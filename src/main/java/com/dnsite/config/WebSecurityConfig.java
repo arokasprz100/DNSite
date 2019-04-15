@@ -37,6 +37,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout()
                 .permitAll();
+
+
+        // TODO disable on production
+        http.authorizeRequests()
+                .antMatchers("/").permitAll()
+                .antMatchers("/h2/**").permitAll();
+
+        http.csrf().disable();
+        http.headers().frameOptions().disable();
     }
 
     @Autowired
