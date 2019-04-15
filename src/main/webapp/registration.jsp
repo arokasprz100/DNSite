@@ -1,3 +1,4 @@
+<%--suppress ALL --%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
@@ -68,6 +69,79 @@
                 <form:errors path="passwordConfirm"></form:errors>
             </div>
         </spring:bind>
+
+        <spring:bind path="email">
+            <div class="form-group ${status.error ? 'has-error' : ''}">
+                <form:input type="text" path="email" class="form-control"
+                            placeholder="Email"></form:input>
+                <form:errors path="email"></form:errors>
+            </div>
+        </spring:bind>
+
+        <spring:bind path="hostname">
+            <div class="form-group ${status.error ? 'has-error' : ''}">
+                <form:input type="text" path="hostname" class="form-control"
+                            placeholder="Hostname"></form:input>
+                <form:errors path="hostname"></form:errors>
+            </div>
+        </spring:bind>
+
+        <spring:bind path="dbPort">
+            <div class="form-group ${status.error ? 'has-error' : ''}">
+                <form:input type="text" path="dbPort" class="form-control"
+                            placeholder="dbPort"></form:input>
+                <form:errors path="dbPort"></form:errors>
+            </div>
+        </spring:bind>
+
+        <spring:bind path="database">
+            <div class="form-group ${status.error ? 'has-error' : ''}">
+                <form:input type="text" path="database" class="form-control"
+                            placeholder="Database"></form:input>
+                <form:errors path="database"></form:errors>
+            </div>
+        </spring:bind>
+
+        <spring:bind path="powerAdminPassword">
+            <div class="form-group ${status.error ? 'has-error' : ''}">
+                <form:input type="text" path="powerAdminPassword" class="form-control"
+                            placeholder="Power admin password"></form:input>
+                <form:errors path="powerAdminPassword"></form:errors>
+            </div>
+        </spring:bind>
+
+        <spring:bind path="powerAdminUsername">
+            <div class="form-group ${status.error ? 'has-error' : ''}">
+                <form:input type="text" path="powerAdminUsername" class="form-control"
+                            placeholder="powerAdminUsername"></form:input>
+                <form:errors path="powerAdminUsername"></form:errors>
+            </div>
+        </spring:bind>
+
+        <spring:bind path="hostmaster">
+            <div class="form-group ${status.error ? 'has-error' : ''}">
+                <form:input type="text" path="hostmaster" class="form-control"
+                            placeholder="hostmaster"></form:input>
+                <form:errors path="hostmaster"></form:errors>
+            </div>
+        </spring:bind>
+
+        <spring:bind path="primaryNameServer">
+            <div class="form-group ${status.error ? 'has-error' : ''}">
+                <form:input type="text" path="primaryNameServer" class="form-control"
+                            placeholder="primaryNameServer"></form:input>
+                <form:errors path="primaryNameServer"></form:errors>
+            </div>
+        </spring:bind>
+
+        <spring:bind path="secondNameServer">
+            <div class="form-group ${status.error ? 'has-error' : ''}">
+                <form:input type="text" path="secondNameServer" class="form-control"
+                            placeholder="secondNameServer"></form:input>
+                <form:errors path="secondNameServer"></form:errors>
+            </div>
+        </spring:bind>
+
 
         <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
     </form:form>
