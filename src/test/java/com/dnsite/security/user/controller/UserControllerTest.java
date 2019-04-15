@@ -18,16 +18,12 @@ import org.springframework.validation.BindingResult;
 import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserControllerTest {
 
     @InjectMocks
     private UserController userController;
-
-    @Mock
-    private UserValidator userValidator;
 
     @Mock
     private User user;
@@ -39,10 +35,13 @@ public class UserControllerTest {
     private Model model;
 
     @Mock
+    private UserService userService;
+
+    @Mock
     private SecurityService securityService;
 
     @Mock
-    private UserService userService;
+    private UserValidator userValidator;
 
     @Before
     public void init(){
@@ -50,22 +49,16 @@ public class UserControllerTest {
     }
 
     @Test
-    public void firstUserInDatabaseSaveTest(){
+    public void firstUserInDatabaseSaveTest() throws Exception {
         Mockito.when(bindingResult.hasErrors()).thenReturn(false);
         Mockito.when(userService.findAll()).thenReturn(Collections.emptyList());
-
-        try {
-            assertEquals("redirect:/welcome", userController.registration(user, bindingResult, model));
-        } catch (Exception e) {
-            System.out.println(e);
-            fail();
-        }
+        assertEquals("redirect:/welcome", userController.registration(user, bindingResult, model));
     }
 
     @Test(expected = Exception.class)
     public void notFirstUserInDatabaseNeedConfirmToSaveTest() throws Exception {
         Mockito.when(bindingResult.hasErrors()).thenReturn(false);
         Mockito.when(userService.findAll()).thenReturn(Collections.singletonList(new User()));
-        userController.registration(user, bindingResult, model);
+        assertEquals("redirect:/login", userController.registration(user, bindingResult, model));
     }
 }

@@ -2,8 +2,10 @@ package com.dnsite.security.user.controller;
 
 import com.dnsite.security.service.SecurityService;
 import com.dnsite.security.user.model.User;
+import com.dnsite.security.user.service.EmailService;
 import com.dnsite.security.user.service.UserService;
 import com.dnsite.security.user.validator.UserValidator;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 public class UserController {
+    private final static Logger log = Logger.getLogger(UserController.class);
 
     @Autowired
     private UserService userService;
@@ -23,6 +26,9 @@ public class UserController {
 
     @Autowired
     private UserValidator userValidator;
+
+    @Autowired
+    private EmailService emailService;
 
     @RequestMapping(value = "/registration", method = RequestMethod.GET)
     public String registration(Model model) {
@@ -41,10 +47,16 @@ public class UserController {
 
         if (userService.findAll().size() == 0){
             userService.save(userForm);
+            log.info("First user of database saved");
         }else{
             //TODO send email to admin. There he will find address to admin page with confirmation of new users
             //TODO admin page
-            throw new Exception("First user already exists");
+            //TODO mayby think about checking it and remove unneccessary fields before pushing user to full registration form
+            //TODO add link in text to tab with user acceptation, add to : administrator
+            log.info("Another user want to join system");
+            emailService.sendSimpleMessage("klopron@gmail.com", "TEST", "TEST");
+            log.info("Email was send to verification");
+            return "redirect:/login";
         }
 
 
