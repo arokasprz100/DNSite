@@ -32,14 +32,21 @@ public class UserController {
     }
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public String registration(@ModelAttribute("userForm") User userForm, BindingResult bindingResult, Model model) {
+    public String registration(@ModelAttribute("userForm") User userForm, BindingResult bindingResult, Model model) throws Exception{
         userValidator.validate(userForm, bindingResult);
 
         if (bindingResult.hasErrors()) {
             return "registration";
         }
 
-        userService.save(userForm);
+        if (userService.findAll().size() == 0){
+            userService.save(userForm);
+        }else{
+            //TODO send email to admin. There he will find address to admin page with confirmation of new users
+            //TODO admin page
+            throw new Exception("First user already exists");
+        }
+
 
         securityService.autologin(userForm.getUsername(), userForm.getPasswordConfirm());
 
