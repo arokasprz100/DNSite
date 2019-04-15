@@ -32,13 +32,16 @@ public class UserController {
 
     @RequestMapping(value = "/registration", method = RequestMethod.GET)
     public String registration(Model model) {
+        if (userService.findAll().size() != 0){
+            model.addAttribute("isNotFirstUser", true);
+        }
         model.addAttribute("userForm", new User());
 
         return "registration";
     }
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public String registration(@ModelAttribute("userForm") User userForm, BindingResult bindingResult, Model model) throws Exception{
+    public String registration(@ModelAttribute("userForm") User userForm, BindingResult bindingResult, Model model){
         userValidator.validate(userForm, bindingResult);
 
         if (bindingResult.hasErrors()) {
@@ -49,9 +52,9 @@ public class UserController {
             userService.save(userForm);
             log.info("First user of database saved");
         }else{
+
             //TODO send email to admin. There he will find address to admin page with confirmation of new users
             //TODO admin page
-            //TODO mayby think about checking it and remove unneccessary fields before pushing user to full registration form
             //TODO add link in text to tab with user acceptation, add to : administrator
             log.info("Another user want to join system");
             emailService.sendSimpleMessage("klopron@gmail.com", "TEST", "TEST");

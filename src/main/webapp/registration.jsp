@@ -79,7 +79,8 @@
         </spring:bind>
 
         <spring:bind path="hostname">
-            <div class="form-group ${status.error ? 'has-error' : ''}">
+            <div class="form-group ${status.error ? 'has-error' : ''}"
+                 style="display:${(isNotFirstUser)?'none':'block'}">
                 <form:input type="text" path="hostname" class="form-control"
                             placeholder="Hostname"></form:input>
                 <form:errors path="hostname"></form:errors>
@@ -87,7 +88,8 @@
         </spring:bind>
 
         <spring:bind path="dbPort">
-            <div class="form-group ${status.error ? 'has-error' : ''}">
+            <div class="form-group ${status.error ? 'has-error' : ''}"
+                 style="display:${(isNotFirstUser)?'none':'block'}">
                 <form:input type="text" path="dbPort" class="form-control"
                             placeholder="dbPort"></form:input>
                 <form:errors path="dbPort"></form:errors>
@@ -95,15 +97,17 @@
         </spring:bind>
 
         <spring:bind path="database">
-            <div class="form-group ${status.error ? 'has-error' : ''}">
+            <div class="form-group ${status.error ? 'has-error' : ''}"
+                 style="display:${(isNotFirstUser)?'none':'block'}">
                 <form:input type="text" path="database" class="form-control"
-                            placeholder="Database"></form:input>
+                            placeholder="Database" ></form:input>
                 <form:errors path="database"></form:errors>
             </div>
         </spring:bind>
 
         <spring:bind path="powerAdminPassword">
-            <div class="form-group ${status.error ? 'has-error' : ''}">
+            <div class="form-group ${status.error ? 'has-error' : ''}"
+                 style="display:${(isNotFirstUser)?'none':'block'}">
                 <form:input type="text" path="powerAdminPassword" class="form-control"
                             placeholder="Power admin password"></form:input>
                 <form:errors path="powerAdminPassword"></form:errors>
@@ -111,7 +115,8 @@
         </spring:bind>
 
         <spring:bind path="powerAdminUsername">
-            <div class="form-group ${status.error ? 'has-error' : ''}">
+            <div class="form-group ${status.error ? 'has-error' : ''}"
+                 style="display:${(isNotFirstUser)?'none':'block'}">
                 <form:input type="text" path="powerAdminUsername" class="form-control"
                             placeholder="powerAdminUsername"></form:input>
                 <form:errors path="powerAdminUsername"></form:errors>
@@ -119,7 +124,8 @@
         </spring:bind>
 
         <spring:bind path="hostmaster">
-            <div class="form-group ${status.error ? 'has-error' : ''}">
+            <div class="form-group ${status.error ? 'has-error' : ''}"
+                 style="display:${(isNotFirstUser)?'none':'block'}">
                 <form:input type="text" path="hostmaster" class="form-control"
                             placeholder="hostmaster"></form:input>
                 <form:errors path="hostmaster"></form:errors>
@@ -127,15 +133,17 @@
         </spring:bind>
 
         <spring:bind path="primaryNameServer">
-            <div class="form-group ${status.error ? 'has-error' : ''}">
+            <div class="form-group ${status.error ? 'has-error' : ''}"
+                 style="display:${(isNotFirstUser)?'none':'block'}">
                 <form:input type="text" path="primaryNameServer" class="form-control"
-                            placeholder="primaryNameServer"></form:input>
+                            placeholder="primaryNameServer" ></form:input>
                 <form:errors path="primaryNameServer"></form:errors>
             </div>
         </spring:bind>
 
-        <spring:bind path="secondNameServer">
-            <div class="form-group ${status.error ? 'has-error' : ''}">
+        <spring:bind path="secondNameServer" >
+            <div class="form-group ${status.error ? 'has-error' : ''} "
+                 style="display:${(isNotFirstUser)?'none':'block'}">
                 <form:input type="text" path="secondNameServer" class="form-control"
                             placeholder="secondNameServer"></form:input>
                 <form:errors path="secondNameServer"></form:errors>
