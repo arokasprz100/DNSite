@@ -6,14 +6,14 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 @SpringBootApplication
-public class RentaroomApplication extends SpringBootServletInitializer {
+public class DNSite extends SpringBootServletInitializer {
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder applicationBuilder) {
-		return applicationBuilder.sources(RentaroomApplication.class);
+		return applicationBuilder.sources(DNSite.class);
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(RentaroomApplication.class, args);
+		SpringApplication.run(DNSite.class, args);
 	}
 }
