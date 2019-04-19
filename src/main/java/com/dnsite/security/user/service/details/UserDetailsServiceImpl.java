@@ -1,6 +1,5 @@
 package com.dnsite.security.user.service.details;
 
-import com.dnsite.security.role.model.Role;
 import com.dnsite.security.user.model.User;
 import com.dnsite.security.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +26,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = userRepository.findByUsername(username);
 
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-        for (Role role : user.getRoles()){
-            grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
-        }
+        grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
 
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), grantedAuthorities);
     }

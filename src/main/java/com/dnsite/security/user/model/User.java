@@ -1,10 +1,7 @@
 package com.dnsite.security.user.model;
 
-import com.dnsite.security.role.model.Role;
-
 import javax.persistence.*;
 import java.util.Date;
-import java.util.Set;
 
 @Entity
 @Table(name = "\"user\"")
@@ -18,7 +15,7 @@ public class User {
 
     private String passwordConfirm;
 
-    private Set<Role> roles;
+    private String role;
 
     private String firstName;
 
@@ -45,6 +42,8 @@ public class User {
     private String primaryNameServer;
 
     private String secondNameServer;
+
+    private boolean isUserAccepted;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -111,16 +110,6 @@ public class User {
 
     public void setLastLoginDate(Date lastLoginDate) {
         this.lastLoginDate = lastLoginDate;
-    }
-
-    @ManyToMany
-    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
     }
 
     public String getEmail() {
@@ -193,5 +182,21 @@ public class User {
 
     public void setSecondNameServer(String secondNameServer) {
         this.secondNameServer = secondNameServer;
+    }
+
+    public boolean isUserAccepted() {
+        return isUserAccepted;
+    }
+
+    public void setUserAccepted(boolean userAccepted) {
+        isUserAccepted = userAccepted;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

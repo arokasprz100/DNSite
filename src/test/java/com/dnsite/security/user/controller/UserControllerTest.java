@@ -52,7 +52,7 @@ public class UserControllerTest {
     public void firstUserInDatabaseSaveTest() throws Exception {
         Mockito.when(bindingResult.hasErrors()).thenReturn(false);
         Mockito.when(userService.findAll()).thenReturn(Collections.emptyList());
-        assertEquals("redirect:/welcome", userController.registration(user, bindingResult, model));
+        assertEquals("redirect:/dnsite", userController.registration(user, bindingResult, model));
     }
 
     @Test(expected = Exception.class)
