@@ -1,0 +1,103 @@
+package com.dnsite.record.model;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "\"records\"")
+public class Record {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    @Column(name = "domain_id")
+    private Long domainId; //TODO add Domain instead of Long, @NotNull
+
+    private String name;
+
+    private String type;
+
+    private String content;
+
+    private Long ttl;
+
+    @Column(name = "prio")
+    private Long priority;
+
+    @Column(name = "change_date")
+    private Long changeDate;
+
+    private Boolean disabled;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getDomainId() {
+        return domainId;
+    }
+
+    public void setDomainId(Long domainId) {
+        this.domainId = domainId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public Long getTtl() {
+        return ttl;
+    }
+
+    public void setTtl(Long ttl) {
+        this.ttl = ttl;
+    }
+
+    public Long getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Long priority) {
+        this.priority = priority;
+    }
+
+    public Long getChangeDate() {
+        return changeDate;
+    }
+
+    public void setChangeDate(Long changeDate) {
+        this.changeDate = changeDate;
+    }
+
+    public Boolean getDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(Boolean disabled) {
+        this.disabled = disabled;
+    }
+}

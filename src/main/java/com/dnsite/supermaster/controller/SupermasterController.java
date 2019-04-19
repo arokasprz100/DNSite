@@ -49,7 +49,6 @@ public class SupermasterController {
     @RequestMapping(value = "/supermasters/delete/{ip}/{nameserver}", method = RequestMethod.GET)
     public String deleteSupermaster(@PathVariable("ip") String ip, @PathVariable("nameserver") String nameserver) {
         SupermasterId supermasterId = new SupermasterId(ip, nameserver);
-        System.out.println(ip + " " + nameserver);
         supermasterService.delete(supermasterId);
         return "redirect:/supermasters";
     }
