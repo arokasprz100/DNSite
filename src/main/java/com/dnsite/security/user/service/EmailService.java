@@ -1,5 +1,6 @@
 package com.dnsite.security.user.service;
 
 public interface EmailService {
-    void sendSimpleMessage(String to, String subject, String text);
+
+    void sendConfirmMessage(String to, String newUser, String newUserEmail);
 }
