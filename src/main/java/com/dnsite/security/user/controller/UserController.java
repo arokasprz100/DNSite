@@ -59,7 +59,8 @@ public class UserController {
             //TODO admin page
             //TODO add link in text to tab with user acceptation, add to : administrator
             log.info("Another user want to join system");
-            emailService.sendSimpleMessage(userService.findByUsername(adminUsername).getEmail(), "TEST", "TEST");
+            // TODO confirm link
+            emailService.sendConfirmMessage(userService.findByUsername(adminUsername).getEmail(), userForm.getUsername(), userForm.getEmail());
             log.info("Email was send to verification");
             return "redirect:/login";
         }
