@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class UserController {
     private final static Logger log = Logger.getLogger(UserController.class);
 
+    private final String adminUsername = "Admin";
+
     @Autowired
     private UserService userService;
 
@@ -57,7 +59,7 @@ public class UserController {
             //TODO admin page
             //TODO add link in text to tab with user acceptation, add to : administrator
             log.info("Another user want to join system");
-            emailService.sendSimpleMessage("klopron@gmail.com", "TEST", "TEST");
+            emailService.sendSimpleMessage(userService.findByUsername(adminUsername).getEmail(), "TEST", "TEST");
             log.info("Email was send to verification");
             return "redirect:/login";
         }
