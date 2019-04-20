@@ -90,4 +90,9 @@ public class UserController {
     public String dnsite(Model model) {
         return "dnsite";
     }
+
+    @RequestMapping(value = {"/403"}, method = RequestMethod.GET)
+    public String accessDeny(Model model) {
+        return "403";
+    }
 }
