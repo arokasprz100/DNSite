@@ -33,7 +33,7 @@ public class EmailServiceImpl implements EmailService {
                     "<body>"+
                     "<p><h3>Hello DNSite Admin! </h3><br>User <b>" + newUser + "</b> witch e-mail adress: "+ newUserEmail +" want to be added to DNSite.<br>" +
                     "If <b>" + newUser + "</b> is authorized to manage the database, please confirm the registration by clicking the link. <br><p>" +
-                    "<a href=\"https://www.google.com\" target=\"_blank\">Confirm user registration</a> <br><br> Best regards, <br> <b>DNSIte Team</b>"
+                    "<a href=\"http://localhost:8001/dnsite/administration/user-confirm\" target=\"_blank\">Confirm user registration</a> <br><br> Best regards, <br> <b>DNSIte Team</b>"
                     +"</body></html>";
 
             helper.setText(body, true);
