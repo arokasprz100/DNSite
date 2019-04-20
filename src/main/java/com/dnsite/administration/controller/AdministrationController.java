@@ -26,7 +26,9 @@ public class AdministrationController {
 
     @RequestMapping(value = "/user-confirm", method = RequestMethod.GET)
     public String userConfirmation(Model model){
-        List<User> usersToConfirm = userService.findAll().stream().filter(a -> !a.getRole().equals("ADMIN")).collect(Collectors.toList());
+        List<User> usersToConfirm = userService.findAll()
+                .stream().filter(a -> !a.getRole().equals("ADMIN"))
+                .collect(Collectors.toList());
         model.addAttribute("userForConfirmation", usersToConfirm);
         return "user-confirm";
     }
@@ -38,9 +40,10 @@ public class AdministrationController {
         return "redirect:/dnsite/administration/user-confirm";
     }
 
-//    @RequestMapping(value = "/user-confirm", method = RequestMethod.POST)
-//    public String userConfirmationRejected(){
-//        System.out.println("USUNIETY");
-//        return "user-confirm";
-//    }
+    @RequestMapping(value = "/user-confirm/{id}/reject", method = RequestMethod.GET)
+    public String userConfirmationRejected(@PathVariable Long id){
+        userService.deleteUserById(id);
+        logger.info("User with id: " + id + " is rejected and deleted;");
+        return "redirect:/dnsite/administration/user-confirm";
+    }
 }
