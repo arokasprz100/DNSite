@@ -52,14 +52,11 @@ public class UserController {
 
         if (userService.findAll().size() == 0){
             userService.save(userForm);
+
             log.info("First user of database saved");
         }else{
-
-            //TODO send email to admin. There he will find address to admin page with confirmation of new users
-            //TODO admin page
-            //TODO add link in text to tab with user acceptation, add to : administrator
             log.info("Another user want to join system");
-            // TODO confirm link
+
             emailService.sendConfirmMessage(userService.findByUsername(adminUsername).getEmail(), userForm.getUsername(), userForm.getEmail());
             log.info("Email was send to verification");
             return "redirect:/login";
