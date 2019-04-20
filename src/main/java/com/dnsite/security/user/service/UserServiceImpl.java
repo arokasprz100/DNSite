@@ -1,5 +1,6 @@
 package com.dnsite.security.user.service;
 
+import com.dnsite.security.user.model.Role;
 import com.dnsite.security.user.model.User;
 import com.dnsite.security.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,13 @@ public class UserServiceImpl implements UserService {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setRegistrationDate(new Date());
         user.setLastLoginDate(new Date());
+        userRepository.save(user);
+    }
+
+    @Override
+    public void updateUserRole(Long id, Role role){
+        User user = userRepository.getOne(id);
+        user.setRole(role.getAuthority());
         userRepository.save(user);
     }
 
