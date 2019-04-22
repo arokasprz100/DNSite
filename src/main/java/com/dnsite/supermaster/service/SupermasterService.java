@@ -7,11 +7,11 @@ import java.util.List;
 
 public interface SupermasterService {
 
-    void save(Supermaster supermaster);
-
     void delete(SupermasterId supermasterId);
 
-    Supermaster findById(SupermasterId supermasterId);
-
     List<Supermaster> findAll();
+
+    void deleteInBatch(List<Supermaster> supermasters);
+
+    void saveInBatch(List<Supermaster> supermasters);
 }

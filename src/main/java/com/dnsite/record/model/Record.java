@@ -3,7 +3,7 @@ package com.dnsite.record.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "\"records\"")
+@Table(name = "records")
 public class Record {
 
     @Id

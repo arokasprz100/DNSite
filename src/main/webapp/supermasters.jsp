@@ -7,76 +7,304 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta charset="UTF-8">
+    <title>Supermasters Test</title>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-    <title>Supermasters</title>
+    <link rel="stylesheet" href="https://unpkg.com/react-table@latest/react-table.css"/>
+
+    <!-- JS -->
+    <script src="https://unpkg.com/react-table@latest/react-table.js"></script>
+    <script src="https://unpkg.com/react-table@latest/react-table.min.js"></script>
 
     <link href="${contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
     <link href="${contextPath}/resources/css/common.css" rel="stylesheet">
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
 </head>
-
 <body>
 
-<div class="container">
+    <div id = "root"></div>
 
-    <form:form method="POST" action="/supermasters" modelAttribute="supermasterForm" class="form-signin">
-            <h2 class="form-signin-heading">Create new supermaster</h2>
-            <spring:bind path="supermasterId.ip">
-                <div>
-                    <form:input type="text" path="supermasterId.ip" class="form-control" placeholder="IP [Required]"></form:input>
-                    <form:errors path="supermasterId.ip"></form:errors>
-                </div>
-            </spring:bind>
+    <script  type = "text/babel">
 
-            <spring:bind path="supermasterId.nameserver">
-                <div>
-                    <form:input type="text" path="supermasterId.nameserver" class="form-control" placeholder="Nameserver [Required]"></form:input>
-                    <form:errors path="supermasterId.nameserver"></form:errors>
-                </div>
-            </spring:bind>
+        var ReactTable = window.ReactTable.default;
 
-            <spring:bind path="account">
-                <div>
-                    <form:input type="text" path="account" class="form-control" placeholder="Account [Required]"></form:input>
-                    <form:errors path="account"></form:errors>
-                </div>
-            </spring:bind>
+        class Supermasters extends React.Component {
 
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
-        </form:form>
+            render() {
+                return (
+                    <div>
+                        <Table ref="supTable"/>
+                        <Form onSubmit = {this.onFormSubmit}/>
+                    </div>
+                );
+            }
 
-        <table>
-            <thead>
-                <tr> <th> IP </th> <th> Nameserver </th> <th> Account </th> <th> Delete </th> </tr>
-            </thead>
-            <tbody>
-                <c:forEach items="${supermastersList}" var="supermaster">
+            onFormSubmit = () => {
+                this.refs.supTable.refreshSupermastersTable();
+                console.log("Form submited");
+            }
+
+        }
+
+        const API = "http://localhost:8001/supermasters/all";
+
+        class Table extends React.Component {
+
+            constructor(props) {
+                super(props);
+
+                this.state = {
+                    data : [],
+                    selected: {}
+                };
+            }
+
+            componentDidMount() {
+                this.refreshSupermastersTable();
+            }
+
+            deleteSupermaster = (ip, nameserver) => {
+                self = this;
+                let URI = 'http://localhost:8001/supermasters/delete/' + ip + '/' + nameserver;
+                fetch(URI)
+                .then(function(response) {
+                    return response;
+                }).then(function(data) {
+                    self.refreshSupermastersTable();
+                });
+            }
+
+            toggleRow(supermasterId) {
+                console.log(this.state.selected);
+                const newSelected = Object.assign( {}, this.state.selected);
+                newSelected[supermasterId] = !this.state.selected[supermasterId];
+                this.setState({
+                    selected: newSelected,
+                });
+            }
+
+            renderTable() {
+                const columns = [
+                {
+                    Header : "Select",
+                    id : "checkbox",
+                    accessor: "",
+                    Cell: ({original}) => {
+                        return (
+                            <input
+                                type = "checkbox"
+                                className="checkbox"
+                                checked={this.state.selected[JSON.stringify(original)] === true}
+                                onChange = { () => this.toggleRow(JSON.stringify(original)) }
+                            />
+                        );
+                    },
+                    sortable: false,
+                    width: 45
+                },
+                {
+                    Header : "IP",
+                    accessor: 'supermasterId.ip',
+                },
+                {
+                    Header : "Nameserver",
+                    accessor: 'supermasterId.nameserver',
+                },
+                {
+                    Header : "Account",
+                    accessor: "account",
+                },
+                {
+                    Header : "Delete",
+                    accessor : "",
+                    Cell : ({original}) => {
+                        return (
+                            <button onClick={ () => {this.deleteSupermaster(original.supermasterId.ip, original.supermasterId.nameserver)}}> Delete </button>
+                        );
+                    },
+                    sortable: false
+                }
+
+                ];
+
+                return (
+                    <ReactTable
+                        data={this.state.data}
+                        columns={columns}
+                        defaultSorted={ [ { id : "account", desc: true} ] }
+                    />
+                );
+            }
+
+            refreshSupermastersTable() {
+                fetch(API)
+                    .then(response => {
+                        if (response.ok) {
+                            return response;
+                        }
+                    throw Error(response.status);
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        this.setState({data: data, selected: {}});
+                    })
+                .catch(error => console.log(error + " coś nie tak"));
+            }
+
+            render() {
+                return this.renderTable();
+            }
+        }
+
+        class Form extends React.Component {
+
+            constructor(props) {
+                super(props);
+
+                this.state = {
+
+                    supermasters : [
+
+                        {
+                            supermasterId : {
+                                ip : '',
+                                nameserver : ''
+                            },
+                            account: ''
+                        }
+
+                    ]
+                };
+
+                this.handleNewSupermasters = this.handleNewSupermasters.bind(this);
+            }
+
+            addSupermaster = (event) => {
+                event.preventDefault();
+                this.setState((previousState) => ( {
+                    supermasters : [... previousState.supermasters,
+                        {
+                            supermasterId : {
+                                ip : '',
+                                nameserver : ''
+                            },
+                            account: ''
+                        }
+                    ],
+                }));
+            }
+
+            handleChange = (e) => {
+                let supermasters = [...this.state.supermasters];
+                if (e.target.className == 'ip') {
+                    var supermasterId = supermasters[e.target.dataset.id]['supermasterId'];
+                    supermasterId.ip = e.target.value;
+                }
+                else if (e.target.className == 'nameserver') {
+                    var supermasterId = supermasters[e.target.dataset.id]['supermasterId'];
+                    supermasterId.nameserver = e.target.value;
+                }
+                else if (e.target.className == 'account') {
+                    supermasters[e.target.dataset.id]['account'] = e.target.value;
+                }
+                this.setState({supermasters}, () => console.log(this.state.supermasters));
+            }
+
+            render() {
+                let {supermasters} = this.state;
+                return (
+                    <form className="form-signin" style = {{width: '100%'}}>
+                    <table className = "table" style = {{width: '100%'}} >
+                    <tbody>
+                    {
+                        supermasters.map((value, idx) => {
+                            let supermasterIpId = 'ip-${idx}',
+                                supermasterNameserverId = 'age-${idx}',
+                                supermasterAccountId = 'account-${idx}';
+                            return (
+                                <tr key={idx}>
+                                    <td>
+                                    <input
+                                        type = "text"
+                                        name = {supermasterIpId}
+                                        data-id = {idx}
+                                        id = {supermasterIpId}
+                                        value={supermasters[idx].supermasterId.ip}
+                                        className="ip"
+                                        placeholder="IP [required]"
+                                        onChange = {this.handleChange}
+                                    /></td>
+                                    <td>
+                                    <input
+                                        type = "text"
+                                        name = {supermasterNameserverId}
+                                        data-id = {idx}
+                                        id = {supermasterNameserverId}
+                                        value={supermasters[idx].supermasterId.nameserver}
+                                        className="nameserver"
+                                        placeholder="Nameserver [required]"
+                                        onChange = {this.handleChange}
+                                    /></td>
+                                    <td>
+                                    <input
+                                        type = "text"
+                                        name = {supermasterAccountId}
+                                        data-id = {idx}
+                                        id = {supermasterAccountId}
+                                        value={supermasters[idx].account}
+                                        className="account"
+                                        placeholder="Account [required]"
+                                        onChange = {this.handleChange}
+                                    /></td>
+                                </tr>
+                            )
+                        })
+                    }
                     <tr>
-                        <td> ${supermaster.supermasterId.ip} </td>
-                        <td> ${supermaster.supermasterId.nameserver} </td>
-                        <td> ${supermaster.account} </td>
                         <td>
-                            <a href="/supermasters/delete/${supermaster.supermasterId.ip}/${supermaster.supermasterId.nameserver}" onclick="return confirm('Are you sure?')">Delete</a>
+                            <button className="btn btn-lg btn-primary btn-block" onClick = {this.addSupermaster}> Add new supermaster </button>
                         </td>
+                        <td>
+                            <button className="btn btn-lg btn-primary btn-block" onClick={(e) => this.handleNewSupermasters(e)}>Submit</button>
+                        </td>
+                        <td></td><td></td>
                     </tr>
-                </c:forEach>
-            </tbody>
-        </table>
+                    </tbody>
+                    </table>
+                    </form>
+                )
+            }
 
-</div>
-<!-- /container -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<script src="${contextPath}/resources/js/bootstrap.min.js"></script>
+            handleNewSupermasters(event) {
+                event.preventDefault();
+                fetch('http://localhost:8001/supermasters', {
+                    method: 'post',
+                    body: JSON.stringify(this.state.supermasters),
+                    headers: {'Content-Type': 'application/json'}
+                }).then((response) => {
+                    return response;
+                }).then((data) => {
+                    console.log('Created supermaster', data);
+                    this.setState({supermasters : [
+                        {
+                            supermasterId : {
+                                ip : '',
+                                nameserver : ''
+                            },
+                            account: ''
+                        }
+                    ]});
+                    this.props.onSubmit();
+                });
+            }
+
+        }
+        ReactDOM.render(<Supermasters />, document.getElementById("root"));
+
+
+
+    </script>
 </body>
 </html>

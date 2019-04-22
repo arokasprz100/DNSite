@@ -3,7 +3,7 @@ package com.dnsite.supermaster.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "\"supermasters\"")
+@Table(name = "supermasters")
 public class Supermaster {
 
     @EmbeddedId

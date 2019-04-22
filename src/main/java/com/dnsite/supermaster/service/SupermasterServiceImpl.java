@@ -12,17 +12,8 @@ import java.util.Optional;
 @Service
 public class SupermasterServiceImpl implements SupermasterService {
 
-    private SupermasterRepository supermasterRepository;
-
     @Autowired
-    SupermasterServiceImpl(SupermasterRepository supermasterRepository){
-        this.supermasterRepository = supermasterRepository;
-    }
-
-    @Override
-    public void save(Supermaster supermaster) {
-        supermasterRepository.save(supermaster);
-    }
+    private SupermasterRepository supermasterRepository;
 
     @Override
     public void delete(SupermasterId supermasterId) {
@@ -30,14 +21,18 @@ public class SupermasterServiceImpl implements SupermasterService {
     }
 
     @Override
-    public Supermaster findById(SupermasterId supermasterId) {
-        Optional<Supermaster> supermasterOptional = supermasterRepository.findById(supermasterId);
-        return supermasterOptional.orElse(null);
+    public List<Supermaster> findAll() {
+        return supermasterRepository.findAll();
     }
 
     @Override
-    public List<Supermaster> findAll() {
-        return supermasterRepository.findAll();
+    public void deleteInBatch(List<Supermaster> supermasters) {
+        supermasterRepository.deleteInBatch(supermasters);
+    }
+
+    @Override
+    public void saveInBatch(List<Supermaster> supermasters) {
+        supermasterRepository.saveAll(supermasters);
     }
 
 }
