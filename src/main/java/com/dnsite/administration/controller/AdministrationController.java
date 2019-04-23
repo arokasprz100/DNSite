@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping(value = "/dnsite/administration")
+@RequestMapping(value = "/administration")
 public class AdministrationController {
 
     private static final Logger logger = LoggerFactory.getLogger(AdministrationController.class);
@@ -37,13 +37,13 @@ public class AdministrationController {
     public String userConfirmationAccepted(@PathVariable Long id){
         userService.updateUserRole(id, Role.ADMIN);
         logger.info("User with id: " + id + " confirmed");
-        return "redirect:/dnsite/administration/user-confirm";
+        return "redirect:/administration/user-confirm";
     }
 
     @RequestMapping(value = "/user-confirm/{id}/reject", method = RequestMethod.GET)
     public String userConfirmationRejected(@PathVariable Long id){
         userService.deleteUserById(id);
         logger.info("User with id: " + id + " is rejected and deleted;");
-        return "redirect:/dnsite/administration/user-confirm";
+        return "redirect:/administration/user-confirm";
     }
 }
