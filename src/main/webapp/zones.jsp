@@ -108,10 +108,14 @@
                     Header : "ID",
                     accessor: 'id',
                 },
-                // {
-                //     Header : "Domain",
-                //     accessor: 'domainname',
-                // },
+                {
+                    Header : "Domain ID",
+                    accessor : "domain.id",
+                },
+                {
+                    Header : "Domain Name",
+                    accessor: 'domain.name',
+                },
                 {
                     Header : "Owner",
                     accessor: "owner",
@@ -120,16 +124,16 @@
                     Header : "Comment",
                     accessor: "comment",
                 },
-                {
-                    Header : "Delete",
-                    accessor : "",
-                    Cell : ({original}) => {
-                        return (
-                            <button onClick={ () => {this.deleteZone(original.zoneId.id)}}> Delete </button>
-                        );
-                    },
-                    sortable: false
-                }
+                <%--{--%>
+                <%--    Header : "Delete",--%>
+                <%--    accessor : "",--%>
+                <%--    Cell : ({original}) => {--%>
+                <%--        return (--%>
+                <%--            <button onClick={ () => {this.deleteZone(original.zoneId.id)}}> Delete </button>--%>
+                <%--        );--%>
+                <%--    },--%>
+                <%--    sortable: false--%>
+                <%--}--%>
 
             ];
 
@@ -152,6 +156,7 @@
                 })
                 .then(response => response.json())
                 .then(data => {
+                    console.log(data);
                     this.setState({data: data, selected: {}});
                 })
                 .catch(error => console.log(error + " coś nie tak"));
@@ -173,8 +178,10 @@
 
                     {
                         id : '',
-                        // domainid : '',
-                        // domainname : '',
+                        domain: {
+                            id: '',
+                            name: '',
+                        },
                         owner : '',
                         comment : ''
                     }
@@ -191,8 +198,10 @@
                 zones : [... previousState.zones,
                     {
                         id : '',
-                        // domainid : '',
-                        // domainname : '',
+                        domain: {
+                          id: '',
+                          name: '',
+                        },
                         owner : '',
                         comment : ''
                     }
@@ -202,7 +211,13 @@
 
         handleChange = (e) => {
             let zones = [...this.state.zones];
-            zones[e.target.dataset.id][e.target.className] = e.target.value;
+            if(e.target.className == 'domainid'){
+                zones[e.target.dataset.id]['domain'].id = e.target.value;
+            } else if (e.target.className == 'domainname'){
+                zones[e.target.dataset.id]['domain'].name = e.target.value;
+            }else{
+                zones[e.target.dataset.id][e.target.className] = e.target.value;
+            }
             this.setState({zones}, () => console.log(this.state.zones));
         }
 
@@ -215,8 +230,8 @@
                         {
                             zones.map((value, idx) => {
                                 let id = 'id-${idx}',
-                                    <%--domainId= 'domainid-${idx}',--%>
-                                    <%--domainName= 'domainname-${idx}',--%>
+                                    domainId= 'domainid-${idx}',
+                                    domainName= 'domainname-${idx}',
                                     owner= 'owner-${idx}',
                                     comment= 'comment-${idx}';
                                 return (
@@ -232,28 +247,28 @@
                                                 placeholder="ID [auto]"
                                                 onChange = {this.handleChange}
                                             /></td>
-                                        <%--<td>--%>
-                                            <%--<input--%>
-                                                <%--type = "text"--%>
-                                                <%--name = {domainId}--%>
-                                                <%--data-id = {idx}--%>
-                                                <%--id = {domainId}--%>
-                                                <%--value={zones[idx].domainid}--%>
-                                                <%--className="domainid"--%>
-                                                <%--placeholder="Domain ID"--%>
-                                                <%--onChange = {this.handleChange}--%>
-                                            <%--/></td>--%>
-                                        <%--<td>--%>
-                                            <%--<input--%>
-                                                <%--type = "text"--%>
-                                                <%--name = {domainname}--%>
-                                                <%--data-id = {idx}--%>
-                                                <%--id = {domainname}--%>
-                                                <%--value={zones[idx].domainname}--%>
-                                                <%--className="domainname"--%>
-                                                <%--placeholder="Domain Name"--%>
-                                                <%--onChange = {this.handleChange}--%>
-                                            <%--/></td>--%>
+                                        <td>
+                                            <input
+                                                type = "text"
+                                                name = {domainId}
+                                                data-id = {idx}
+                                                id = {domainId}
+                                                value={zones[idx].domain.id}
+                                                className="domainid"
+                                                placeholder="Domain ID"
+                                                onChange = {this.handleChange}
+                                            /></td>
+                                        <td>
+                                            <input
+                                                type = "text"
+                                                name = {domainName}
+                                                data-id = {idx}
+                                                id = {domainName}
+                                                value={zones[idx].domain.name}
+                                                className="domainname"
+                                                placeholder="Domain Name"
+                                                onChange = {this.handleChange}
+                                            /></td>
                                         <td>
                                             <input
                                                 type = "text"
@@ -311,8 +326,10 @@
 
                         {
                             id : '',
-                            // domainid : '',
-                            // domainname : '',
+                            domain: {
+                                id: '',
+                                name: '',
+                            },
                             owner : '',
                             comment : ''
                         }

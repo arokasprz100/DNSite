@@ -1,6 +1,7 @@
 package com.dnsite.domain.model;
 
 import com.dnsite.zone.model.Zone;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import utils.CustomConstraints.CaseMode;
 import utils.CustomConstraints.CheckCase;
 
@@ -17,7 +18,7 @@ public class Domain {
 
     @Column(name = "name")
     @NotNull
-    @CheckCase(CaseMode.UPPER)
+    @CheckCase(CaseMode.LOWER)
     private String name;
 
     @Column(name = "master")
@@ -27,7 +28,6 @@ public class Domain {
     private int lastCheck;
 
     @Column(name="type")
-    @NotNull
     private String type;
 
     @Column(name="notified_serial")
@@ -37,6 +37,7 @@ public class Domain {
     private String account;
 
     @OneToMany(mappedBy = "domain", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Zone> zones;
 
     public Long getId() {
@@ -93,5 +94,13 @@ public class Domain {
 
     public void setAccount(String account) {
         this.account = account;
+    }
+
+    public Set<Zone> getZones() {
+        return zones;
+    }
+
+    public void setZones(Set<Zone> zones) {
+        this.zones = zones;
     }
 }

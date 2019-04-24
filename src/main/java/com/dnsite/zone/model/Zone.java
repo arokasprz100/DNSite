@@ -1,6 +1,7 @@
 package com.dnsite.zone.model;
 
 import com.dnsite.domain.model.Domain;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
 
@@ -12,7 +13,7 @@ public class Zone {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn
     private Domain domain = null;
 
@@ -53,5 +54,10 @@ public class Zone {
 
     public void setOwner(Integer owner) {
         this.owner = owner;
+    }
+
+    @Override
+    public String toString() {
+        return "{id: " + this.id + ", owner: " + this.owner +", comment: " + this.comment + "domain: " + domain.toString() + "}";
     }
 }
