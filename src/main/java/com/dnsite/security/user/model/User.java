@@ -1,10 +1,7 @@
 package com.dnsite.security.user.model;
 
-import com.dnsite.security.role.model.Role;
-
 import javax.persistence.*;
 import java.util.Date;
-import java.util.Set;
 
 @Entity
 @Table(name = "\"user\"")
@@ -18,7 +15,7 @@ public class User {
 
     private String passwordConfirm;
 
-    private Set<Role> roles;
+    private String role;
 
     private String firstName;
 
@@ -27,6 +24,26 @@ public class User {
     private Date registrationDate;
 
     private Date lastLoginDate;
+
+    private String email;
+
+    private String hostname;
+
+    private Long dbPort;
+
+    private String database;
+
+    private String powerAdminPassword;
+
+    private String powerAdminUsername;
+
+    private String hostmaster;
+
+    private String primaryNameServer;
+
+    private String secondNameServer;
+
+    private boolean isUserAccepted;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -95,13 +112,91 @@ public class User {
         this.lastLoginDate = lastLoginDate;
     }
 
-    @ManyToMany
-    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    public Set<Role> getRoles() {
-        return roles;
+    public String getEmail() {
+        return email;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getHostname() {
+        return hostname;
+    }
+
+    public void setHostname(String hostname) {
+        this.hostname = hostname;
+    }
+
+    public Long getDbPort() {
+        return dbPort;
+    }
+
+    public void setDbPort(Long dbPort) {
+        this.dbPort = dbPort;
+    }
+
+    public String getDatabase() {
+        return database;
+    }
+
+    public void setDatabase(String database) {
+        this.database = database;
+    }
+
+    public String getPowerAdminPassword() {
+        return powerAdminPassword;
+    }
+
+    public void setPowerAdminPassword(String powerAdminPassword) {
+        this.powerAdminPassword = powerAdminPassword;
+    }
+
+    public String getPowerAdminUsername() {
+        return powerAdminUsername;
+    }
+
+    public void setPowerAdminUsername(String powerAdminUsername) {
+        this.powerAdminUsername = powerAdminUsername;
+    }
+
+    public String getHostmaster() {
+        return hostmaster;
+    }
+
+    public void setHostmaster(String hostmaster) {
+        this.hostmaster = hostmaster;
+    }
+
+    public String getPrimaryNameServer() {
+        return primaryNameServer;
+    }
+
+    public void setPrimaryNameServer(String primaryNameServer) {
+        this.primaryNameServer = primaryNameServer;
+    }
+
+    public String getSecondNameServer() {
+        return secondNameServer;
+    }
+
+    public void setSecondNameServer(String secondNameServer) {
+        this.secondNameServer = secondNameServer;
+    }
+
+    public boolean isUserAccepted() {
+        return isUserAccepted;
+    }
+
+    public void setUserAccepted(boolean userAccepted) {
+        isUserAccepted = userAccepted;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

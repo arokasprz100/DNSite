@@ -6,14 +6,14 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 @SpringBootApplication
-public class DNSite extends SpringBootServletInitializer {
+public class DNSiteApplication extends SpringBootServletInitializer {
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder applicationBuilder) {
-		return applicationBuilder.sources(DNSite.class);
+		return applicationBuilder.sources(DNSiteApplication.class);
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(DNSite.class, args);
+		SpringApplication.run(DNSiteApplication.class, args);
 	}
 }

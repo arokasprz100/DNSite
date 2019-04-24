@@ -27,18 +27,29 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable();
-        /*
         http
                 .authorizeRequests()
                 .antMatchers("/resources/**", "/registration").permitAll()
+                .antMatchers("/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/login")
+                .defaultSuccessUrl("/",true)
                 .permitAll()
                 .and()
                 .logout()
-                .permitAll();*/
+                .permitAll()
+                .and()
+                .exceptionHandling().accessDeniedPage("/403");
+
+
+        // TODO disable on production
+        http.authorizeRequests()
+                .antMatchers("/").permitAll()
+                .antMatchers("/h2/**").permitAll();
+
+        http.headers().frameOptions().disable();
     }
 
     @Autowired
@@ -56,4 +67,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public UserDetailsService userDetailsService() {
         return super.userDetailsService();
     }
+
+
 }
