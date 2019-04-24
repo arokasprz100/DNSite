@@ -31,8 +31,19 @@
 
 <div class="container">
 
-    <form method="POST" action="${contextPath}/login" class="form-signin">
+    <form:form method="POST" modelAttribute="userForm" class="form-signin">
         <h3 class="form-signin-heading">Remind your password</h3>
+
+        <spring:bind path="email">
+            <div class="form-group ${status.error ? 'has-error' : ''}">
+                <form:input type="text" path="email" class="form-control"
+                            placeholder="Email"></form:input>
+                <form:errors path="email"></form:errors>
+            </div>
+        </spring:bind>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
+    </form:form>
+    <%--<form method="POST" action="${contextPath}/login" class="form-signin">--%>
 
         <%--<spring:bind path="password">--%>
             <%--<div class="form-group ${status.error ? 'has-error' : ''}">--%>
@@ -49,14 +60,14 @@
             <%--</div>--%>
         <%--</spring:bind>--%>
 
-        <span>${message}</span>
-        <input name="email" type="text" class="form-control" placeholder="email"
-               autofocus="true"/>
+        <%--<span>${message}</span>--%>
+        <%--<input name="email" type="text" class="form-control" placeholder="email"--%>
+               <%--autofocus="true"/>--%>
 
 
 
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
-    </form>
+        <%--<button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>--%>
+    <%--</form>--%>
 
 </div>
 <!-- /container -->
