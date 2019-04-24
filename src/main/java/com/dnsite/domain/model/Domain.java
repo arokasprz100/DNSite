@@ -1,5 +1,6 @@
 package com.dnsite.domain.model;
 
+import com.dnsite.record.model.Record;
 import com.dnsite.zone.model.Zone;
 import utils.CustomConstraints.CaseMode;
 import utils.CustomConstraints.CheckCase;
@@ -38,6 +39,9 @@ public class Domain {
 
     @OneToMany(mappedBy = "domain", cascade = CascadeType.ALL)
     private Set<Zone> zones;
+
+    @OneToMany(mappedBy = "domain", cascade = CascadeType.ALL)
+    private Set<Record> records;
 
     public Long getId() {
         return id;
@@ -93,5 +97,21 @@ public class Domain {
 
     public void setAccount(String account) {
         this.account = account;
+    }
+
+    public Set<Zone> getZones() {
+        return zones;
+    }
+
+    public void setZones(Set<Zone> zones) {
+        this.zones = zones;
+    }
+
+    public Set<Record> getRecords() {
+        return records;
+    }
+
+    public void setRecords(Set<Record> records) {
+        this.records = records;
     }
 }

@@ -24,73 +24,153 @@
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+
+
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/react-table@latest/react-table.css"/>
+
+    <!-- JS -->
+    <script src="https://unpkg.com/react-table@latest/react-table.js"></script>
+    <script src="https://unpkg.com/react-table@latest/react-table.min.js"></script>
+
 </head>
 
 <body>
 
-    <div class="container">
+    <div id = "root"></div>
 
-        <form:form method="POST" action="/records" modelAttribute="recordForm" class="form-signin">
-            <h2 class="form-signin-heading">Create new record</h2>
-            <spring:bind path="name">
-                <div>
-                    <form:input type="text" path="name" class="form-control" placeholder="Name [Required]"></form:input>
-                    <form:errors path="name"></form:errors>
-                </div>
-            </spring:bind>
+    <script type="text/babel">
 
-            <spring:bind path="type">
-                <div>
-                    <form:input type="text" path="type" class="form-control" placeholder="Type [Required]"></form:input>
-                    <form:errors path="type"></form:errors>
-                </div>
-            </spring:bind>
+        const API = "http://localhost:8001/records/all";
 
-            <spring:bind path="content">
-                <div>
-                    <form:input type="text" path="content" class="form-control" placeholder="Content [Required]"></form:input>
-                    <form:errors path="content"></form:errors>
-                </div>
-            </spring:bind>
+        var ReactTable = window.ReactTable.default;
 
-            <spring:bind path="ttl">
-                <div>
-                    <form:input type="number" path="ttl" class="form-control" placeholder="TTL [Required]"></form:input>
-                    <form:errors path="ttl"></form:errors>
-                </div>
-            </spring:bind>
+        class RecordsTable extends React.Component {
 
-            <spring:bind path="priority">
-                <div>
-                    <form:input type="number" path="priority" class="form-control" placeholder="Priority [Required]"></form:input>
-                    <form:errors path="priority"></form:errors>
-                </div>
-            </spring:bind>
+            constructor(props) {
+                super(props);
 
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
-        </form:form>
+                this.state = {
+                    data : [],
+                    selected: {}
+                };
+            }
 
-    </div>
-    <!-- /container -->
+            componentDidMount() {
+                this.refreshRecordsTable();
+            }
 
-    <table>
-        <thead>
-            <tr> <th> Id </th> <th> Name </th> <th> Type </th> <th> Content </th> <th> TTL </th> <th> Priority </th> </tr>
-        </thead>
-        <tbody>
-        <c:forEach items="${recordsList}" var="record">
-            <tr>
-                <td> ${record.id} </td>
-                <td> ${record.name} </td>
-                <td> ${record.type} </td>
-                <td> ${record.content} </td>
-                <td> ${record.ttl} </td>
-                <td> ${record.priority} </td>
-            </tr>
-        </c:forEach>
-        </tbody>
-    </table>
+            toggleRow(recordId) {
+                console.log(this.state.selected);
+                const newSelected = Object.assign( {}, this.state.selected);
+                newSelected[recordId] = !this.state.selected[recordId];
+                this.setState({
+                    selected: newSelected,
+                });
+            }
 
+            renderEditable = cellInfo => {
+                return (
+                    <div
+                        style={{ backgroundColor: "#fafafa" }}
+                        contentEditable
+                        suppressContentEditableWarning
+                        onBlur={e => {
+                            const data = [...this.state.data];
+                            data[cellInfo.index][cellInfo.column.id] = e.target.innerHTML;
+                            this.setState({ data });
+                        }}
+                        dangerouslySetInnerHTML={{
+                            __html: this.state.data[cellInfo.index][cellInfo.column.id]
+                        }}
+                    />
+                );
+            };
+
+            renderTable() {
+                const columns = [
+                {
+                    Header : "Select",
+                    id : "checkbox",
+                    accessor: "",
+                    Cell: ({original}) => {
+                        return (
+                            <input
+                                type = "checkbox"
+                                className="checkbox"
+                                checked={this.state.selected[JSON.stringify(original.id)] === true}
+                                onChange = { () => this.toggleRow(JSON.stringify(original.id)) }
+                            />
+                        );
+                    },
+                    sortable: false,
+                    width: 45
+                },
+                {
+                    Header : "ID",
+                    accessor: 'id',
+                },
+                {
+                    Header : "Domain",
+                    accessor: 'domain',
+                    Cell: this.renderEditable
+                },
+                {
+                    Header : 'Name',
+                    accessor: 'name',
+                    Cell: this.renderEditable
+                },
+                {
+                    Header : 'Type',
+                    accessor: 'type',
+                    Cell: this.renderEditable
+                },
+                {
+                    Header : 'Content',
+                    accessor: 'content',
+                    Cell: this.renderEditable
+                },
+                {
+                    Header : 'TTL',
+                    accessor: 'ttl',
+                    Cell: this.renderEditable
+                }
+                ];
+
+                return (
+                    <ReactTable
+                        data={this.state.data}
+                        columns={columns}
+                    />
+                );
+            }
+
+            refreshRecordsTable() {
+                fetch(API)
+                    .then(response => {
+                        if (response.ok) {
+                            return response;
+                        }
+                    throw Error(response.status);
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        this.setState({data: data, selected: {}});
+                    })
+                .catch(error => console.log(error + " coś nie tak"));
+            }
+
+            render() {
+                return this.renderTable();
+            }
+        }
+
+        ReactDOM.render(<RecordsTable />, document.getElementById("root"));
+
+    </script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script src="${contextPath}/resources/js/bootstrap.min.js"></script>

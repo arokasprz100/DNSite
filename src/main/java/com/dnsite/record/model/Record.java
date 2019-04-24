@@ -1,5 +1,7 @@
 package com.dnsite.record.model;
 
+import com.dnsite.domain.model.Domain;
+
 import javax.persistence.*;
 
 @Entity
@@ -10,8 +12,9 @@ public class Record {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "domain_id")
-    private Long domainId; //TODO add Domain instead of Long, @NotNull
+    @ManyToOne
+    @JoinColumn
+    private Domain domain = null;
 
     private String name;
 
@@ -35,14 +38,6 @@ public class Record {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getDomainId() {
-        return domainId;
-    }
-
-    public void setDomainId(Long domainId) {
-        this.domainId = domainId;
     }
 
     public String getName() {
@@ -100,4 +95,14 @@ public class Record {
     public void setDisabled(Boolean disabled) {
         this.disabled = disabled;
     }
+
+    public Domain getDomain() {
+        return domain;
+    }
+
+    public void setDomain(Domain domain) {
+        this.domain = domain;
+    }
+
+
 }
