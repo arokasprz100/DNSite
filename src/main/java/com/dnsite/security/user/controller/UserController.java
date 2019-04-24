@@ -43,6 +43,7 @@ public class UserController {
         return "registration";
     }
 
+
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public String registration(@ModelAttribute("userForm") User userForm, BindingResult bindingResult, Model model){
         if (userService.findAll().size() != 0){
@@ -95,4 +96,10 @@ public class UserController {
     public String accessDeny(Model model) {
         return "403";
     }
+
+    @RequestMapping(value = {"/remind-passwd"}, method = RequestMethod.GET)
+    public String remindPasswd(Model model) {
+        return "remind-passwd";
+    }
+
 }

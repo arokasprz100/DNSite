@@ -1,3 +1,4 @@
+<%--suppress ALL --%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
@@ -14,7 +15,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Log in with your account</title>
+    <title>Reimnd password</title>
 
     <link href="${contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
     <link href="${contextPath}/resources/css/common.css" rel="stylesheet">
@@ -31,22 +32,30 @@
 <div class="container">
 
     <form method="POST" action="${contextPath}/login" class="form-signin">
-        <h2 class="form-heading">Log in</h2>
+        <h3 class="form-signin-heading">Remind your password</h3>
 
-        <div class="form-group ${error != null ? 'has-error' : ''}">
-            <span>${message}</span>
-            <input name="username" type="text" class="form-control" placeholder="Username"
-                   autofocus="true"/>
-            <input name="password" type="password" class="form-control" placeholder="Password"/>
-            <span>${error}</span>
-            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        <%--<spring:bind path="password">--%>
+            <%--<div class="form-group ${status.error ? 'has-error' : ''}">--%>
+                <%--<form:input type="password" path="password" class="form-control" placeholder="Password"></form:input>--%>
+                <%--<form:errors path="password"></form:errors>--%>
+            <%--</div>--%>
+        <%--</spring:bind>--%>
 
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Log In</button>
-            <h4 class="text-center"><a href="${contextPath}/registration">Create an account</a></h4>
-            <h4 class="text-center"><a href="${contextPath}/remind-passwd">Remind password</a></h4>
+        <%--<spring:bind path="passwordConfirm">--%>
+            <%--<div class="form-group ${status.error ? 'has-error' : ''}">--%>
+                <%--<form:input type="password" path="passwordConfirm" class="form-control"--%>
+                            <%--placeholder="Confirm your password"></form:input>--%>
+                <%--<form:errors path="passwordConfirm"></form:errors>--%>
+            <%--</div>--%>
+        <%--</spring:bind>--%>
 
-        </div>
+        <span>${message}</span>
+        <input name="email" type="text" class="form-control" placeholder="email"
+               autofocus="true"/>
 
+
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
     </form>
 
 </div>
