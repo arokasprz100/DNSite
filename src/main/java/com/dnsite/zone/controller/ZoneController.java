@@ -6,22 +6,41 @@ import com.dnsite.zone.service.ZoneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
+@RequestMapping("/zones")
 public class ZoneController {
-    private ZoneService zoneService;
 
     @Autowired
-    ZoneController(ZoneService zoneService){
-        this.zoneService = zoneService;
+    private ZoneService zoneService;
+
+    @GetMapping
+    public String getPage(Model model){
+        return "zones";
     }
 
-    @RequestMapping(value = "/zones", method = RequestMethod.GET)
-    public String listZones(Model model){
-        model.addAttribute("zonesList", zoneService.listAll());
-        model.addAttribute("iksde", "dzialaj");
-        return "zones";
+    @GetMapping
+    @RequestMapping("/all")
+    @ResponseBody
+    public List<Zone> findAll(){
+        return zoneService.findAll();
+    }
+
+    @GetMapping
+    @RequestMapping("/deleteInBatch")
+    @ResponseBody
+    public String deleteInBatch(@RequestBody List<Zone> zones){
+        zoneService.deleteInBatch(zones);
+        return "Zones deleted";
+    }
+
+    @PostMapping
+    @ResponseBody
+    public String saveDomains(@RequestBody List<Zone> zones){
+        zoneService.saveInBatch(zones);
+        return "Zones saved";
     }
 }

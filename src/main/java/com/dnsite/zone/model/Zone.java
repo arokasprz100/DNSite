@@ -1,21 +1,23 @@
 package com.dnsite.zone.model;
 
+import com.dnsite.domain.model.Domain;
+
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "\"zones\"")
+@Table(name = "zones")
 public class Zone {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    //@ManyToOne
-    @Column(name="domain_id")
-    private Long domain; //TODO add Domain instead of Long, @NotNull
+    @ManyToOne
+    @JoinColumn
+    private Domain domain = null;
 
-    //TODO add owner
+    @Column(name="owner")
+    private Integer owner = 0;
 
     @Column(name="comment")
     private String comment;
@@ -29,11 +31,11 @@ public class Zone {
         this.id = id;
     }
 
-    public Long getDomain() {
+    public Domain getDomain() {
         return domain;
     }
 
-    public void setDomain(Long domain) {
+    public void setDomain(Domain domain) {
         this.domain = domain;
     }
 
@@ -43,5 +45,13 @@ public class Zone {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public Integer getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Integer owner) {
+        this.owner = owner;
     }
 }
