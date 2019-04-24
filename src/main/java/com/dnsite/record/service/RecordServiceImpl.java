@@ -24,4 +24,8 @@ public class RecordServiceImpl implements RecordService {
     public List<Record> findAll() {
         return recordRepository.findAll();
     }
+
+    public void saveOrUpdate(List<Record> records) {
+        recordRepository.saveAll(records);
+    }
 }

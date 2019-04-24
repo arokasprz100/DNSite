@@ -8,4 +8,6 @@ public interface RecordService {
     void save(Record record);
 
     List<Record> findAll();
+
+    void saveOrUpdate(List<Record> records);
 }

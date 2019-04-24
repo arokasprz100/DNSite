@@ -1,5 +1,6 @@
 package com.dnsite.domain.model;
 
+import com.dnsite.record.model.Record;
 import com.dnsite.zone.model.Zone;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import utils.CustomConstraints.CaseMode;
@@ -39,6 +40,9 @@ public class Domain {
     @OneToMany(mappedBy = "domain", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Zone> zones;
+
+    @OneToMany(mappedBy = "domain", cascade = CascadeType.ALL)
+    private Set<Record> records;
 
     public Long getId() {
         return id;
@@ -102,5 +106,13 @@ public class Domain {
 
     public void setZones(Set<Zone> zones) {
         this.zones = zones;
+    }
+
+    public Set<Record> getRecords() {
+        return records;
+    }
+
+    public void setRecords(Set<Record> records) {
+        this.records = records;
     }
 }
