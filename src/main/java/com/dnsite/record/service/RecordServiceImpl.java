@@ -10,16 +10,8 @@ import java.util.List;
 @Service
 public class RecordServiceImpl implements RecordService {
 
-    private RecordRepository recordRepository;
-
     @Autowired
-    public RecordServiceImpl(RecordRepository recordRepository) {
-        this.recordRepository = recordRepository;
-    }
-
-    public void save (Record record) {
-        recordRepository.save(record);
-    }
+    private RecordRepository recordRepository;
 
     public List<Record> findAll() {
         return recordRepository.findAll();
@@ -27,5 +19,9 @@ public class RecordServiceImpl implements RecordService {
 
     public void saveOrUpdate(List<Record> records) {
         recordRepository.saveAll(records);
+    }
+
+    public void deleteInBatch(List<Record> records) {
+        recordRepository.deleteInBatch(records);
     }
 }

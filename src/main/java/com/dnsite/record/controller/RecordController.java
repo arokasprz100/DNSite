@@ -5,7 +5,6 @@ import com.dnsite.record.service.RecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,17 +33,15 @@ public class RecordController {
     @ResponseBody
     public String commitChanges(@RequestBody List<Record> records) {
         recordService.saveOrUpdate(records);
-        return "Records added";
+        return "Changes applied.";
     }
 
-    /*
     @PostMapping
-    public String addRecord(@ModelAttribute("recordForm") Record recordForm, BindingResult bindingResult, Model model) {
-
-        recordService.save(recordForm);
-        return "redirect:records";
+    @RequestMapping("/delete")
+    @ResponseBody
+    public String deleteRecords(@RequestBody List<Record> records) {
+        recordService.deleteInBatch(records);
+        return "Records deleted.";
     }
-    */
-
 
 }

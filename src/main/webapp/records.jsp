@@ -55,7 +55,9 @@
 
                 this.state = {
                     data : [],
-                    selected: {}
+                    selected: {},
+                    recordsToDelete : [],
+                    currentIndex : 0
                 };
             }
 
@@ -63,10 +65,10 @@
                 this.refreshRecordsTable();
             }
 
-            toggleRow(recordId) {
+            toggleRow(recordTableIndex) {
                 console.log(this.state.selected);
                 const newSelected = Object.assign( {}, this.state.selected);
-                newSelected[recordId] = !this.state.selected[recordId];
+                newSelected[recordTableIndex] = !this.state.selected[recordTableIndex];
                 this.setState({
                     selected: newSelected,
                 });
@@ -101,8 +103,8 @@
                             <input
                                 type = "checkbox"
                                 className="checkbox"
-                                checked={this.state.selected[JSON.stringify(original.id)] === true}
-                                onChange = { () => this.toggleRow(JSON.stringify(original.id)) }
+                                checked={this.state.selected[JSON.stringify(original.tableIndex)] === true}
+                                onChange = { () => this.toggleRow(JSON.stringify(original.tableIndex)) }
                             />
                         );
                     },
@@ -137,15 +139,94 @@
                     Header : 'TTL',
                     accessor: 'ttl',
                     Cell: this.renderEditable
-                }
+                },
+                {
+                    Header : 'Delete',
+                    accessor: '',
+                    Cell: ({original}) => {
+                        return (
+                            <button onClick = { () => this.deleteRecord(original) } > Delete </button>
+                        );
+                    },
+}
                 ];
 
                 return (
-                    <ReactTable
-                        data={this.state.data}
-                        columns={columns}
-                    />
+                    <div>
+                        <ReactTable
+                            data={this.state.data}
+                            columns={columns}
+                        />
+                        <button onClick={ () => this.addRecord() }> Add record </button>
+                        <button onClick={ () => this.commitChanges() }> Commit changes </button>
+                    </div>
                 );
+            }
+
+            deleteRecord = (original) => {
+                var array = [...this.state.data];
+                var index = array.indexOf(original)
+                if (index !== -1) {
+                    array.splice(index, 1);
+                    this.setState({data: array});
+                }
+
+                if (original.id != "") {
+                    this.setState( (previousState) => ( {
+                        recordsToDelete : [... previousState.recordsToDelete,
+                            original]
+                    }));
+                }
+
+                console.log(this.state.recordsToDelete);
+            }
+
+            commitChanges = () => {
+                console.log(this.state.data);
+                fetch('http://localhost:8001/records/commit', {
+                    method: 'post',
+                    body: JSON.stringify(this.state.data),
+                    headers: {'Content-Type': 'application/json'}
+                }).then((response) => {
+                    return response;
+                }).then((data) => {
+                    console.log('Complete', data);
+                    this.deleteRecordsFromDb();
+                });
+            }
+
+            deleteRecordsFromDb = () => {
+                fetch('http://localhost:8001/records/delete', {
+                    method: 'post',
+                    body: JSON.stringify(this.state.recordsToDelete),
+                    headers: {'Content-Type': 'application/json'}
+                }).then((response) => {
+                    return response;
+                }).then((data) => {
+                    console.log('Complete', data);
+                    this.setState({recordsToDelete : []});
+                });
+            }
+
+
+
+            addRecord = (event) => {
+                let currentTableIndex = this.state.currentIndex;
+
+                this.setState((previousState) => ( {
+                    data : [... previousState.data,
+                        {
+                            id : '',
+                            domain: '',
+                            name: '',
+                            type: '',
+                            content: '',
+                            ttl: '',
+                            tableIndex : currentTableIndex
+                        },
+                    ],
+                    currentIndex : currentTableIndex + 1
+                }));
             }
 
             refreshRecordsTable() {
@@ -158,7 +239,13 @@
                     })
                     .then(response => response.json())
                     .then(data => {
-                        this.setState({data: data, selected: {}});
+                        let currentTableIndex = this.state.currentIndex;
+                        data.map((record, index) => {
+                            record.tableIndex = currentTableIndex;
+                            currentTableIndex = currentTableIndex + 1;
+
+                        });
+                        this.setState({data: data, selected: {}, currentIndex : currentTableIndex});
                     })
                 .catch(error => console.log(error + " coś nie tak"));
             }
