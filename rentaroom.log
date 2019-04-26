@@ -1,0 +1,126 @@
+2019-04-19 10:39:19 INFO  UserController:53 - First user of database saved
+2019-04-19 10:39:19 INFO  UserController:59 - Another user want to join system
+2019-04-19 10:39:19 DEBUG UserValidatorTest:55 - org.springframework.validation.BeanPropertyBindingResult: 0 errors com.dnsite.security.user.model.User@4066c471
+2019-04-19 11:28:58 INFO  UserController:53 - First user of database saved
+2019-04-19 11:28:58 INFO  UserController:59 - Another user want to join system
+2019-04-19 11:28:58 DEBUG UserValidatorTest:55 - org.springframework.validation.BeanPropertyBindingResult: 0 errors com.dnsite.security.user.model.User@4066c471
+2019-04-19 13:07:57 INFO  UserController:55 - First user of database saved
+2019-04-19 13:07:57 INFO  UserController:61 - Another user want to join system
+2019-04-19 13:07:57 DEBUG UserValidatorTest:55 - org.springframework.validation.BeanPropertyBindingResult: 0 errors com.dnsite.security.user.model.User@5cdec700
+2019-04-19 13:11:48 INFO  UserController:55 - First user of database saved
+2019-04-19 13:11:48 INFO  UserController:61 - Another user want to join system
+2019-04-19 13:11:48 DEBUG UserValidatorTest:55 - org.springframework.validation.BeanPropertyBindingResult: 0 errors com.dnsite.security.user.model.User@6d026701
+2019-04-19 13:12:57 INFO  UserController:55 - First user of database saved
+2019-04-19 13:12:57 INFO  UserController:61 - Another user want to join system
+2019-04-19 13:12:57 DEBUG UserValidatorTest:55 - org.springframework.validation.BeanPropertyBindingResult: 0 errors com.dnsite.security.user.model.User@6d026701
+2019-04-19 13:16:21 INFO  UserController:55 - First user of database saved
+2019-04-19 13:16:21 INFO  UserController:61 - Another user want to join system
+2019-04-19 13:16:21 DEBUG UserValidatorTest:55 - org.springframework.validation.BeanPropertyBindingResult: 0 errors com.dnsite.security.user.model.User@6d026701
+2019-04-19 13:37:12 INFO  UserController:55 - First user of database saved
+2019-04-19 13:37:12 INFO  UserController:61 - Another user want to join system
+2019-04-19 13:37:12 DEBUG UserValidatorTest:55 - org.springframework.validation.BeanPropertyBindingResult: 0 errors com.dnsite.security.user.model.User@6d026701
+2019-04-19 13:40:01 INFO  UserController:55 - First user of database saved
+2019-04-19 13:40:39 INFO  UserController:61 - Another user want to join system
+2019-04-19 13:40:51 INFO  EmailServiceImpl:29 - Email was send successfully
+2019-04-19 13:40:51 INFO  UserController:64 - Email was send to verification
+2019-04-19 13:42:45 INFO  UserController:55 - First user of database saved
+2019-04-19 13:42:45 INFO  UserController:61 - Another user want to join system
+2019-04-19 13:42:45 DEBUG UserValidatorTest:55 - org.springframework.validation.BeanPropertyBindingResult: 0 errors com.dnsite.security.user.model.User@6d026701
+2019-04-19 13:45:24 INFO  UserController:61 - Another user want to join system
+2019-04-19 13:45:37 INFO  UserController:64 - Email was send to verification
+2019-04-19 14:13:39 INFO  UserController:55 - First user of database saved
+2019-04-19 14:13:39 INFO  UserController:61 - Another user want to join system
+2019-04-19 14:13:39 DEBUG UserValidatorTest:55 - org.springframework.validation.BeanPropertyBindingResult: 0 errors com.dnsite.security.user.model.User@6d026701
+2019-04-19 14:18:29 INFO  UserController:61 - Another user want to join system
+2019-04-19 14:18:42 INFO  UserController:64 - Email was send to verification
+2019-04-19 14:43:37 INFO  UserController:55 - First user of database saved
+2019-04-19 14:43:37 INFO  UserController:61 - Another user want to join system
+2019-04-19 14:43:37 DEBUG UserValidatorTest:55 - org.springframework.validation.BeanPropertyBindingResult: 0 errors com.dnsite.security.user.model.User@5cdec700
+2019-04-19 14:45:22 INFO  UserController:61 - Another user want to join system
+2019-04-19 14:45:36 INFO  UserController:64 - Email was send to verification
+2019-04-19 14:48:08 INFO  UserController:55 - First user of database saved
+2019-04-19 14:48:09 INFO  UserController:61 - Another user want to join system
+2019-04-19 14:48:09 DEBUG UserValidatorTest:55 - org.springframework.validation.BeanPropertyBindingResult: 0 errors com.dnsite.security.user.model.User@78aa1f72
+2019-04-19 14:49:43 INFO  UserController:61 - Another user want to join system
+2019-04-19 14:49:56 INFO  UserController:64 - Email was send to verification
+2019-04-19 14:52:26 INFO  UserController:55 - First user of database saved
+2019-04-19 14:52:26 INFO  UserController:61 - Another user want to join system
+2019-04-19 14:52:26 DEBUG UserValidatorTest:55 - org.springframework.validation.BeanPropertyBindingResult: 0 errors com.dnsite.security.user.model.User@6d026701
+2019-04-19 14:54:10 INFO  UserController:61 - Another user want to join system
+2019-04-19 14:54:23 INFO  UserController:64 - Email was send to verification
+2019-04-19 14:57:23 INFO  UserController:55 - First user of database saved
+2019-04-19 14:57:23 INFO  UserController:61 - Another user want to join system
+2019-04-19 14:57:23 DEBUG UserValidatorTest:55 - org.springframework.validation.BeanPropertyBindingResult: 0 errors com.dnsite.security.user.model.User@6d026701
+2019-04-19 15:00:06 INFO  UserController:61 - Another user want to join system
+2019-04-19 15:00:19 INFO  UserController:64 - Email was send to verification
+2019-04-19 15:13:41 INFO  UserController:55 - First user of database saved
+2019-04-19 15:13:41 INFO  UserController:61 - Another user want to join system
+2019-04-19 15:13:41 DEBUG UserValidatorTest:55 - org.springframework.validation.BeanPropertyBindingResult: 0 errors com.dnsite.security.user.model.User@5cdec700
+2019-04-21 10:52:45 INFO  UserController:62 - First user of database saved
+2019-04-21 10:52:45 INFO  UserController:64 - Another user want to join system
+2019-04-21 10:52:45 DEBUG UserValidatorTest:55 - org.springframework.validation.BeanPropertyBindingResult: 0 errors com.dnsite.security.user.model.User@5170bcf4
+2019-04-21 11:08:08 INFO  UserController:62 - First user of database saved
+2019-04-21 11:08:08 INFO  UserController:64 - Another user want to join system
+2019-04-21 11:08:08 DEBUG UserValidatorTest:55 - org.springframework.validation.BeanPropertyBindingResult: 0 errors com.dnsite.security.user.model.User@5170bcf4
+2019-04-21 11:10:25 INFO  UserController:62 - First user of database saved
+2019-04-21 11:10:25 INFO  UserController:64 - Another user want to join system
+2019-04-21 11:10:25 DEBUG UserValidatorTest:55 - org.springframework.validation.BeanPropertyBindingResult: 0 errors com.dnsite.security.user.model.User@2812b107
+2019-04-21 11:11:01 INFO  UserController:62 - First user of database saved
+2019-04-21 11:11:01 INFO  UserController:64 - Another user want to join system
+2019-04-21 11:11:01 DEBUG UserValidatorTest:55 - org.springframework.validation.BeanPropertyBindingResult: 0 errors com.dnsite.security.user.model.User@2812b107
+2019-04-21 11:14:03 INFO  UserController:62 - First user of database saved
+2019-04-21 11:14:30 INFO  UserController:64 - Another user want to join system
+2019-04-21 11:14:43 INFO  UserController:69 - Email was send to verification
+2019-04-21 11:17:00 INFO  UserController:62 - First user of database saved
+2019-04-21 11:17:00 INFO  UserController:64 - Another user want to join system
+2019-04-21 11:17:00 DEBUG UserValidatorTest:55 - org.springframework.validation.BeanPropertyBindingResult: 0 errors com.dnsite.security.user.model.User@2812b107
+2019-04-21 11:18:35 INFO  UserController:64 - Another user want to join system
+2019-04-21 11:18:48 INFO  UserController:69 - Email was send to verification
+2019-04-22 17:49:59 INFO  UserController:62 - First user of database saved
+2019-04-22 17:49:59 INFO  UserController:64 - Another user want to join system
+2019-04-22 17:49:59 DEBUG UserValidatorTest:55 - org.springframework.validation.BeanPropertyBindingResult: 0 errors com.dnsite.security.user.model.User@2812b107
+2019-04-22 17:54:19 INFO  UserController:62 - First user of database saved
+2019-04-22 17:54:19 INFO  UserController:64 - Another user want to join system
+2019-04-22 17:54:19 DEBUG UserValidatorTest:55 - org.springframework.validation.BeanPropertyBindingResult: 0 errors com.dnsite.security.user.model.User@2812b107
+2019-04-22 17:57:25 INFO  UserController:69 - First user of database saved
+2019-04-22 17:57:25 INFO  UserController:71 - Another user want to join system
+2019-04-22 17:57:25 DEBUG UserValidatorTest:55 - org.springframework.validation.BeanPropertyBindingResult: 0 errors com.dnsite.security.user.model.User@2812b107
+2019-04-22 18:15:32 INFO  UserController:63 - First user of database saved
+2019-04-22 18:15:32 INFO  UserController:65 - Another user want to join system
+2019-04-22 18:15:32 DEBUG UserValidatorTest:55 - org.springframework.validation.BeanPropertyBindingResult: 0 errors com.dnsite.security.user.model.User@2812b107
+2019-04-23 12:41:34 INFO  UserController:63 - First user of database saved
+2019-04-23 12:41:34 INFO  UserController:65 - Another user want to join system
+2019-04-23 12:41:34 DEBUG UserValidatorTest:55 - org.springframework.validation.BeanPropertyBindingResult: 0 errors com.dnsite.security.user.model.User@2812b107
+2019-04-23 12:48:03 INFO  UserController:63 - First user of database saved
+2019-04-23 12:48:03 INFO  UserController:65 - Another user want to join system
+2019-04-23 12:48:03 DEBUG UserValidatorTest:55 - org.springframework.validation.BeanPropertyBindingResult: 0 errors com.dnsite.security.user.model.User@2812b107
+2019-04-23 12:59:24 INFO  UserController:63 - First user of database saved
+2019-04-23 12:59:24 INFO  UserController:65 - Another user want to join system
+2019-04-23 12:59:24 DEBUG UserValidatorTest:55 - org.springframework.validation.BeanPropertyBindingResult: 0 errors com.dnsite.security.user.model.User@5170bcf4
+2019-04-24 20:02:47 INFO  UserController:63 - First user of database saved
+2019-04-24 20:02:47 INFO  UserController:65 - Another user want to join system
+2019-04-24 20:02:47 DEBUG UserValidatorTest:55 - org.springframework.validation.BeanPropertyBindingResult: 0 errors com.dnsite.security.user.model.User@df6620a
+2019-04-24 20:04:05 INFO  UserController:63 - First user of database saved
+2019-04-24 20:04:23 INFO  UserController:65 - Another user want to join system
+2019-04-24 20:04:37 INFO  UserController:70 - Email was send to verification
+2019-04-24 20:09:38 INFO  UserController:65 - Another user want to join system
+2019-04-24 20:09:51 INFO  UserController:70 - Email was send to verification
+2019-04-24 20:25:54 INFO  UserController:62 - First user of database saved
+2019-04-24 20:25:54 INFO  UserController:64 - Another user want to join system
+2019-04-24 20:25:54 DEBUG UserValidatorTest:55 - org.springframework.validation.BeanPropertyBindingResult: 0 errors com.dnsite.security.user.model.User@4e31276e
+2019-04-24 20:29:12 INFO  UserController:62 - First user of database saved
+2019-04-24 22:10:00 INFO  UserController:63 - First user of database saved
+2019-04-24 22:10:00 INFO  UserController:65 - Another user want to join system
+2019-04-24 22:10:00 DEBUG UserValidatorTest:55 - org.springframework.validation.BeanPropertyBindingResult: 0 errors com.dnsite.security.user.model.User@5170bcf4
+2019-04-25 00:42:13 INFO  UserController:63 - First user of database saved
+2019-04-25 00:42:13 INFO  UserController:65 - Another user want to join system
+2019-04-25 00:42:13 DEBUG UserValidatorTest:55 - org.springframework.validation.BeanPropertyBindingResult: 0 errors com.dnsite.security.user.model.User@2812b107
+2019-04-26 08:16:13 INFO  UserController:80 - First user of database saved
+2019-04-26 08:16:13 INFO  UserController:82 - Another user want to join system
+2019-04-26 08:16:13 DEBUG UserValidatorTest:55 - org.springframework.validation.BeanPropertyBindingResult: 0 errors com.dnsite.security.user.model.User@2931522b
+2019-04-26 08:34:42 INFO  UserController:86 - First user of database saved
+2019-04-26 08:34:42 INFO  UserController:88 - Another user want to join system
+2019-04-26 08:34:42 DEBUG UserValidatorTest:55 - org.springframework.validation.BeanPropertyBindingResult: 0 errors com.dnsite.security.user.model.User@2931522b
+2019-04-26 08:36:45 INFO  UserController:86 - First user of database saved
+2019-04-26 11:23:31 INFO  UserController:56 - Sending email with new password 
+2019-04-26 11:23:40 INFO  UserController:56 - Sending email with new password 
