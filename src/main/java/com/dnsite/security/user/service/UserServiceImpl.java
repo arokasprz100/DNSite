@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -48,5 +49,29 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findAll() {
         return userRepository.findAll();
+    }
+
+    @Override
+    public String generateTemporaryPassword(String username){
+        User user = findByUsername(username);
+        String tempPasswd = alphaNumericString();
+        user.setPassword(bCryptPasswordEncoder.encode(tempPasswd));
+        user.setRegistrationDate(new Date());
+        user.setLastLoginDate(new Date());
+        userRepository.save(user);
+
+        return tempPasswd;
+    }
+
+
+    private static String alphaNumericString() {
+        String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuwxyz";
+        Random rnd = new Random();
+        int len = rnd.nextInt(25);
+        StringBuilder sb = new StringBuilder(len);
+        for (int i = 0; i < len; i++) {
+            sb.append(AB.charAt(rnd.nextInt(AB.length())));
+        }
+        return sb.toString();
     }
 }

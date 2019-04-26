@@ -40,6 +40,8 @@ public class UserController {
         }
         model.addAttribute("userForm", new User());
 
+
+
         return "remind-passwd";
     }
 
@@ -48,6 +50,11 @@ public class UserController {
         if (userService.findAll().size() != 0){
             model.addAttribute("isNotFirstUser", true);
         }
+
+        String tempPasswd = userService.generateTemporaryPassword(userForm.getUsername());
+        emailService.sendTempPasswdMessage(userService.findByUsername(userForm.getUsername()).getEmail(), userForm.getUsername(), tempPasswd);
+
+
         return "redirect:/dnsite";
     }
 
@@ -57,7 +64,6 @@ public class UserController {
             model.addAttribute("isNotFirstUser", true);
         }
         model.addAttribute("userForm", new User());
-
         return "registration";
     }
 

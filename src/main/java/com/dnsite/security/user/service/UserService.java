@@ -16,4 +16,5 @@ public interface UserService {
     void updateUserRole(Long id, Role role);
 
     void deleteUserById(Long id);
+    String generateTemporaryPassword(String username);
 }
