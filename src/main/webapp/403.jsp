@@ -23,7 +23,7 @@
         flex-direction: column;
         text-align: center;
         min-height: 100vh;
-        background-image: url("./resources/background.png");
+        background-image: url("src/resources/background.png");
         padding-top: 25vh;
       }
       .error403 h1 {

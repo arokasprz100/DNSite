@@ -26,15 +26,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.cors().and().csrf().disable();
         http
                 .authorizeRequests()
-                .antMatchers("/resources/**", "/registration","/remind-passwd").permitAll()
-                .antMatchers("/dnsite/**").hasRole("ADMIN")
+                .antMatchers("/resources/**", "/registration").permitAll()
+                .antMatchers("/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/login")
-                .defaultSuccessUrl("/dnsite",true)
+                .defaultSuccessUrl("/",true)
                 .permitAll()
                 .and()
                 .logout()
@@ -48,7 +49,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/").permitAll()
                 .antMatchers("/h2/**").permitAll();
 
-        http.csrf().disable();
         http.headers().frameOptions().disable();
     }
 

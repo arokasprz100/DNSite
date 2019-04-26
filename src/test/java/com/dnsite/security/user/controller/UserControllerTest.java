@@ -49,14 +49,14 @@ public class UserControllerTest {
     }
 
     @Test
-    public void firstUserInDatabaseSaveTest() throws Exception {
+    public void firstUserInDatabaseSaveTest() {
         Mockito.when(bindingResult.hasErrors()).thenReturn(false);
         Mockito.when(userService.findAll()).thenReturn(Collections.emptyList());
-        assertEquals("redirect:/dnsite", userController.registration(user, bindingResult, model));
+        assertEquals("redirect:/", userController.registration(user, bindingResult, model));
     }
 
     @Test(expected = Exception.class)
-    public void notFirstUserInDatabaseNeedConfirmToSaveTest() throws Exception {
+    public void notFirstUserInDatabaseNeedConfirmToSaveTest() {
         Mockito.when(bindingResult.hasErrors()).thenReturn(false);
         Mockito.when(userService.findAll()).thenReturn(Collections.singletonList(new User()));
         assertEquals("redirect:/login", userController.registration(user, bindingResult, model));

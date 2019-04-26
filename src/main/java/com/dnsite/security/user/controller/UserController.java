@@ -97,7 +97,7 @@ public class UserController {
 
         securityService.autologin(userForm.getUsername(), userForm.getPasswordConfirm());
 
-        return "redirect:/dnsite";
+        return "redirect:/";
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
