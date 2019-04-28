@@ -1,5 +1,6 @@
 package com.dnsite.supermaster.service;
 
+import com.dnsite.history.service.HistoryService;
 import com.dnsite.supermaster.model.Supermaster;
 import com.dnsite.supermaster.model.SupermasterId;
 import com.dnsite.supermaster.repository.SupermasterRepository;
@@ -7,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class SupermasterServiceImpl implements SupermasterService {
@@ -15,9 +15,13 @@ public class SupermasterServiceImpl implements SupermasterService {
     @Autowired
     private SupermasterRepository supermasterRepository;
 
+    @Autowired
+    private HistoryService historyService;
+
     @Override
     public void delete(SupermasterId supermasterId) {
         supermasterRepository.deleteById(supermasterId);
+        historyService.save("SUPERMASTER","DELETE");
     }
 
     @Override
@@ -28,11 +32,13 @@ public class SupermasterServiceImpl implements SupermasterService {
     @Override
     public void deleteInBatch(List<Supermaster> supermasters) {
         supermasterRepository.deleteInBatch(supermasters);
+        historyService.save("SUPERMASTER","DELETE");
     }
 
     @Override
     public void saveInBatch(List<Supermaster> supermasters) {
         supermasterRepository.saveAll(supermasters);
+        historyService.save("SUPERMASTER","SAVE");
     }
 
 }
