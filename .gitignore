@@ -12,6 +12,7 @@ node_modules/
 
 # production
 /build
+build/
 .mv.db
 
 # misc
@@ -49,3 +50,6 @@ yarn-error.log*
 /.nb-gradle/
 
 **/META-INF/
+
+.log
+
