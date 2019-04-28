@@ -1,9 +1,9 @@
 package com.dnsite.domain.model;
 
+import com.dnsite.utils.CustomConstraints.CaseMode;
+import com.dnsite.utils.CustomConstraints.CheckCase;
 import com.dnsite.zone.model.Zone;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import utils.CustomConstraints.CaseMode;
-import utils.CustomConstraints.CheckCase;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
