@@ -40,8 +40,6 @@ public class UserController {
         }
         model.addAttribute("userForm", new User());
 
-
-
         return "remind-passwd";
     }
 
@@ -51,8 +49,8 @@ public class UserController {
             model.addAttribute("isNotFirstUser", true);
         }
 
-        String tempPasswd = userService.generateTemporaryPassword(userForm.getUsername());
-        emailService.sendTempPasswdMessage(userService.findByUsername(userForm.getUsername()).getEmail(), userForm.getUsername(), tempPasswd);
+        String tempPassword = userService.generateTemporaryPassword(userForm.getUsername());
+        emailService.sendTempPasswdMessage(userService.findByUsername(userForm.getUsername()).getEmail(), userForm.getUsername(), tempPassword);
 
 
         return "redirect:/dnsite";
@@ -93,7 +91,6 @@ public class UserController {
             log.info("Email was send to verification");
             return "redirect:/login";
         }
-
 
         securityService.autologin(userForm.getUsername(), userForm.getPasswordConfirm());
 

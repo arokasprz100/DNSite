@@ -27,10 +27,9 @@ public class AdministrationController {
     @RequestMapping(value = "/user-confirm/all", method = RequestMethod.GET)
     @ResponseBody
     public List<User> userConfirmation(){
-        List<User> usersToConfirm = userService.findAll()
+        return userService.findAll()
                 .stream().filter(a -> !a.getRole().equals("ADMIN"))
                 .collect(Collectors.toList());
-        return usersToConfirm;
     }
 
     @RequestMapping(value = "/user-confirm/{id}/accept", method = RequestMethod.GET)

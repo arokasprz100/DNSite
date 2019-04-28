@@ -54,13 +54,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public String generateTemporaryPassword(String username){
         User user = findByUsername(username);
-        String tempPasswd = alphaNumericString();
-        user.setPassword(bCryptPasswordEncoder.encode(tempPasswd));
+        String tempPassword = alphaNumericString();
+        user.setPassword(bCryptPasswordEncoder.encode(tempPassword));
         user.setRegistrationDate(new Date());
         user.setLastLoginDate(new Date());
         userRepository.save(user);
 
-        return tempPasswd;
+        return tempPassword;
     }
 
 
