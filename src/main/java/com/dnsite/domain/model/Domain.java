@@ -10,7 +10,9 @@ import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Entity
-@Table(name = "domains")
+@Table(name = "domains", indexes = {
+        @Index(columnList = "name", name="name_index")
+})
 public class Domain {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
