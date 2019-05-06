@@ -2,7 +2,8 @@
 !.mvn/wrapper/maven-wrapper.jar
 
 # dependencies
-/node_modules
+/node_modules/
+node_modules/
 /.pnp
 .pnp.js
 
@@ -11,6 +12,8 @@
 
 # production
 /build
+build/
+.mv.db
 
 # misc
 .DS_Store
@@ -47,3 +50,8 @@ yarn-error.log*
 /.nb-gradle/
 
 **/META-INF/
+
+.log
+
+*.db
+**/*.log

@@ -1,10 +1,9 @@
 package com.dnsite.domain.model;
 
 import com.dnsite.domainExtension.model.DomainExtension;
+import com.dnsite.utils.CustomConstraints.CaseMode;
+import com.dnsite.utils.CustomConstraints.CheckCase;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import utils.CustomConstraints.CaseMode;
-import utils.CustomConstraints.CheckCase;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Set;
@@ -26,16 +25,16 @@ public class Domain {
     @Column(name = "master")
     private String master;
 
-    @Column(name="last_check")
+    @Column(name = "last_check")
     private int lastCheck;
 
-    @Column(name="type")
+    @Column(name = "type")
     private String type;
 
-    @Column(name="notified_serial")
+    @Column(name = "notified_serial")
     private int notifiedSerial;
 
-    @Column(name="account")
+    @Column(name = "account")
     private String account;
 
     @OneToMany(mappedBy = "domain", cascade = CascadeType.ALL)

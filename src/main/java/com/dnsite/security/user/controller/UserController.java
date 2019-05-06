@@ -33,13 +33,35 @@ public class UserController {
     @Autowired
     private EmailService emailService;
 
+    @RequestMapping(value = "/remind-passwd", method = RequestMethod.GET)
+    public String remindPasswd(Model model) {
+        if (userService.findAll().size() != 0){
+            model.addAttribute("isNotFirstUser", true);
+        }
+        model.addAttribute("userForm", new User());
+
+        return "remind-passwd";
+    }
+
+    @RequestMapping(value = "/remind-passwd", method = RequestMethod.POST)
+    public String remindPasswd(@ModelAttribute("userForm") User userForm, BindingResult bindingResult, Model model) {
+        if (userService.findAll().size() != 0){
+            model.addAttribute("isNotFirstUser", true);
+        }
+
+        String tempPassword = userService.generateTemporaryPassword(userForm.getUsername());
+        emailService.sendTempPasswdMessage(userService.findByUsername(userForm.getUsername()).getEmail(), userForm.getUsername(), tempPassword);
+
+
+        return "redirect:/dnsite";
+    }
+
     @RequestMapping(value = "/registration", method = RequestMethod.GET)
     public String registration(Model model) {
         if (userService.findAll().size() != 0){
             model.addAttribute("isNotFirstUser", true);
         }
         model.addAttribute("userForm", new User());
-
         return "registration";
     }
 
@@ -70,7 +92,6 @@ public class UserController {
             return "redirect:/login";
         }
 
-
         securityService.autologin(userForm.getUsername(), userForm.getPasswordConfirm());
 
         return "redirect:/";
@@ -95,4 +116,6 @@ public class UserController {
     public String accessDeny(Model model) {
         return "403";
     }
+
+
 }
