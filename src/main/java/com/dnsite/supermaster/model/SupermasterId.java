@@ -1,31 +1,42 @@
 package com.dnsite.supermaster.model;
 
+import com.vladmihalcea.hibernate.type.basic.Inet;
+import org.hibernate.annotations.TypeDef;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
+@TypeDef(
+        name = "ipv4",
+        typeClass = PostgreSQLInetType.class,
+        defaultForType = Inet.class
+)
 public class SupermasterId implements Serializable {
 
-    @Column(name = "ip")
-    private String ip; // TODO: figure out how to map to INET Psql Type
+    @Column(
+            name = "ip",
+            columnDefinition = "inet"
+    )
+    private Inet ip;
 
     @Column(name = "nameserver")
     private String nameserver;
 
     public SupermasterId() {}
 
-    public SupermasterId(String ip, String nameserver) {
+    public SupermasterId(Inet ip, String nameserver) {
         this.ip = ip;
         this.nameserver = nameserver;
     }
 
-    public String getIp() {
+    public Inet getIp() {
         return ip;
     }
 
-    public void setIp(String ip) {
+    public void setIp(Inet ip) {
         this.ip = ip;
     }
 

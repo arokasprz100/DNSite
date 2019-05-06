@@ -3,6 +3,7 @@ package com.dnsite.supermaster.controller;
 import com.dnsite.supermaster.model.Supermaster;
 import com.dnsite.supermaster.model.SupermasterId;
 import com.dnsite.supermaster.service.SupermasterService;
+import com.vladmihalcea.hibernate.type.basic.Inet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,7 @@ import java.util.List;
 public class SupermasterController {
 
     @Autowired
-    SupermasterService supermasterService;
+    private SupermasterService supermasterService;
 
     @GetMapping
     @RequestMapping("/all")
@@ -26,7 +27,7 @@ public class SupermasterController {
     @GetMapping
     @RequestMapping("/delete/{ip}/{nameserver}")
     @ResponseBody
-    public String delete(@PathVariable("ip") String id, @PathVariable("nameserver") String nameserver) {
+    public String delete(@PathVariable("ip") Inet id, @PathVariable("nameserver") String nameserver) {
         SupermasterId supermasterId = new SupermasterId(id, nameserver);
         supermasterService.delete(supermasterId);
         return "Supermaster deleted";
