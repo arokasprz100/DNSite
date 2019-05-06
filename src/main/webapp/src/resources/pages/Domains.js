@@ -1,10 +1,10 @@
 import React from "react";
-import "../styles/Zones.css";
+import "../styles/Domains.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 
-class Zones extends React.Component {
+class Domains extends React.Component {
 
     render() {
         return (
@@ -16,13 +16,13 @@ class Zones extends React.Component {
     }
 
     onFormSubmit = () => {
-        this.refs.supTable.refreshZonesTable();
+        this.refs.supTable.refreshDomainsTable();
         console.log("Form submited");
     }
 
 }
 
-const API = "http://localhost:8001/zones/all";
+const API = "http://localhost:8001/domains/all";
 
 class Table extends React.Component {
 
@@ -36,17 +36,17 @@ class Table extends React.Component {
     }
 
     componentDidMount() {
-        this.refreshZonesTable();
+        this.refreshDomainsTable();
     }
 
-    deleteZones = (id) => {
+    deleteDomains = (id) => {
         let self = this;
-        let URI = 'http://localhost:8001/zones/delete/' + id;
+        let URI = 'http://localhost:8001/domains/delete/' + id;
         fetch(URI)
             .then(function(response) {
                 return response;
             }).then(function(data) {
-            self.refreshZonesTable();
+            self.refreshDomainsTable();
         });
     }
 
@@ -122,7 +122,7 @@ class Table extends React.Component {
         );
     }
 
-    refreshZonesTable() {
+    refreshDomainsTable() {
         fetch(API)
             .then(response => {
                 if (response.ok) {
@@ -150,7 +150,7 @@ class Form extends React.Component {
 
         this.state = {
 
-            zones : [
+            domains : [
 
                 {
                     id : '',
@@ -165,13 +165,13 @@ class Form extends React.Component {
             ]
         };
 
-        this.handleNewZones = this.handleNewZones.bind(this);
+        this.handleNewDomains = this.handleNewDomains.bind(this);
     }
 
     addZone = (event) => {
         event.preventDefault();
         this.setState((previousState) => ( {
-            zones : [... previousState.zones,
+            domains : [... previousState.domains,
                 {
                     id : '',
                     domain: {
@@ -186,25 +186,25 @@ class Form extends React.Component {
     }
 
     handleChange = (e) => {
-        let zones = [...this.state.zones];
+        let domains = [...this.state.domains];
         if(e.target.className == 'domainid'){
-            zones[e.target.dataset.id]['domain'].id = e.target.value;
+            domains[e.target.dataset.id]['domain'].id = e.target.value;
         } else if (e.target.className == 'domainname'){
-            zones[e.target.dataset.id]['domain'].name = e.target.value;
+            domains[e.target.dataset.id]['domain'].name = e.target.value;
         }else{
-            zones[e.target.dataset.id][e.target.className] = e.target.value;
+            domains[e.target.dataset.id][e.target.className] = e.target.value;
         }
-        this.setState({zones}, () => console.log(this.state.zones));
+        this.setState({domains}, () => console.log(this.state.domains));
     }
 
     render() {
-        let {zones} = this.state;
+        let {domains} = this.state;
         return (
             <form className="form-signin" style = {{width: '100%'}}>
                 <table className = "table" style = {{width: '100%'}} >
                     <tbody>
                     {
-                        zones.map((value, idx) => {
+                        domains.map((value, idx) => {
                             let id = 'id-${idx}',
                                 domainId= 'domainid-${idx}',
                                 domainName= 'domainname-${idx}',
@@ -218,7 +218,7 @@ class Form extends React.Component {
                                             name = {id}
                                             data-id = {idx}
                                             id = {id}
-                                            value={zones[idx].id}
+                                            value={domains[idx].id}
                                             className="id"
                                             placeholder="ID [auto]"
                                             onChange = {this.handleChange}
@@ -229,7 +229,7 @@ class Form extends React.Component {
                                             name = {domainId}
                                             data-id = {idx}
                                             id = {domainId}
-                                            value={zones[idx].domain.id}
+                                            value={domains[idx].domain.id}
                                             className="domainid"
                                             placeholder="Domain ID"
                                             onChange = {this.handleChange}
@@ -240,7 +240,7 @@ class Form extends React.Component {
                                             name = {domainName}
                                             data-id = {idx}
                                             id = {domainName}
-                                            value={zones[idx].domain.name}
+                                            value={domains[idx].domain.name}
                                             className="domainname"
                                             placeholder="Domain Name"
                                             onChange = {this.handleChange}
@@ -251,7 +251,7 @@ class Form extends React.Component {
                                             name = {owner}
                                             data-id = {idx}
                                             id = {owner}
-                                            value={zones[idx].owner}
+                                            value={domains[idx].owner}
                                             className="owner"
                                             placeholder="Owner"
                                             onChange = {this.handleChange}
@@ -262,7 +262,7 @@ class Form extends React.Component {
                                             name = {comment}
                                             data-id = {idx}
                                             id = {comment}
-                                            value={zones[idx].comment}
+                                            value={domains[idx].comment}
                                             className="comment"
                                             placeholder="Comment"
                                             onChange = {this.handleChange}
@@ -276,7 +276,7 @@ class Form extends React.Component {
                             <button className="btn btn-lg btn-primary btn-block" onClick = {this.addZone}> Add new zone </button>
                         </td>
                         <td>
-                            <button className="btn btn-lg btn-primary btn-block" onClick={(e) => this.handleNewZones(e)}>Submit</button>
+                            <button className="btn btn-lg btn-primary btn-block" onClick={(e) => this.handleNewDomains(e)}>Submit</button>
                         </td>
                         <td></td><td></td>
                     </tr>
@@ -286,19 +286,19 @@ class Form extends React.Component {
         )
     }
 
-    handleNewZones(event) {
+    handleNewDomains(event) {
         event.preventDefault();
-        fetch('http://localhost:8001/zones', {
+        fetch('http://localhost:8001/domains', {
             method: 'post',
-            body: JSON.stringify(this.state.zones),
+            body: JSON.stringify(this.state.domains),
             headers: {'Content-Type': 'application/json'}
         }).then((response) => {
             return response;
         }).then((data) => {
-            console.log('Created zones', data);
+            console.log('Created domains', data);
             this.setState(this.state = {
 
-                zones : [
+                domains : [
 
                     {
                         id : '',
@@ -318,4 +318,4 @@ class Form extends React.Component {
 
 }
 
-export default Zones;
+export default Domains;

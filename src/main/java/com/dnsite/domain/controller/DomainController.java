@@ -10,29 +10,29 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/domains")
+//@RequestMapping("/domains")
 public class DomainController {
 
     @Autowired
     DomainService domainService;
 
-    @GetMapping
-    public String getPage(Model model){return "domains";}
+//    @GetMapping
+//    public String getPage(Model model){return "domains";}
 
-    @GetMapping
-    @RequestMapping("/all")
+//    @GetMapping
+//    @RequestMapping("/all")
     @ResponseBody
     public List<Domain> findAll(){return domainService.findAll();}
 
-    @GetMapping
-    @RequestMapping("/deleteInBatch")
+//    @GetMapping
+//    @RequestMapping("/deleteInBatch")
     @ResponseBody
     public String deleteInBatch(@RequestBody List<Domain> domains){
         domainService.deleteInBatch(domains);
         return "Domains deleted";
     }
 
-    @PostMapping
+//    @PostMapping
     @ResponseBody
     public String saveDomains(@RequestBody List<Domain> domains){
         domainService.saveInBatch(domains);

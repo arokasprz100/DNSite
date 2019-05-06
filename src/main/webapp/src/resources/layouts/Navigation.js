@@ -5,7 +5,7 @@ import "../styles/Navigation.css";
 const navList = [
   { name: "home", path: "/dnsite", exact: true },
   { name: "supermasters", path: "/supermasters" },
-  { name: "zones", path: "/zones" },
+  { name: "domains", path: "/domains" },
   { name: "administration", path: "/administration" }
 ];
 

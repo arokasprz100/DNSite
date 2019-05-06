@@ -3,7 +3,7 @@ import "../styles/MainPage.css";
 import { Route, Switch } from "react-router-dom";
 import Home from "../pages/Home";
 import Supermasters from "../pages/Supermasters";
-import Zones from "../pages/Zones";
+import Domains from "../pages/Domains";
 import Administration from "../pages/Administration";
 
 const MainPage = () => {
@@ -12,7 +12,7 @@ const MainPage = () => {
       <Switch>
         <Route path="/dnsite" exact component={Home} />
         <Route path="/supermasters" component={Supermasters} />
-        <Route path="/zones" component={Zones} />
+        <Route path="/domains" component={Domains} />
         <Route path="/administration" component={Administration} />
       </Switch>
     </>
