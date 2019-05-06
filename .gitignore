@@ -53,3 +53,5 @@ yarn-error.log*
 
 .log
 
+*.db
+**/*.log
