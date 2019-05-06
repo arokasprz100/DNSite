@@ -41,7 +41,7 @@ class Table extends React.Component {
 
     deleteSupermaster = (ip, nameserver) => {
         let self = this;
-        let URI = 'http://localhost:8001/supermasters/delete/' + ip + '/' + nameserver;
+        let URI = 'http://localhost:8001/supermasters/delete/' + ip.address + '/' + nameserver;
         fetch(URI)
         .then(function(response) {
             return response;
@@ -80,7 +80,7 @@ class Table extends React.Component {
         },
         {
             Header : "IP",
-            accessor: 'supermasterId.ip',
+            accessor: 'supermasterId.ip.address',
         },
         {
             Header : "Nameserver",
@@ -122,6 +122,7 @@ class Table extends React.Component {
             })
             .then(response => response.json())
             .then(data => {
+                console.log(data);
                 this.setState({data: data, selected: {}});
             })
         .catch(error => console.log(error + " coś nie tak"));
@@ -143,7 +144,7 @@ class Form extends React.Component {
 
                 {
                     supermasterId : {
-                        ip : '',
+                        ip : {address : '' },
                         nameserver : ''
                     },
                     account: ''
@@ -161,7 +162,7 @@ class Form extends React.Component {
             supermasters : [... previousState.supermasters,
                 {
                     supermasterId : {
-                        ip : '',
+                        ip : {address : '' },
                         nameserver : ''
                     },
                     account: ''
@@ -205,7 +206,7 @@ class Form extends React.Component {
                                 name = {supermasterIpId}
                                 data-id = {idx}
                                 id = {supermasterIpId}
-                                value={supermasters[idx].supermasterId.ip}
+                                value={supermasters[idx].supermasterId.ip.address}
                                 className="ip"
                                 placeholder="IP [required]"
                                 onChange = {this.handleChange}
@@ -264,7 +265,7 @@ class Form extends React.Component {
             this.setState({supermasters : [
                 {
                     supermasterId : {
-                        ip : '',
+                        ip : {address : ''},
                         nameserver : ''
                     },
                     account: ''
