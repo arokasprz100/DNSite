@@ -18,6 +18,12 @@
 
     <link href="${contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
     <link href="${contextPath}/resources/css/common.css" rel="stylesheet">
+    <link href="${contextPath}/resources/styles/LogInPage.css" rel="stylesheet">
+    <link
+            href="https://fonts.googleapis.com/css?family=Montserrat:400,600,700,900|Varela"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -31,18 +37,29 @@
 <div class="container">
 
     <form method="POST" action="${contextPath}/login" class="form-signin">
-        <h2 class="form-heading">Log in</h2>
+        <h2 class="form-heading">Login</h2>
 
         <div class="form-group ${error != null ? 'has-error' : ''}">
             <span>${message}</span>
-            <input name="username" type="text" class="form-control" placeholder="Username"
+            <div class="login-textbox">
+                <i class="fas fa-user"></i>
+                <input name="username" type="text" class="form-control" placeholder="Username"
                    autofocus="true"/>
-            <input name="password" type="password" class="form-control" placeholder="Password"/>
+            </div>
+            <div class="login-textbox">
+                <i class="fas fa-lock"></i>
+                <input name="password" type="password" class="form-control" placeholder="Password"/>
+            </div>
             <span>${error}</span>
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Log In</button>
-            <h4 class="text-center"><a href="${contextPath}/registration">Create an account</a></h4>
+            <button class="btn btn-lg btn-primary btn-block login-button" type="submit">Sign in</button>
+            <div class="login-options">
+                <h4 class="text-center"><a href="${contextPath}/registration">Create an account</a></h4>
+                <h4 class="text-center">|</h4>
+                <h4 class="text-center"><a href="${contextPath}/remind-passwd">Remind password</a></h4>
+            </div>
+
         </div>
 
     </form>
