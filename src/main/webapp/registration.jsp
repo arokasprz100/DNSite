@@ -17,6 +17,7 @@
 
     <title>Create an account</title>
 
+    <link rel="shortcut icon" href="../resources/images/icon.png" />
     <link href="${contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
     <link href="${contextPath}/resources/css/common.css" rel="stylesheet">
     <link href="${contextPath}/resources/styles/Registration.css" rel="stylesheet">

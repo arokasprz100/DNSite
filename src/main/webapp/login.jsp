@@ -16,6 +16,7 @@
 
     <title>Log in with your account</title>
 
+    <link rel="shortcut icon" href="../resources/images/icon.png" />
     <link href="${contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
     <link href="${contextPath}/resources/css/common.css" rel="stylesheet">
     <link href="${contextPath}/resources/styles/LogInPage.css" rel="stylesheet">
