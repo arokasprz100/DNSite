@@ -20,6 +20,12 @@
     <link href="${contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
     <link href="${contextPath}/resources/css/common.css" rel="stylesheet">
     <link href="${contextPath}/resources/styles/remind-password.css" rel="stylesheet">
+    <link
+            href="https://fonts.googleapis.com/css?family=Montserrat:400,600,700,900|Varela"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -32,17 +38,20 @@
 
 <div class="container">
     <%--TODO informacja o wysłaniu maila z hasłem tymczasowym--%>
-    <form:form method="POST" modelAttribute="userForm" class="form-signin">
-        <h3 class="form-signin-heading">Remind your password</h3>
+    <form:form method="POST" modelAttribute="userForm" class="form-signin RemindPasswordForm">
+        <h3 class="form-signin-heading RemindPasswordHeading">Remind Password</h3>
 
         <spring:bind path="username">
             <div class="form-group ${status.error ? 'has-error' : ''}">
-                <form:input type="text" path="username" class="form-control" placeholder="Username"></form:input>
+                <div class="remind-textbox">
+                    <i class="fas fa-envelope"></i>
+                    <form:input type="text" path="username" class="form-control RemindPasswordControl" placeholder="Username"></form:input>
+                </div>
                 <form:errors path="username"></form:errors>
             </div>
         </spring:bind>
 
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
+        <button class="btn btn-lg btn-primary btn-block remind-button" type="submit">Submit</button>
     </form:form>
 
 

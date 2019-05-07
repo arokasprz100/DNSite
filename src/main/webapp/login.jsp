@@ -36,19 +36,19 @@
 
 <div class="container">
 
-    <form method="POST" action="${contextPath}/login" class="form-signin">
-        <h2 class="form-heading">Login</h2>
+    <form method="POST" action="${contextPath}/login" class="form-signin LoginForm">
+        <h2 class="form-heading LoginHeading">Login</h2>
 
         <div class="form-group ${error != null ? 'has-error' : ''}">
             <span>${message}</span>
             <div class="login-textbox">
                 <i class="fas fa-user"></i>
-                <input name="username" type="text" class="form-control" placeholder="Username"
+                <input name="username" type="text" class="form-control LoginControl" placeholder="Username"
                    autofocus="true"/>
             </div>
             <div class="login-textbox">
                 <i class="fas fa-lock"></i>
-                <input name="password" type="password" class="form-control" placeholder="Password"/>
+                <input name="password" type="password" class="form-control LoginControl" placeholder="Password"/>
             </div>
             <span>${error}</span>
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
