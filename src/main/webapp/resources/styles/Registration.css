@@ -29,7 +29,7 @@ body{
 }
 
 .RegistrationControl:focus{
-    box-shadow: none;
+    box-shadow: none !important;
 }
 
 .RegistrationButton{

@@ -3,6 +3,15 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  color: #151515;
+}
+
+header {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-image: url("../images/background.png");
 }
 
 main {
@@ -14,12 +23,12 @@ main {
 }
 
 article {
-  min-width: 50%;
-  max-width: 50%;
+  min-width: 70%;
+  max-width: 70%;
   flex-grow: 1;
   background-color: white;
 }
 
 aside {
-  min-width: 50%;
+  min-width: 70%;
 }

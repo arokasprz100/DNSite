@@ -11,11 +11,12 @@ main {
   flex-direction: column;
   align-items: center;
   flex-grow: 1;
+  min-height: 100%;
 }
 
 article {
-  min-width: 50%;
-  max-width: 50%;
+  min-width: 70%;
+  max-width: 70%;
   flex-grow: 1;
   background-color: white;
 }

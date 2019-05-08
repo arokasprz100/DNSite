@@ -43,16 +43,16 @@ body{
 }
 
 .LoginControl:focus{
-    box-shadow: none;
+    box-shadow: none !important;
 }
 
 .login-button{
-    border-radius: 0;
-    background: none;
-    border: 2px solid rgb(255, 88, 0);
-    padding: 4px 0;
-    transition: 0.3s;
-}
+     border-radius: 0;
+     background: none;
+     border: 2px solid rgb(255, 88, 0);
+     padding: 4px 0;
+     transition: 0.3s;
+ }
 
 .login-button:hover{
     background-color: rgb(255, 88, 0);

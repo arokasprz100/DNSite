@@ -12,3 +12,7 @@
   text-decoration: none;
   text-transform: uppercase;
 }
+
+.footer p {
+  margin-bottom: 0px;
+}
