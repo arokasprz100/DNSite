@@ -3,11 +3,11 @@ package com.dnsite.security.user.service;
 import com.dnsite.history.service.HistoryService;
 import com.dnsite.security.user.model.Role;
 import com.dnsite.security.user.model.User;
+import com.dnsite.security.user.utils.PasswordGenerator;
 import com.dnsite.security.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -61,24 +61,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public String generateTemporaryPassword(String username){
         User user = findByUsername(username);
-        String tempPassword = alphaNumericString();
+
+        PasswordGenerator passwordGenerator = new PasswordGenerator.PasswordGeneratorBuilder()
+                .useDigits(true)
+                .useLower(true)
+                .useUpper(true)
+                .build();
+        Random rnd = new Random();
+        int len = 7 + rnd.nextInt(15);
+        String tempPassword = passwordGenerator.generate(len);
+
         user.setPassword(bCryptPasswordEncoder.encode(tempPassword));
         user.setRegistrationDate(new Date());
         user.setLastLoginDate(new Date());
         userRepository.save(user);
-
         return tempPassword;
-    }
-
-
-    private static String alphaNumericString() {
-        String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuwxyz";
-        Random rnd = new Random();
-        int len = rnd.nextInt(25);
-        StringBuilder sb = new StringBuilder(len);
-        for (int i = 0; i < len; i++) {
-            sb.append(AB.charAt(rnd.nextInt(AB.length())));
-        }
-        return sb.toString();
     }
 }
