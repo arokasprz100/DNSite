@@ -39,67 +39,28 @@ public final class PasswordGenerator {
             this.usePunctuation = false;
         }
 
-        /**
-         * Set true in case you would like to include lower characters
-         * (abc...xyz). Default false.
-         *
-         * @param useLower true in case you would like to include lower
-         * characters (abc...xyz). Default false.
-         * @return the builder for chaining.
-         */
+
         public PasswordGeneratorBuilder useLower(boolean useLower) {
             this.useLower = useLower;
             return this;
         }
 
-        /**
-         * Set true in case you would like to include upper characters
-         * (ABC...XYZ). Default false.
-         *
-         * @param useUpper true in case you would like to include upper
-         * characters (ABC...XYZ). Default false.
-         * @return the builder for chaining.
-         */
         public PasswordGeneratorBuilder useUpper(boolean useUpper) {
             this.useUpper = useUpper;
             return this;
         }
 
-        /**
-         * Set true in case you would like to include digit characters (123..).
-         * Default false.
-         *
-         * @param useDigits true in case you would like to include digit
-         * characters (123..). Default false.
-         * @return the builder for chaining.
-         */
+
         public PasswordGeneratorBuilder useDigits(boolean useDigits) {
             this.useDigits = useDigits;
             return this;
         }
 
-
-
-        /**
-         * Get an object to use.
-         *
-         * @return the {@link gr.idrymavmela.business.lib.PasswordGenerator}
-         * object.
-         */
         public PasswordGenerator build() {
             return new PasswordGenerator(this);
         }
     }
 
-    /**
-     * This method will generate a password depending the use* properties you
-     * define. It will use the categories with a probability. It is not sure
-     * that all of the defined categories will be used.
-     *
-     * @param length the length of the password you would like to generate.
-     * @return a password that uses the categories you define when constructing
-     * the object with a probability.
-     */
     public String generate(int length) {
         // Argument Validation.
         if (length <= 0) {
