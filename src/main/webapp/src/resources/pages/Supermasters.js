@@ -52,9 +52,9 @@ class Table extends React.Component {
         });
     }
 
-    toggleRow(supermaster) {
+    toggleRow(supermasterTableIndex) {
         const newSelected = Object.assign( {}, this.state.selected);
-        newSelected[supermaster] = !this.state.selected[supermaster];
+        newSelected[supermasterTableIndex] = !this.state.selected[supermasterTableIndex];
         this.setState({
             selected: newSelected,
             selectAll: 2
@@ -86,13 +86,61 @@ class Table extends React.Component {
                         ip : {address : '' },
                         nameserver : ''
                     },
-                    account: ''
+                    account: '',
+                    tableIndex : currentTableIndex,
+                    commited : false
                 },
-                tableIndex : currentTableIndex
             ],
             currentIndex : currentTableIndex + 1
         }));
     }
+
+    getSelectedRows = () => {
+        return Object.keys(
+            Object.fromEntries(
+                Object.entries(this.state.selected).filter(([k,v]) => v === true)
+            )
+        ).map(Number);
+    }
+
+    getSelectedItems = (selectedRows) => {
+        return JSON.parse(JSON.stringify(this.state.data.filter(item => {
+            return (selectedRows.indexOf(item.tableIndex) != -1);
+        })));
+    }
+
+    deleteMultipleSupermasters = () => {
+        const selectedRows = this.getSelectedRows();
+        const toDelete = this.getSelectedItems(selectedRows).filter(item => item.commited == true);
+        const toKeep = this.state.data.filter(item => {
+            return (selectedRows.indexOf(item.tableIndex) === -1);
+        });
+
+        this.setState( (previousState) => ( {
+            recordsToDelete : [... previousState.recordsToDelete, ...toDelete],
+            data : toKeep,
+            selected: {},
+            selectAll: 0
+        }));
+    }
+
+    renderEditable = cellInfo => {
+        return (
+            <div
+                style={{ backgroundColor: "#fafafa" }}
+                contentEditable
+                suppressContentEditableWarning
+                onBlur={e => {
+                    const data = [...this.state.data];
+                    data[cellInfo.index][cellInfo.column.id] = e.target.innerHTML;
+                    this.setState({ data });
+                }}
+                dangerouslySetInnerHTML={{
+                    __html: this.state.data[cellInfo.index][cellInfo.column.id]
+                }}
+            />
+        );
+    };
 
     renderTable() {
         const columns = [
@@ -118,8 +166,8 @@ class Table extends React.Component {
                     <input
                         type = "checkbox"
                         className="checkbox"
-                        checked={this.state.selected[JSON.stringify(original)] === true}
-                        onChange = { () => this.toggleRow(JSON.stringify(original)) }
+                        checked={this.state.selected[original.tableIndex] === true}
+                        onChange = { () => this.toggleRow(original.tableIndex) }
                     />
                 );
             },
@@ -149,7 +197,10 @@ class Table extends React.Component {
                     <button onClick={ () => {this.deleteSupermaster(original.supermasterId.ip, original.supermasterId.nameserver)}}> Delete </button>
                 );
             },
-            sortable: false
+            sortable: false,
+            Footer : (
+                <button onClick= { () => this.deleteMultipleSupermasters() } > Delete selected </button>
+            )
         }
 
         ];
@@ -177,8 +228,13 @@ class Table extends React.Component {
             })
             .then(response => response.json())
             .then(data => {
-                console.log(data);
-                this.setState({data: data, selected: {}});
+                let currentTableIndex = this.state.currentIndex;
+                data.map((supermaster, index) => {
+                    supermaster.tableIndex = currentTableIndex;
+                    supermaster.commited = true;
+                    currentTableIndex = currentTableIndex + 1;
+                });
+                this.setState({data: data, selected: {}, currentIndex : currentTableIndex});
             })
         .catch(error => console.log(error + " coś nie tak"));
     }
