@@ -34,6 +34,7 @@ class Table extends React.Component {
             selected: {},
             selectAll : 0,
             currentIndex : 0,
+            recordsToDelete : [],
         };
     }
 
@@ -177,12 +178,10 @@ class Table extends React.Component {
         {
             Header : "IP",
             accessor: 'supermasterId.ip.address',
-            Cell: this.renderEditable
         },
         {
             Header : "Nameserver",
             accessor: 'supermasterId.nameserver',
-            Cell: this.renderEditable
         },
         {
             Header : "Account",
@@ -228,6 +227,7 @@ class Table extends React.Component {
             })
             .then(response => response.json())
             .then(data => {
+                console.log(data);
                 let currentTableIndex = this.state.currentIndex;
                 data.map((supermaster, index) => {
                     supermaster.tableIndex = currentTableIndex;
