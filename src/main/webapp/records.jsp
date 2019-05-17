@@ -57,7 +57,8 @@
                     data : [],
                     selected: {},
                     recordsToDelete : [],
-                    currentIndex : 0
+                    currentIndex : 0,
+                    selectAll : 0
                 };
             }
 
@@ -71,8 +72,70 @@
                 newSelected[recordTableIndex] = !this.state.selected[recordTableIndex];
                 this.setState({
                     selected: newSelected,
+                    selectAll: 2
                 });
             }
+
+            toggleSelectAll() {
+                let newSelected = {};
+
+                if (this.state.selectAll === 0) {
+                    this.state.data.forEach(x => {
+                        newSelected[x.tableIndex] = true;
+                    });
+                }
+
+                this.setState({
+                    selected: newSelected,
+                    selectAll: this.state.selectAll === 0 ? 1 : 0
+                });
+            }
+
+            getSelectedRows = () => {
+                return Object.keys(
+                    Object.fromEntries(
+                        Object.entries(this.state.selected).filter(([k,v]) => v === true)
+                    )
+                ).map(Number);
+            }
+
+            getSelectedItems = (selectedRows) => {
+                return JSON.parse(JSON.stringify(this.state.data.filter(item => {
+                    return (selectedRows.indexOf(item.tableIndex) != -1);
+                })));
+            }
+
+            getNotSelectedItems = (selectedRows) => {
+                return JSON.parse(JSON.stringify(this.state.data.filter(item => {
+                    return (selectedRows.indexOf(item.tableIndex) === -1);
+                })));
+            }
+
+            deleteMultipleRecords = () => {
+                const selectedRows = this.getSelectedRows();
+                const toDelete = this.getSelectedItems(selectedRows).filter(item => item.id != "");
+                const toKeep = this.state.data.filter(item => {
+                    return (selectedRows.indexOf(item.tableIndex) === -1);
+                });
+
+                this.setState( (previousState) => ( {
+                    recordsToDelete : [... previousState.recordsToDelete, ...toDelete],
+                    data : toKeep,
+                    selected: {},
+                    selectAll: 0
+                }));
+            }
+
+            setValueInAllSelected = (e) => {
+                let selectedRows = this.getSelectedRows();
+                let selectedItems = this.getSelectedItems(selectedRows);
+                selectedItems.map((row) => row[e.target.name] = e.target.value);
+                const notSelectedItems = this.getNotSelectedItems(selectedRows);
+                this.setState({
+                    data : [...selectedItems, ...notSelectedItems]
+                });
+            }
+
 
             renderEditable = cellInfo => {
                 return (
@@ -95,7 +158,20 @@
             renderTable() {
                 const columns = [
                 {
-                    Header : "Select",
+                    Header : x => {
+                        return (
+                            <input
+                                type="checkbox"
+                                checked={this.state.selectAll === 1}
+                                ref={input => {
+                                    if (input) {
+                                        input.indeterminate = this.state.selectAll === 2;
+                                    }
+                                }}
+                                onChange={() => this.toggleSelectAll()}
+                            />
+                        );
+                    },
                     id : "checkbox",
                     accessor: "",
                     Cell: ({original}) => {
@@ -109,6 +185,7 @@
                         );
                     },
                     sortable: false,
+                    filterable: false,
                     width: 45
                 },
                 {
@@ -116,29 +193,36 @@
                     accessor: 'id',
                 },
                 {
-                    Header : "Domain",
-                    accessor: 'domain',
-                    Cell: this.renderEditable
-                },
-                {
                     Header : 'Name',
                     accessor: 'name',
-                    Cell: this.renderEditable
+                    Cell: this.renderEditable,
+                    Footer : (
+                        <input type="text" name="name" onChange= {this.setValueInAllSelected} />
+                    )
                 },
                 {
                     Header : 'Type',
                     accessor: 'type',
-                    Cell: this.renderEditable
+                    Cell: this.renderEditable,
+                    Footer : (
+                        <input type="text" name="type" onChange= {this.setValueInAllSelected} />
+                    )
                 },
                 {
                     Header : 'Content',
                     accessor: 'content',
-                    Cell: this.renderEditable
+                    Cell: this.renderEditable,
+                    Footer : (
+                        <input type="text" name="content" onChange= {this.setValueInAllSelected} />
+                    )
                 },
                 {
                     Header : 'TTL',
                     accessor: 'ttl',
-                    Cell: this.renderEditable
+                    Cell: this.renderEditable,
+                    Footer : (
+                        <input type="text" name="ttl" onChange= {this.setValueInAllSelected} />
+                    )
                 },
                 {
                     Header : 'Delete',
@@ -148,6 +232,11 @@
                             <button onClick = { () => this.deleteRecord(original) } > Delete </button>
                         );
                     },
+                    sortable: false,
+                    filterable: false,
+                    Footer : (
+                        <button onClick= { () => this.deleteMultipleRecords() } > Delete selected </button>
+                    )
 }
                 ];
 
@@ -155,6 +244,7 @@
                     <div>
                         <ReactTable
                             data={this.state.data}
+                            filterable
                             columns={columns}
                         />
                         <button onClick={ () => this.addRecord() }> Add record </button>
@@ -182,7 +272,6 @@
             }
 
             commitChanges = () => {
-                console.log(this.state.data);
                 fetch('http://localhost:8001/records/commit', {
                     method: 'post',
                     body: JSON.stringify(this.state.data),
@@ -217,7 +306,6 @@
                     data : [... previousState.data,
                         {
                             id : '',
-                            domain: '',
                             name: '',
                             type: '',
                             content: '',

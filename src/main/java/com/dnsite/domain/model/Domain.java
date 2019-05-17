@@ -1,9 +1,11 @@
 package com.dnsite.domain.model;
 
 import com.dnsite.domainExtension.model.DomainExtension;
+import com.dnsite.record.model.Record;
 import com.dnsite.utils.CustomConstraints.CaseMode;
 import com.dnsite.utils.CustomConstraints.CheckCase;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Set;
@@ -41,9 +43,8 @@ public class Domain {
     @JsonIgnore
     private Set<DomainExtension> domainExtensions;
 
-    // TODO : fix
-    //@OneToMany(mappedBy = "domain", cascade = CascadeType.ALL)
-    //private Set<Record> records;
+    @OneToMany(mappedBy = "domain", cascade = CascadeType.MERGE)
+    private Set<Record> records;
 
     public Long getId() {
         return id;
@@ -108,7 +109,7 @@ public class Domain {
     public void setDomainExtensions(Set<DomainExtension> domainExtensions) {
         this.domainExtensions = domainExtensions;
     }
-/*
+
     public Set<Record> getRecords() {
         return records;
     }
@@ -116,5 +117,5 @@ public class Domain {
     public void setRecords(Set<Record> records) {
         this.records = records;
     }
-    */
+
 }

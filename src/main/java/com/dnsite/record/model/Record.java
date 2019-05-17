@@ -1,5 +1,7 @@
 package com.dnsite.record.model;
 
+import com.dnsite.domain.model.Domain;
+
 import javax.persistence.*;
 
 @Entity
@@ -10,14 +12,9 @@ public class Record {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    /*
     @ManyToOne
     @JoinColumn
     private Domain domain = null;
-    */
-
-    // TODO: fix
-    public String domain;
 
     private String name;
 
@@ -98,7 +95,7 @@ public class Record {
     public void setDisabled(Boolean disabled) {
         this.disabled = disabled;
     }
-/*
+
     public Domain getDomain() {
         return domain;
     }
@@ -106,6 +103,6 @@ public class Record {
     public void setDomain(Domain domain) {
         this.domain = domain;
     }
-*/
+
 
 }

@@ -31,7 +31,9 @@ class Table extends React.Component {
 
         this.state = {
             data : [],
-            selected: {}
+            selected: {},
+            selectAll : 0,
+            currentIndex : 0,
         };
     }
 
@@ -50,19 +52,65 @@ class Table extends React.Component {
         });
     }
 
-    toggleRow(supermasterId) {
-        console.log(this.state.selected);
+    toggleRow(supermaster) {
         const newSelected = Object.assign( {}, this.state.selected);
-        newSelected[supermasterId] = !this.state.selected[supermasterId];
+        newSelected[supermaster] = !this.state.selected[supermaster];
         this.setState({
             selected: newSelected,
+            selectAll: 2
         });
+    }
+
+    toggleSelectAll() {
+        let newSelected = {};
+
+        if (this.state.selectAll === 0) {
+            this.state.data.forEach(x => {
+                newSelected[x.tableIndex] = true;
+            });
+        }
+
+        this.setState({
+            selected: newSelected,
+            selectAll: this.state.selectAll === 0 ? 1 : 0
+        });
+    }
+
+    addSupermaster = (event) => {
+        let currentTableIndex = this.state.currentIndex;
+
+        this.setState((previousState) => ( {
+            data : [... previousState.data,
+                {
+                    supermasterId : {
+                        ip : {address : '' },
+                        nameserver : ''
+                    },
+                    account: ''
+                },
+                tableIndex : currentTableIndex
+            ],
+            currentIndex : currentTableIndex + 1
+        }));
     }
 
     renderTable() {
         const columns = [
         {
-            Header : "Select",
+            Header : x => {
+                return (
+                    <input
+                        type="checkbox"
+                        checked={this.state.selectAll === 1}
+                        ref={input => {
+                            if (input) {
+                                input.indeterminate = this.state.selectAll === 2;
+                            }
+                        }}
+                        onChange={() => this.toggleSelectAll()}
+                    />
+                );
+            },
             id : "checkbox",
             accessor: "",
             Cell: ({original}) => {
@@ -81,14 +129,17 @@ class Table extends React.Component {
         {
             Header : "IP",
             accessor: 'supermasterId.ip.address',
+            Cell: this.renderEditable
         },
         {
             Header : "Nameserver",
             accessor: 'supermasterId.nameserver',
+            Cell: this.renderEditable
         },
         {
             Header : "Account",
             accessor: "account",
+            Cell: this.renderEditable
         },
         {
             Header : "Delete",
@@ -104,11 +155,15 @@ class Table extends React.Component {
         ];
 
         return (
-            <ReactTable
-                data={this.state.data}
-                columns={columns}
-                defaultSorted={ [ { id : "account", desc: true} ] }
-            />
+            <div>
+                <ReactTable
+                    data={this.state.data}
+                    columns={columns}
+                    defaultSorted={ [ { id : "account", desc: true} ] }
+                />
+                <button onClick={ () => this.addSupermaster() }> Add supermaster </button>
+            </div>
+
         );
     }
 
