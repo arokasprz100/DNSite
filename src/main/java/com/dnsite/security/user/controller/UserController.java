@@ -35,9 +35,7 @@ public class UserController {
 
     @RequestMapping(value = "/remind-passwd", method = RequestMethod.GET)
     public String remindPasswd(Model model) {
-        if (userService.findAll().size() != 0){
-            model.addAttribute("isNotFirstUser", true);
-        }
+        addNotFirstUserToModel(model);
         model.addAttribute("userForm", new User());
 
         return "remind-passwd";
@@ -45,9 +43,7 @@ public class UserController {
 
     @RequestMapping(value = "/remind-passwd", method = RequestMethod.POST)
     public String remindPasswd(@ModelAttribute("userForm") User userForm, BindingResult bindingResult, Model model) {
-        if (userService.findAll().size() != 0){
-            model.addAttribute("isNotFirstUser", true);
-        }
+        addNotFirstUserToModel(model);
 
         String tempPassword = userService.setUserTemporaryPassword(userForm.getUsername());
         emailService.sendTempPasswdMessage(userService.findByUsername(userForm.getUsername()).getEmail(), userForm.getUsername(), tempPassword);
@@ -57,18 +53,14 @@ public class UserController {
 
     @RequestMapping(value = "/registration", method = RequestMethod.GET)
     public String registration(Model model) {
-        if (userService.findAll().size() != 0){
-            model.addAttribute("isNotFirstUser", true);
-        }
+        addNotFirstUserToModel(model);
         model.addAttribute("userForm", new User());
         return "registration";
     }
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public String registration(@ModelAttribute("userForm") User userForm, BindingResult bindingResult, Model model){
-        if (userService.findAll().size() != 0){
-            model.addAttribute("isNotFirstUser", true);
-        }
+        addNotFirstUserToModel(model);
 
         userValidator.validate(userForm, bindingResult);
 
@@ -77,17 +69,9 @@ public class UserController {
         }
 
         if (userService.findAll().size() == 0){
-            userForm.setRole(Role.ADMIN.getAuthority());
-            userService.save(userForm);
-
-            log.info("First user of database saved");
+            registerFirstUser(userForm);
         }else{
-            log.info("Another user want to join system");
-
-            emailService.sendConfirmMessage(userService.findByUsername(adminUsername).getEmail(), userForm.getUsername(), userForm.getEmail());
-            userForm.setRole(Role.USER.getAuthority());
-            userService.save(userForm);
-            log.info("Email was send to verification");
+            registerRegularUser(userForm);
             return "redirect:/login";
         }
 
@@ -116,5 +100,25 @@ public class UserController {
         return "403";
     }
 
+    private void addNotFirstUserToModel(Model model) {
+        if (userService.findAll().size() != 0) {
+            model.addAttribute("isNotFirstUser", true);
+        }
+    }
 
+    private void registerFirstUser(@ModelAttribute("userForm") User userForm) {
+        userForm.setRole(Role.ADMIN.getAuthority());
+        userService.save(userForm);
+
+        log.info("First user of database saved");
+    }
+
+    private void registerRegularUser(@ModelAttribute("userForm") User userForm) {
+        log.info("Another user want to join system");
+
+        emailService.sendConfirmMessage(userService.findByUsername(adminUsername).getEmail(), userForm.getUsername(), userForm.getEmail());
+        userForm.setRole(Role.USER.getAuthority());
+        userService.save(userForm);
+        log.info("Email was send to verification");
+    }
 }
