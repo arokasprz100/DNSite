@@ -49,9 +49,8 @@ public class UserController {
             model.addAttribute("isNotFirstUser", true);
         }
 
-        String tempPassword = userService.generateTemporaryPassword(userForm.getUsername());
+        String tempPassword = userService.setUserTemporaryPassword(userForm.getUsername());
         emailService.sendTempPasswdMessage(userService.findByUsername(userForm.getUsername()).getEmail(), userForm.getUsername(), tempPassword);
-
 
         return "redirect:/dnsite";
     }

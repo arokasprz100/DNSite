@@ -6,7 +6,7 @@ import static org.junit.Assert.*;
 public class PasswordGeneratorTest {
 
     @Test
-    public void generate() {
+    public void testPasswordGenerator(){
 
         PasswordGenerator passwordGenerator = new PasswordGenerator.PasswordGeneratorBuilder()
                 .useDigits(true)

@@ -59,9 +59,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String generateTemporaryPassword(String username){
+    public String setUserTemporaryPassword(String username){
         User user = findByUsername(username);
 
+        String tempPassword = generateTemporaryPassword();
+        user.setPassword(bCryptPasswordEncoder.encode(tempPassword));
+        user.setRegistrationDate(new Date());
+        user.setLastLoginDate(new Date());
+        userRepository.save(user);
+        return tempPassword;
+    }
+
+    private String generateTemporaryPassword(){
         PasswordGenerator passwordGenerator = new PasswordGenerator.PasswordGeneratorBuilder()
                 .useDigits(true)
                 .useLower(true)
@@ -69,12 +78,6 @@ public class UserServiceImpl implements UserService {
                 .build();
         Random rnd = new Random();
         int len = 7 + rnd.nextInt(15);
-        String tempPassword = passwordGenerator.generate(len);
-
-        user.setPassword(bCryptPasswordEncoder.encode(tempPassword));
-        user.setRegistrationDate(new Date());
-        user.setLastLoginDate(new Date());
-        userRepository.save(user);
-        return tempPassword;
+        return passwordGenerator.generate(len);
     }
 }
