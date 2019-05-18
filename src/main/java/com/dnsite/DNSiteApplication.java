@@ -1,5 +1,6 @@
 package com.dnsite;
 
+import javafx.application.Application;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -16,6 +17,14 @@ public class DNSiteApplication extends SpringBootServletInitializer {
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(DNSiteApplication.class, args);
+		synchronized (DNSiteApplication.class) {
+			Application.launch(StartUpTest.class);
+			StartUpTest startUpTest = StartUpTest.waitForStartUpTest();
+			startUpTest.printSomething();
+			System.setProperty("spring.datasource.username", startUpTest.getUsername());
+			//trzeba ustawic wszystkie property z palca
+			//dodac wszystko co potrzebne dla bazy
+			SpringApplication.run(DNSiteApplication.class, args);
+		}
 	}
 }

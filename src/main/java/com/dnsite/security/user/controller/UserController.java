@@ -33,6 +33,7 @@ public class UserController {
 
     @RequestMapping(value = "/remind-passwd", method = RequestMethod.GET)
     public String remindPasswd(Model model) {
+        System.out.println("DUPA: " + System.getProperty("spring.mail.username"));
         if (userService.findAll().size() != 0){
             model.addAttribute("isNotFirstUser", true);
         }
