@@ -34,8 +34,7 @@ public class EmailServiceImpl implements EmailService {
 
         }
         catch(MessagingException e){
-            System.out.println("Exception message: " + e.getMessage());
-            e.printStackTrace();
+            log.trace("Exception in sendConfirmMessage: " + e.getMessage(), e);
         }
 
         emailSender.send(message);
@@ -65,8 +64,7 @@ public class EmailServiceImpl implements EmailService {
 
         }
         catch(MessagingException e){
-            System.out.println("Exception message: " + e.getMessage());
-            e.printStackTrace();
+            log.trace("Exception in sendTempPasswdMessage: " + e.getMessage(), e);
         }
 
         emailSender.send(message);
