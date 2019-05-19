@@ -2,8 +2,6 @@ package com.dnsite;
 
 import com.dnsite.utils.hibernate.DbConfig;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -84,12 +82,10 @@ public class StartUpTest extends Application {
         hbBtn.getChildren().add(btn);
         grid.add(hbBtn, 1, 4);
 
-        btn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                dbConfig.setUsername(userTextField.getText());
-                dbConfig.setPassword(pwBox.getText());
-            }
+        btn.setOnAction(e -> {
+            dbConfig.setUsername(userTextField.getText());
+            dbConfig.setPassword(pwBox.getText());
+            stage.close();
         });
 
         Scene scene = new Scene(grid, 300, 275);
