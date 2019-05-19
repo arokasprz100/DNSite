@@ -101,6 +101,11 @@
 			<artifactId>gson</artifactId>
 			<version>2.7</version>
 		</dependency>
+		<dependency>
+			<groupId>org.yaml</groupId>
+			<artifactId>snakeyaml</artifactId>
+			<version>1.21</version>
+		</dependency>
 	</dependencies>
 
 	<build>

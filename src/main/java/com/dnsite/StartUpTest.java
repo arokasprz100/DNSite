@@ -1,5 +1,6 @@
 package com.dnsite;
 
+import com.dnsite.utils.hibernate.DbConfig;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -21,7 +22,7 @@ import javafx.stage.Stage;
 import java.util.concurrent.CountDownLatch;
 
 public class StartUpTest extends Application {
-    private String username;
+    private DbConfig dbConfig;
     public static final CountDownLatch latch = new CountDownLatch(1);
     public static StartUpTest startUpTest = null;
 
@@ -49,6 +50,7 @@ public class StartUpTest extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        dbConfig = new DbConfig();
         BorderPane pane = new BorderPane();
 //        Scene scene = new Scene(pane, 500, 500);
 //        stage.setScene(scene);
@@ -85,7 +87,8 @@ public class StartUpTest extends Application {
         btn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                username = userTextField.getText();
+                dbConfig.setUsername(userTextField.getText());
+                dbConfig.setPassword(pwBox.getText());
             }
         });
 
@@ -95,12 +98,12 @@ public class StartUpTest extends Application {
         stage.show();
     }
 
-    public String getUsername() {
-        return username;
+    public DbConfig getDbConfig() {
+        return dbConfig;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setDbConfig(DbConfig dbConfig) {
+        this.dbConfig = dbConfig;
     }
 
     public static void main(String[] args) {
