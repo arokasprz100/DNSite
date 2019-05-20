@@ -23,10 +23,10 @@ public class DNSiteApplication extends SpringBootServletInitializer {
 		synchronized (DNSiteApplication.class) {
 			DbConfigService dbConfigService = new DbConfigService();
 			if(dbConfigService.validateFirstUserExistance("dbconfig.yaml")){
-				Application.launch(StartUpTest.class);
-				StartUpTest startUpTest = StartUpTest.waitForStartUpTest();
-				dbConfigService.createYAMLFile(startUpTest.getDbConfig(), "dbconfig.yaml");
-				DbConfig dbConfig = startUpTest.getDbConfig();
+				Application.launch(DbConnectionGUI.class);
+				DbConnectionGUI dbConnectionGUI = DbConnectionGUI.waitForStartUpTest();
+				dbConfigService.createYAMLFile(dbConnectionGUI.getDbConfig(), "dbconfig.yaml");
+				DbConfig dbConfig = dbConnectionGUI.getDbConfig();
 				EnvironmentConfig.setDbOnFirstUse(dbConfig);
 			}else{
 				DbConfig dbConfig = dbConfigService.readDbConfigFile("dbconfig.yaml");
