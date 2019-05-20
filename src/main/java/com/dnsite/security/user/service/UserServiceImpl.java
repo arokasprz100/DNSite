@@ -1,5 +1,6 @@
 package com.dnsite.security.user.service;
 
+import com.dnsite.history.service.HistoryService;
 import com.dnsite.security.user.model.Role;
 import com.dnsite.security.user.model.User;
 import com.dnsite.security.user.repository.UserRepository;
@@ -20,12 +21,16 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @Autowired
+    private HistoryService historyService;
+
     @Override
     public void save(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setRegistrationDate(new Date());
         user.setLastLoginDate(new Date());
         userRepository.save(user);
+        historyService.save("USER", "INSERT");
     }
 
     @Override
@@ -33,18 +38,21 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.getOne(id);
         user.setRole(role.getAuthority());
         userRepository.save(user);
+        historyService.save("USER", "UPDATE");
     }
 
     @Override
     public void deleteUserById(Long id){
         User user = userRepository.getOne(id);
         userRepository.delete(user);
+        historyService.save("USER", "DELETE");
     }
 
     @Override
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
+
 
     @Override
     public List<User> findAll() {

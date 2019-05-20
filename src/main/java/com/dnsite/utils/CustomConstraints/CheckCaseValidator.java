@@ -37,4 +37,12 @@ public class CheckCaseValidator implements ConstraintValidator<CheckCase, String
 
         return isValid;
     }
+
+    public CaseMode getCaseMode() {
+        return caseMode;
+    }
+
+    public void setCaseMode(CaseMode caseMode) {
+        this.caseMode = caseMode;
+    }
 }

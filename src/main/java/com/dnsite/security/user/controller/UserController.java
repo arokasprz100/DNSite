@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class UserController {
     private final static Logger log = Logger.getLogger(UserController.class);
 
-    private final String adminUsername = "Admin";
-
     @Autowired
     private UserService userService;
 
@@ -84,8 +82,9 @@ public class UserController {
             log.info("First user of database saved");
         }else{
             log.info("Another user want to join system");
-
-            emailService.sendConfirmMessage(userService.findByUsername(adminUsername).getEmail(), userForm.getUsername(), userForm.getEmail());
+            userService.findAll().stream()
+                    .filter(a -> a.getRole().equals("ADMIN"))
+                    .forEach(a -> emailService.sendConfirmMessage(a.getEmail(), userForm.getUsername(), userForm.getEmail()));
             userForm.setRole(Role.USER.getAuthority());
             userService.save(userForm);
             log.info("Email was send to verification");

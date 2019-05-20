@@ -51,7 +51,7 @@ yarn-error.log*
 
 **/META-INF/
 
-.log
+*.log
 
 *.db
 **/*.log
