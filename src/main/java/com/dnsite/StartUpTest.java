@@ -50,8 +50,6 @@ public class StartUpTest extends Application {
     public void start(Stage stage) throws Exception {
         dbConfig = new DbConfig();
         BorderPane pane = new BorderPane();
-//        Scene scene = new Scene(pane, 500, 500);
-//        stage.setScene(scene);
 
         Label label = new Label("Hello");
         GridPane grid = new GridPane();
@@ -86,6 +84,7 @@ public class StartUpTest extends Application {
             dbConfig.setUsername(userTextField.getText());
             dbConfig.setPassword(pwBox.getText());
             stage.close();
+            //test connection
         });
 
         Scene scene = new Scene(grid, 300, 275);

@@ -3,10 +3,11 @@ package com.dnsite.utils.hibernate;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
+import java.util.Objects;
 
 public class DbConfigService {
-    public boolean validateFirstUserExistance(){
-        File f = new File("dbconfig.yaml");
+    public boolean validateFirstUserExistance(String fileName){
+        File f = new File(fileName);
         // config file not exists
         if(f.isFile()){
             return false;
@@ -14,11 +15,11 @@ public class DbConfigService {
         return true;
     }
 
-    public void createYAMLFile(DbConfig user){
+    public void createYAMLFile(DbConfig user, String fileName){
         Yaml yaml = new Yaml();
         String output = yaml.dump(user);
         byte[] sourceByte = output.getBytes();
-        File file = new File("dbconfig.yaml");
+        File file = new File(fileName);
         if (!file.exists()) {
             try {
                 file.createNewFile();
@@ -26,7 +27,7 @@ public class DbConfigService {
                 e.printStackTrace();
             }
         }
-        FileOutputStream fileOutputStream = null;
+        FileOutputStream fileOutputStream;
         try {
             fileOutputStream = new FileOutputStream(file);
             fileOutputStream.write(sourceByte);
@@ -36,26 +37,24 @@ public class DbConfigService {
         }
     }
 
-    public DbConfig readDbConfigFile(){
+    public DbConfig readDbConfigFile(String fileName){
         Yaml yaml = new Yaml();
         try {
-            waitForFileExists("dbconfig.yaml");
+            waitForFileExists(fileName);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
         InputStream ios = null;
         try {
-            ios = new FileInputStream(new File("dbconfig.yaml"));
+            ios = new FileInputStream(new File(fileName));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
 
         DbConfig obj = yaml.load(ios);
-        System.out.println("DUPA");
-        System.out.println(obj.getUsername());
         try {
-            ios.close();
+            Objects.requireNonNull(ios).close();
         } catch (IOException e) {
             e.printStackTrace();
         }

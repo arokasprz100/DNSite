@@ -2,6 +2,7 @@ package com.dnsite;
 
 import com.dnsite.utils.hibernate.DbConfig;
 import com.dnsite.utils.hibernate.DbConfigService;
+import com.dnsite.utils.hibernate.EnvironmentConfig;
 import javafx.application.Application;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,37 +22,17 @@ public class DNSiteApplication extends SpringBootServletInitializer {
 	public static void main(String[] args) {
 		synchronized (DNSiteApplication.class) {
 			DbConfigService dbConfigService = new DbConfigService();
-
-			if(dbConfigService.validateFirstUserExistance()){
+			if(dbConfigService.validateFirstUserExistance("dbconfig.yaml")){
 				Application.launch(StartUpTest.class);
 				StartUpTest startUpTest = StartUpTest.waitForStartUpTest();
-				startUpTest.printSomething();
-				dbConfigService.createYAMLFile(startUpTest.getDbConfig());
+				dbConfigService.createYAMLFile(startUpTest.getDbConfig(), "dbconfig.yaml");
 				DbConfig dbConfig = startUpTest.getDbConfig();
-				System.setProperty("spring.datasource.username", dbConfig.getUsername());
-				System.setProperty("spring.datasource.password", dbConfig.getPassword());
+				EnvironmentConfig.setDbOnFirstUse(dbConfig);
 			}else{
-				DbConfig dbConfig = dbConfigService.readDbConfigFile();
-				System.setProperty("spring.datasource.username", dbConfig.getUsername());
-				System.setProperty("spring.datasource.password", dbConfig.getPassword());
+				DbConfig dbConfig = dbConfigService.readDbConfigFile("dbconfig.yaml");
+				EnvironmentConfig.setPropertiesIFDbWasConfigured(dbConfig);
 			}
-			System.setProperty("spring.mvc.view.prefix", "/");
-			System.setProperty("spring.mvc.view.suffix", ".jsp");
-			System.setProperty("server.port", "8001");
-			System.setProperty("spring.h2.console.enabled", "true");
-			System.setProperty("spring.h2.console.path", "/h2");
-			System.setProperty("spring.datasource.url", "jdbc:h2:file:./test");
-			System.setProperty("spring.datasource.url-class-name", "org.h2.Driver");
-			System.setProperty("spring.jpa.hibernate.ddl-auto", "update");
-			System.setProperty("spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation", "true");
-			System.setProperty("spring.jpa.show-sql", "true");
-			System.setProperty("spring.messages.basename", "validation");
-			System.setProperty("spring.mail.host", "smtp.gmail.com");
-			System.setProperty("spring.mail.port", "587");
-			System.setProperty("spring.mail.username", "dnsiteofficial@gmail.com");
-			System.setProperty("spring.mail.password", "dnsite123");
-			System.setProperty("spring.mail.properties.mail.smtp.auth", "true");
-			System.setProperty("spring.mail.properties.mail.smtp.starttls.enable", "true");
+			EnvironmentConfig.setCommonProperties();
 
 			SpringApplication.run(DNSiteApplication.class, args);
 		}
