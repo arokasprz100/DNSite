@@ -17,6 +17,9 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.concurrent.CountDownLatch;
 
 public class DbConnectionGUI extends Application {
@@ -82,27 +85,54 @@ public class DbConnectionGUI extends Application {
         Label dbport = new Label("DB port:");
         grid.add(dbport, 0, 4);
 
-        PasswordField dbportTextField = new PasswordField();
+        TextField dbportTextField = new TextField();
         grid.add(dbportTextField, 1, 4);
+        pane.setCenter(label);
+
+        Label dbname = new Label("DB name:");
+        grid.add(dbname, 0, 5);
+
+        TextField dbNameTextField = new TextField();
+        grid.add(dbNameTextField, 1, 5);
         pane.setCenter(label);
 
         Button btn = new Button("Sign in");
         HBox hbBtn = new HBox(10);
         hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
         hbBtn.getChildren().add(btn);
-        grid.add(hbBtn, 1, 5);
+        grid.add(hbBtn, 1, 6);
+        Text error = new Text();
+        error.setText("There was an error while connectiong to database");
 
         btn.setOnAction(e -> {
             dbConfig.setUsername(userTextField.getText());
             dbConfig.setPassword(pwBox.getText());
-            stage.close();
-            //test connection
+            dbConfig.setDbPort(dbNameTextField.getText());
+            dbConfig.setDbName(dbNameTextField.getText());
+            dbConfig.setHostname(hostnameTextField.getText());
+            try {
+                testDbConnection();
+                stage.close();
+            } catch (SQLException e1) {
+
+                grid.add(error, 1, 7);
+                e1.printStackTrace();
+            }
         });
 
-        Scene scene = new Scene(grid, 300, 275);
+        Scene scene = new Scene(grid, 800, 600);
         stage.setScene(scene);
 
         stage.show();
+    }
+
+    public void testDbConnection() throws SQLException {
+        synchronized (this){
+            Connection conn = DriverManager.getConnection("jdbc:postgresql://" + dbConfig.getHostname() + ":" + dbConfig.getDbPort() + "/" + dbConfig.getDbName()
+                    , dbConfig.getUsername()
+                    , dbConfig.getPassword());
+            conn.isClosed();
+        }
     }
 
     public DbConfig getDbConfig() {

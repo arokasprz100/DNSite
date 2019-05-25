@@ -10,6 +10,8 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.scheduling.annotation.EnableAsync;
 
+import java.sql.SQLException;
+
 @SpringBootApplication
 @EnableAsync
 public class DNSiteApplication extends SpringBootServletInitializer {
@@ -25,16 +27,28 @@ public class DNSiteApplication extends SpringBootServletInitializer {
 			if(dbConfigService.validateFirstUserExistance("dbconfig.yaml")){
 				Application.launch(DbConnectionGUI.class);
 				DbConnectionGUI dbConnectionGUI = DbConnectionGUI.waitForStartUpTest();
+				validateProperEndOfInitialization(dbConnectionGUI);
 				dbConfigService.createYAMLFile(dbConnectionGUI.getDbConfig(), "dbconfig.yaml");
 				DbConfig dbConfig = dbConnectionGUI.getDbConfig();
-				EnvironmentConfig.setDbOnFirstUse(dbConfig);
+				EnvironmentConfig.setDBProperties(dbConfig);
 			}else{
 				DbConfig dbConfig = dbConfigService.readDbConfigFile("dbconfig.yaml");
-				EnvironmentConfig.setPropertiesIFDbWasConfigured(dbConfig);
+				EnvironmentConfig.setDBProperties(dbConfig);
 			}
 			EnvironmentConfig.setCommonProperties();
 
 			SpringApplication.run(DNSiteApplication.class, args);
+		}
+	}
+
+	private static void validateProperEndOfInitialization(DbConnectionGUI dbConnectionGUI) {
+		if(dbConnectionGUI.getDbConfig().getUsername().isEmpty()){
+			System.exit(1);
+		}
+		try {
+			dbConnectionGUI.testDbConnection();
+		} catch (SQLException e) {
+			System.exit(1);
 		}
 	}
 

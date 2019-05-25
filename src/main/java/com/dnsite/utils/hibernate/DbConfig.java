@@ -7,16 +7,9 @@ public class DbConfig {
 
     private String hostname;
 
-    private Long dbPort;
+    private String dbPort;
 
-    private String database;
-
-
-    private String hostmaster;
-
-    private String primaryNameServer;
-
-    private String secondNameServer;
+    private String dbName;
 
     public String getUsername() {
         return username;
@@ -42,43 +35,19 @@ public class DbConfig {
         this.hostname = hostname;
     }
 
-    public Long getDbPort() {
+    public String getDbPort() {
         return dbPort;
     }
 
-    public void setDbPort(Long dbPort) {
+    public void setDbPort(String dbPort) {
         this.dbPort = dbPort;
     }
 
-    public String getDatabase() {
-        return database;
+    public String getDbName() {
+        return dbName;
     }
 
-    public void setDatabase(String database) {
-        this.database = database;
-    }
-
-    public String getHostmaster() {
-        return hostmaster;
-    }
-
-    public void setHostmaster(String hostmaster) {
-        this.hostmaster = hostmaster;
-    }
-
-    public String getPrimaryNameServer() {
-        return primaryNameServer;
-    }
-
-    public void setPrimaryNameServer(String primaryNameServer) {
-        this.primaryNameServer = primaryNameServer;
-    }
-
-    public String getSecondNameServer() {
-        return secondNameServer;
-    }
-
-    public void setSecondNameServer(String secondNameServer) {
-        this.secondNameServer = secondNameServer;
+    public void setDbName(String dbName) {
+        this.dbName = dbName;
     }
 }
