@@ -107,7 +107,7 @@ public class DbConnectionGUI extends Application {
         btn.setOnAction(e -> {
             dbConfig.setUsername(userTextField.getText());
             dbConfig.setPassword(pwBox.getText());
-            dbConfig.setDbPort(dbNameTextField.getText());
+            dbConfig.setDbPort(dbportTextField.getText());
             dbConfig.setDbName(dbNameTextField.getText());
             dbConfig.setHostname(hostnameTextField.getText());
             try {
