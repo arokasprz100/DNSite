@@ -10,16 +10,9 @@ class Supermasters extends Component {
         return (
             <div>
                 <Table ref="supTable"/>
-                <Form onSubmit = {this.onFormSubmit}/>
             </div>
         );
     }
-
-    onFormSubmit = () => {
-        this.refs.supTable.refreshSupermastersTable();
-        console.log("Form submited");
-    }
-
 }
 
 const API = "http://localhost:8001/supermasters/all";
@@ -42,15 +35,20 @@ class Table extends React.Component {
         this.refreshSupermastersTable();
     }
 
-    deleteSupermaster = (ip, nameserver) => {
-        let self = this;
-        let URI = 'http://localhost:8001/supermasters/delete/' + ip.address + '/' + nameserver;
-        fetch(URI)
-        .then(function(response) {
-            return response;
-        }).then(function(data) {
-            self.refreshSupermastersTable();
-        });
+    deleteSupermaster = (original) => {
+        var array = [...this.state.data];
+        var index = array.indexOf(original)
+        if (index !== -1) {
+            array.splice(index, 1);
+            this.setState({data: array});
+        }
+
+        if (original.committed === true) {
+            this.setState( (previousState) => ( {
+                recordsToDelete : [... previousState.recordsToDelete,
+                    original]
+            }));
+        }
     }
 
     toggleRow(supermasterTableIndex) {
@@ -81,16 +79,16 @@ class Table extends React.Component {
         let currentTableIndex = this.state.currentIndex;
 
         this.setState((previousState) => ( {
-            data : [... previousState.data,
+            data : [...previousState.data,
                 {
                     supermasterId : {
-                        ip : {address : '' },
+                        ip : { address : '' },
                         nameserver : ''
                     },
                     account: '',
                     tableIndex : currentTableIndex,
-                    commited : false
-                },
+                    committed : false
+                }
             ],
             currentIndex : currentTableIndex + 1
         }));
@@ -112,7 +110,7 @@ class Table extends React.Component {
 
     deleteMultipleSupermasters = () => {
         const selectedRows = this.getSelectedRows();
-        const toDelete = this.getSelectedItems(selectedRows).filter(item => item.commited == true);
+        const toDelete = this.getSelectedItems(selectedRows).filter(item => item.committed == true);
         const toKeep = this.state.data.filter(item => {
             return (selectedRows.indexOf(item.tableIndex) === -1);
         });
@@ -124,6 +122,47 @@ class Table extends React.Component {
             selectAll: 0
         }));
     }
+
+    renderEditableWhenNotCommitted = cellInfo => {
+        const data = [...this.state.data];
+
+        if (data[cellInfo.index].committed === true)
+        {
+            return (
+                <div
+                    dangerouslySetInnerHTML={{
+                        __html: (cellInfo.column.id === 'supermasterId.nameserver') ?
+                            this.state.data[cellInfo.index].supermasterId.nameserver :
+                            this.state.data[cellInfo.index].supermasterId.ip.address
+                    }}
+                />
+            );
+        }
+        else
+        {
+            return (
+                <div
+                    style={{ backgroundColor: "#fafafa" }}
+                    contentEditable
+                    suppressContentEditableWarning
+                    onBlur={e => {
+                        const data = [...this.state.data];
+                        (cellInfo.column.id === 'supermasterId.nameserver') ?
+                            data[cellInfo.index].supermasterId.nameserver  = e.target.innerHTML :
+                            data[cellInfo.index].supermasterId.ip.address  = e.target.innerHTML;
+
+                        this.setState({ data });
+                    }}
+                    dangerouslySetInnerHTML={{
+                        __html: (cellInfo.column.id === 'supermasterId.nameserver') ?
+                            this.state.data[cellInfo.index].supermasterId.nameserver :
+                            this.state.data[cellInfo.index].supermasterId.ip.address
+                    }}
+                />
+            );
+        }
+
+    };
 
     renderEditable = cellInfo => {
         return (
@@ -142,6 +181,33 @@ class Table extends React.Component {
             />
         );
     };
+
+    deleteRecordsFromDb = () => {
+        fetch('http://localhost:8001/supermasters/delete', {
+            method: 'post',
+            body: JSON.stringify(this.state.recordsToDelete),
+            headers: {'Content-Type': 'application/json'}
+        }).then((response) => {
+            return response;
+        }).then((data) => {
+            console.log('Complete', data);
+            this.setState({recordsToDelete : []});
+        });
+    }
+
+    commitChanges = () => {
+        console.log(JSON.stringify(this.state.data));
+        fetch('http://localhost:8001/supermasters/commit', {
+            method: 'post',
+            body: JSON.stringify(this.state.data),
+            headers: {'Content-Type': 'application/json'}
+        }).then((response) => {
+            return response;
+        }).then((data) => {
+            console.log('Complete', data);
+            this.deleteRecordsFromDb();
+        });
+    }
 
     renderTable() {
         const columns = [
@@ -178,10 +244,12 @@ class Table extends React.Component {
         {
             Header : "IP",
             accessor: 'supermasterId.ip.address',
+            Cell: this.renderEditableWhenNotCommitted
         },
         {
             Header : "Nameserver",
             accessor: 'supermasterId.nameserver',
+            Cell: this.renderEditableWhenNotCommitted
         },
         {
             Header : "Account",
@@ -193,7 +261,7 @@ class Table extends React.Component {
             accessor : "",
             Cell : ({original}) => {
                 return (
-                    <button onClick={ () => {this.deleteSupermaster(original.supermasterId.ip, original.supermasterId.nameserver)}}> Delete </button>
+                    <button onClick={ () => {this.deleteSupermaster(original)}}> Delete </button>
                 );
             },
             sortable: false,
@@ -212,6 +280,7 @@ class Table extends React.Component {
                     defaultSorted={ [ { id : "account", desc: true} ] }
                 />
                 <button onClick={ () => this.addSupermaster() }> Add supermaster </button>
+                <button onClick={ () => this.commitChanges() }> Commit changes </button>
             </div>
 
         );
@@ -231,7 +300,7 @@ class Table extends React.Component {
                 let currentTableIndex = this.state.currentIndex;
                 data.map((supermaster, index) => {
                     supermaster.tableIndex = currentTableIndex;
-                    supermaster.commited = true;
+                    supermaster.committed = true;
                     currentTableIndex = currentTableIndex + 1;
                 });
                 this.setState({data: data, selected: {}, currentIndex : currentTableIndex});
@@ -244,148 +313,5 @@ class Table extends React.Component {
     }
 }
 
-class Form extends React.Component {
-
-    constructor(props) {
-        super(props);
-
-        this.state = {
-
-            supermasters : [
-
-                {
-                    supermasterId : {
-                        ip : {address : '' },
-                        nameserver : ''
-                    },
-                    account: ''
-                }
-
-            ]
-        };
-
-        this.handleNewSupermasters = this.handleNewSupermasters.bind(this);
-    }
-
-    addSupermaster = (event) => {
-        event.preventDefault();
-        this.setState((previousState) => ( {
-            supermasters : [... previousState.supermasters,
-                {
-                    supermasterId : {
-                        ip : {address : '' },
-                        nameserver : ''
-                    },
-                    account: ''
-                }
-            ],
-        }));
-    }
-
-    handleChange = (e) => {
-        let supermasters = [...this.state.supermasters];
-        if (e.target.className == 'ip') {
-            var supermasterId = supermasters[e.target.dataset.id]['supermasterId'];
-            supermasterId.ip = e.target.value;
-        }
-        else if (e.target.className == 'nameserver') {
-            var supermasterId = supermasters[e.target.dataset.id]['supermasterId'];
-            supermasterId.nameserver = e.target.value;
-        }
-        else if (e.target.className == 'account') {
-            supermasters[e.target.dataset.id]['account'] = e.target.value;
-        }
-        this.setState({supermasters}, () => console.log(this.state.supermasters));
-    }
-
-    render() {
-        let {supermasters} = this.state;
-        return (
-            <form className="form-signin" style = {{width: '100%'}}>
-            <table className = "table" style = {{width: '100%'}} >
-            <tbody>
-            {
-                supermasters.map((value, idx) => {
-                    let supermasterIpId = 'ip-${idx}',
-                        supermasterNameserverId = 'age-${idx}',
-                        supermasterAccountId = 'account-${idx}';
-                    return (
-                        <tr key={idx}>
-                            <td>
-                            <input
-                                type = "text"
-                                name = {supermasterIpId}
-                                data-id = {idx}
-                                id = {supermasterIpId}
-                                value={supermasters[idx].supermasterId.ip.address}
-                                className="ip"
-                                placeholder="IP [required]"
-                                onChange = {this.handleChange}
-                            /></td>
-                            <td>
-                            <input
-                                type = "text"
-                                name = {supermasterNameserverId}
-                                data-id = {idx}
-                                id = {supermasterNameserverId}
-                                value={supermasters[idx].supermasterId.nameserver}
-                                className="nameserver"
-                                placeholder="Nameserver [required]"
-                                onChange = {this.handleChange}
-                            /></td>
-                            <td>
-                            <input
-                                type = "text"
-                                name = {supermasterAccountId}
-                                data-id = {idx}
-                                id = {supermasterAccountId}
-                                value={supermasters[idx].account}
-                                className="account"
-                                placeholder="Account [required]"
-                                onChange = {this.handleChange}
-                            /></td>
-                        </tr>
-                    )
-                })
-            }
-            <tr>
-                <td>
-                    <button className="btn btn-lg btn-primary btn-block" onClick = {this.addSupermaster}> Add new supermaster </button>
-                </td>
-                <td>
-                    <button className="btn btn-lg btn-primary btn-block" onClick={(e) => this.handleNewSupermasters(e)}>Submit</button>
-                </td>
-                <td></td><td></td>
-            </tr>
-            </tbody>
-            </table>
-            </form>
-        )
-    }
-
-    handleNewSupermasters(event) {
-        event.preventDefault();
-        fetch('http://localhost:8001/supermasters', {
-            method: 'post',
-            body: JSON.stringify(this.state.supermasters),
-            headers: {'Content-Type': 'application/json'}
-        }).then((response) => {
-            return response;
-        }).then((data) => {
-            console.log('Created supermaster', data);
-            this.setState({supermasters : [
-                {
-                    supermasterId : {
-                        ip : {address : ''},
-                        nameserver : ''
-                    },
-                    account: ''
-                }
-            ]});
-            this.props.onSubmit();
-        });
-    }
-
-}
 
 export default Supermasters;

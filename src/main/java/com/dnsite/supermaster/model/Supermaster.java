@@ -1,13 +1,15 @@
 package com.dnsite.supermaster.model;
 
-import javax.persistence.*;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "supermasters")
 public class Supermaster {
 
     @EmbeddedId
-    SupermasterId supermasterId;
+    private SupermasterId supermasterId;
 
     private String account;
 

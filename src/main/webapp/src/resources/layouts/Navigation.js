@@ -6,7 +6,8 @@ const navList = [
   { name: "home", path: "/dnsite", exact: true },
   { name: "supermasters", path: "/supermasters" },
   { name: "domains", path: "/domains" },
-  { name: "administration", path: "/administration" }
+  { name: "administration", path: "/administration" },
+  { name: "records", path: "/records" }
 ];
 
 class Navigation extends Component {

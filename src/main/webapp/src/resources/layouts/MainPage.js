@@ -5,6 +5,7 @@ import Home from "../pages/Home";
 import Supermasters from "../pages/Supermasters";
 import Domains from "../pages/Domains";
 import Administration from "../pages/Administration";
+import Records from "../pages/Records";
 
 const MainPage = () => {
   return (
@@ -13,6 +14,7 @@ const MainPage = () => {
         <Route path="/dnsite" exact component={Home} />
         <Route path="/supermasters" component={Supermasters} />
         <Route path="/domains" component={Domains} />
+        <Route path="/records" component={Records} />
         <Route path="/administration" component={Administration} />
       </Switch>
     </>
