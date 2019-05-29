@@ -183,23 +183,32 @@ class Table extends React.Component {
     };
 
     deleteRecordsFromDb = () => {
+        let supermasters = this.state.recordsToDelete;
+        supermasters.forEach( (supermaster) => {
+            supermaster.supermasterId.ip = supermaster.supermasterId.ip.address;
+        });
         fetch('http://localhost:8001/supermasters/delete', {
             method: 'post',
-            body: JSON.stringify(this.state.recordsToDelete),
+            body: JSON.stringify(supermasters),
             headers: {'Content-Type': 'application/json'}
         }).then((response) => {
             return response;
         }).then((data) => {
             console.log('Complete', data);
             this.setState({recordsToDelete : []});
+            this.refreshSupermastersTable();
         });
     }
 
     commitChanges = () => {
-        console.log(JSON.stringify(this.state.data));
+        console.log(this.state.data);
+        let supermasters = this.state.data;
+        supermasters.forEach( (supermaster) => {
+            supermaster.supermasterId.ip = supermaster.supermasterId.ip.address;
+        });
         fetch('http://localhost:8001/supermasters/commit', {
             method: 'post',
-            body: JSON.stringify(this.state.data),
+            body: JSON.stringify(supermasters),
             headers: {'Content-Type': 'application/json'}
         }).then((response) => {
             return response;

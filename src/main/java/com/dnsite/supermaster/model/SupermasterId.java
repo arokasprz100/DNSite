@@ -25,19 +25,12 @@ public class SupermasterId implements Serializable {
     @Column(name = "nameserver")
     private String nameserver;
 
-    public SupermasterId() {}
-
-    public SupermasterId(Inet ip, String nameserver) {
-        this.ip = ip;
-        this.nameserver = nameserver;
-    }
-
     public Inet getIp() {
         return ip;
     }
 
-    public void setIp(Inet ip) {
-        this.ip = ip;
+    public void setIp(String address) {
+        this.ip = new Inet(address);
     }
 
     public String getNameserver() {
