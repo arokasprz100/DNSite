@@ -5,6 +5,7 @@ import Home from "../pages/Home";
 import Supermasters from "../pages/Supermasters";
 import Domains from "../pages/Domains";
 import Administration from "../pages/Administration";
+import Domain from "../pages/Domain"
 
 const MainPage = () => {
   return (
@@ -14,6 +15,7 @@ const MainPage = () => {
         <Route path="/supermasters" component={Supermasters} />
         <Route path="/domains" component={Domains} />
         <Route path="/administration" component={Administration} />
+        <Route path="/domain/:id" component={Domain}/>
       </Switch>
     </>
   );

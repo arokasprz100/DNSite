@@ -62,33 +62,20 @@ class Table extends React.Component {
     renderTable() {
         const columns = [
             {
-                Header : "Select",
-                id : "checkbox",
-                accessor: "",
-                Cell: ({original}) => {
-                    return (
-                        <input
-                            type = "checkbox"
-                            className="checkbox"
-                            checked={this.state.selected[JSON.stringify(original)] === true}
-                            onChange = { () => this.toggleRow(JSON.stringify(original)) }
-                        />
-                    );
-                },
-                sortable: false,
-                width: 45
-            },
-            {
                 Header : "ID",
-                accessor: 'id',
-            },
-            {
-                Header : "Domain ID",
-                accessor : "domain.id",
+                accessor: 'domain.id',
             },
             {
                 Header : "Domain Name",
                 accessor: 'domain.name',
+            },
+            {
+                Header : "Domain Type",
+                accessor: 'domain.type',
+            },
+            {
+                Header : "Domain Master",
+                accessor: 'domain.master',
             },
             {
                 Header : "Owner",
@@ -98,18 +85,6 @@ class Table extends React.Component {
                 Header : "Comment",
                 accessor: "comment",
             },
-            {/*
-            <%--{--%>
-            <%--    Header : "Delete",--%>
-            <%--    accessor : "",--%>
-            <%--    Cell : ({original}) => {--%>
-            <%--        return (--%>
-            <%--            <button onClick={ () => {this.deleteZone(original.zoneId.id)}}> Delete </button>--%>
-            <%--        );--%>
-            <%--    },--%>
-            <%--    sortable: false--%>
-            <%--}--%>
-            */}
 
         ];
 
@@ -157,6 +132,8 @@ class Form extends React.Component {
                     domain: {
                         id: '',
                         name: '',
+                        master: '',
+                        type: ''
                     },
                     owner : '',
                     comment : ''
@@ -175,8 +152,10 @@ class Form extends React.Component {
                 {
                     id : '',
                     domain: {
-                      id: '',
-                      name: '',
+                        id: '',
+                        name: '',
+                        master: '',
+                        type: ''
                     },
                     owner : '',
                     comment : ''
@@ -187,10 +166,14 @@ class Form extends React.Component {
 
     handleChange = (e) => {
         let domains = [...this.state.domains];
-        if(e.target.className == 'domainid'){
-            domains[e.target.dataset.id]['domain'].id = e.target.value;
-        } else if (e.target.className == 'domainname'){
+        if(e.target.className == 'domainname'){
             domains[e.target.dataset.id]['domain'].name = e.target.value;
+        } else if (e.target.className == 'domainmaster'){
+            domains[e.target.dataset.id]['domain'].master = e.target.value;
+        } else if (e.target.className == 'domaintype'){
+            domains[e.target.dataset.id]['domain'].type = e.target.value;
+        } else if (e.target.className == 'domainid'){
+            domains[e.target.dataset.id]['domain'].id = e.target.value;
         }else{
             domains[e.target.dataset.id][e.target.className] = e.target.value;
         }
@@ -208,32 +191,12 @@ class Form extends React.Component {
                             let id = 'id-${idx}',
                                 domainId= 'domainid-${idx}',
                                 domainName= 'domainname-${idx}',
+                                domainType= 'domaintype-${idx}',
+                                domainMaster= 'domainmaster-${idx}',
                                 owner= 'owner-${idx}',
                                 comment= 'comment-${idx}';
                             return (
                                 <tr key={idx}>
-                                    <td>
-                                        <input
-                                            type = "text"
-                                            name = {id}
-                                            data-id = {idx}
-                                            id = {id}
-                                            value={domains[idx].id}
-                                            className="id"
-                                            placeholder="ID [auto]"
-                                            onChange = {this.handleChange}
-                                        /></td>
-                                    <td>
-                                        <input
-                                            type = "text"
-                                            name = {domainId}
-                                            data-id = {idx}
-                                            id = {domainId}
-                                            value={domains[idx].domain.id}
-                                            className="domainid"
-                                            placeholder="Domain ID"
-                                            onChange = {this.handleChange}
-                                        /></td>
                                     <td>
                                         <input
                                             type = "text"
@@ -244,6 +207,31 @@ class Form extends React.Component {
                                             className="domainname"
                                             placeholder="Domain Name"
                                             onChange = {this.handleChange}
+                                            style={{flex: 1}}
+                                        /></td>
+                                    <td>
+                                        <input
+                                            type = "text"
+                                            name = {domainType}
+                                            data-id = {idx}
+                                            id = {domainType}
+                                            value={domains[idx].domain.type}
+                                            className="domaintype"
+                                            placeholder="Domain Type"
+                                            onChange = {this.handleChange}
+                                            style={{flex: 1}}
+                                        /></td>
+                                    <td>
+                                        <input
+                                            type = "text"
+                                            name = {domainMaster}
+                                            data-id = {idx}
+                                            id = {domainMaster}
+                                            value={domains[idx].domain.master}
+                                            className="domainmaster"
+                                            placeholder="Domain Master"
+                                            onChange = {this.handleChange}
+                                            style={{flex: 1}}
                                         /></td>
                                     <td>
                                         <input
@@ -255,6 +243,7 @@ class Form extends React.Component {
                                             className="owner"
                                             placeholder="Owner"
                                             onChange = {this.handleChange}
+                                            style={{flex: 1}}
                                         /></td>
                                     <td>
                                         <input
@@ -266,6 +255,7 @@ class Form extends React.Component {
                                             className="comment"
                                             placeholder="Comment"
                                             onChange = {this.handleChange}
+                                            style={{flex: 1}}
                                         /></td>
                                 </tr>
                             )
@@ -305,6 +295,8 @@ class Form extends React.Component {
                         domain: {
                             id: '',
                             name: '',
+                            master: '',
+                            type: ''
                         },
                         owner : '',
                         comment : ''
