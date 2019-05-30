@@ -10,7 +10,7 @@ const MainPage = () => {
   return (
     <>
       <Switch>
-        <Route path="/" exact component={Home} />
+        <Route path="/dnsite" exact component={Home} />
         <Route path="/supermasters" component={Supermasters} />
         <Route path="/zones" component={Zones} />
         <Route path="/administration" component={Administration} />

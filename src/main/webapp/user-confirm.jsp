@@ -15,8 +15,8 @@
 
     <title>Create an account</title>
 
-    <link href="${contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
     <link rel="shortcut icon" href="../resources/images/icon.png" />
+    <link href="${contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -35,33 +35,17 @@
 <body>
 <div class="container">
 
-    <c:if test="${pageContext.request.userPrincipal.name != null}">
-        <form id="logoutForm" method="POST" action="${contextPath}/logout">
-            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-        </form>
-
-        <form id="roomsForm" method="GET" action="${contextPath}/rooms">
-            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-        </form>
-
-        <h2>Welcome ${pageContext.request.userPrincipal.name}</h2>
-        <div class="container">
-            <div class="row">
-                <div class="col-sm">
-                    <div class="row">
-                        <a onclick="document.forms['logoutForm'].submit()">Logout</a>
-                    </div>
-                </div>
-                <div class="col-sm">
-
-                </div>
-                <div class="col-sm">
-
-                </div>
-            </div>
-        </div>
-
-    </c:if>
+    <form:form method="POST" modelAttribute="userForConfirmation">
+        <c:forEach items="${userForConfirmation}" var="user">
+            <tr>
+                <td>${user.id}</td>
+                <td>${user.username}</td>
+                <td>${user.email}</td>
+                <td><a href="/dnsite/administration/user-confirm/${user.id}/accept">accept</a></td>
+                <td><a href="/dnsite/administration/user-confirm/${user.id}/reject">reject</a></td>
+            </tr>
+        </c:forEach>
+    </form:form>
 
 </div>
 <!-- /container -->

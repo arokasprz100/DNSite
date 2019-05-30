@@ -6,9 +6,9 @@ class UserBlock extends Component {
   render() {
     return (
       <div className="userBlock">
-        <h4>
+        <h3>
           Witaj <span>{this.state.userName}</span>!
-        </h4>
+        </h3>
         <div className="userButtons">
           <button>Ustawienia konta</button>|<button>Wyloguj</button>
         </div>

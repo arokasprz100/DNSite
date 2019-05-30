@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import "../styles/Navigation.css";
 
 const navList = [
+  { name: "home", path: "/dnsite", exact: true },
   { name: "supermasters", path: "/supermasters" },
   { name: "zones", path: "/zones" },
   { name: "administration", path: "/administration" }
@@ -31,14 +32,14 @@ class Navigation extends Component {
     ));
     return (
       <nav className="menu">
-        <div className="menuContent">
-          <ul>{menu}</ul>
-        </div>
         <span className="toggle" onClick={this.navShow}>
           <i />
           <i />
           <i />
         </span>
+        <div className="menuContent">
+          <ul>{menu}</ul>
+        </div>
       </nav>
     );
   }
