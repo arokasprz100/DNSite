@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Set;
+import com.dnsite.record.model.Record;
 
 @Entity
 @Table(name = "domains", indexes = {
@@ -18,8 +19,8 @@ public class Domain {
     private Long id;
 
     @Column(name = "name")
-    @NotNull
     @CheckCase(CaseMode.LOWER)
+    @NotNull
     private String name;
 
     @Column(name = "master")
@@ -37,13 +38,13 @@ public class Domain {
     @Column(name = "account")
     private String account;
 
-    @OneToMany(mappedBy = "domain", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "domain", cascade = CascadeType.ALL)
     @JsonIgnore
-    private Set<DomainExtension> domainExtensions;
+    private DomainExtension domainExtensions;
 
-    // TODO : fix
-    //@OneToMany(mappedBy = "domain", cascade = CascadeType.ALL)
-    //private Set<Record> records;
+    @OneToMany( mappedBy = "domain", cascade = CascadeType.MERGE)
+    @JsonIgnore
+    private Set<Record> records;
 
     public Long getId() {
         return id;
@@ -101,20 +102,30 @@ public class Domain {
         this.account = account;
     }
 
-    public Set<DomainExtension> getDomainExtensions() {
+    public DomainExtension getDomainExtensions() {
         return domainExtensions;
     }
 
-    public void setDomainExtensions(Set<DomainExtension> domainExtensions) {
+    public void setDomainExtensions(DomainExtension domainExtensions) {
         this.domainExtensions = domainExtensions;
     }
-/*
+
     public Set<Record> getRecords() {
         return records;
     }
 
     public void setRecords(Set<Record> records) {
-        this.records = records;
+        this.records.clear();
+        this.records.addAll(records);
     }
-    */
+
+    public void addRecord(Record record) {
+        records.add(record);
+        record.setDomain(this);
+    }
+
+    public void removeRecord(Record record) {
+        records.remove(record);
+        record.setDomain(null);
+    }
 }

@@ -43,5 +43,4 @@ public class RecordController {
         recordService.deleteInBatch(records);
         return "Records deleted.";
     }
-
 }

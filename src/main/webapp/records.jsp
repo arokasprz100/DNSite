@@ -183,9 +183,15 @@
 
             commitChanges = () => {
                 console.log(this.state.data);
+                let obj = JSON.parse(JSON.stringify(this.state.data));
+                Array.prototype.forEach.call(obj, item => {
+                    item['domain'] = {
+                        id:JSON.parse([item['domain']][0])};
+                });
+                console.log(obj);
                 fetch('http://localhost:8001/records/commit', {
                     method: 'post',
-                    body: JSON.stringify(this.state.data),
+                    body: JSON.stringify(obj),
                     headers: {'Content-Type': 'application/json'}
                 }).then((response) => {
                     return response;
@@ -239,13 +245,18 @@
                     })
                     .then(response => response.json())
                     .then(data => {
+                        console.log(data);
+                        Array.prototype.forEach.call(data, item => {
+                            item.domain = item.domain.id});
                         let currentTableIndex = this.state.currentIndex;
                         data.map((record, index) => {
                             record.tableIndex = currentTableIndex;
                             currentTableIndex = currentTableIndex + 1;
 
                         });
-                        this.setState({data: data, selected: {}, currentIndex : currentTableIndex});
+                        this.setState({data: data,
+                            selected: {},
+                            currentIndex : currentTableIndex});
                     })
                 .catch(error => console.log(error + " coś nie tak"));
             }

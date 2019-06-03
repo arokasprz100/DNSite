@@ -19,7 +19,7 @@ class Domain extends React.Component {
 
 }
 
-const API = "http://localhost:8001/domain/";
+const API = "http://localhost:8001/domains/";
 
 class DomainForm extends React.Component{
 
@@ -27,72 +27,70 @@ class DomainForm extends React.Component{
         super(props);
 
         this.state= {
-            domain: {
-                name : '',
-                master : '',
-                lastCheck: '',
-                type: '',
-                notifiedSerial: '',
-                account: '',
-                owner: '',
-                comment: ''
-            }
-        };
+            id : '',
+            name : '',
+            master : '',
+            lastCheck: '',
+            type: '',
+            notifiedSerial: '',
+            account: '',
+            owner: '',
+            comment: ''
+        }
         this.urlId = this.props.urlId;
-        this.handleDomainInfo = this.handleDomainInfo.bind(this);
     }
 
-    handleChange = (e) => {
-        let domain = [...this.state.domains];
-        domain[e.target.dataset.id][e.target.className] = e.target.value;
-        this.setState({domain}, () => console.log(this.state.domain));
+    componentDidMount() {
+        this.refreshDomainForm();
     }
 
     handleDomainInfo(event) {
         event.preventDefault();
     }
 
+    handleChange = e => {
+        this.setState({[e.target.name]: e.target.value});
+    };
+
     render() {
-        let {domain} = this.state;
         return (
             <Form
                 // onSubmit={e => this.handleSubmit(e)}
             >
-                {this.urlId}
                 <Row>
                     <Col>
-                        {/*<Form.Group controlId="formGridName">*/}
+                        <Form.Group controlId="formGridName">
                             <Form.Label>Name</Form.Label>
-                            <Form.Control placeholder={domain.name} onChange = {this.handleChange}/>
-                        {/*</Form.Group>*/}
+                            <Form.Control placeholder={this.state.name} onChange = {this.handleChange}/>
+                        </Form.Group>
                     </Col>
                     <Col>
-                        {/*<Form.Group controlId="formGridType">*/}
+                        <Form.Group controlId="formGridType">
                             <Form.Label>Type</Form.Label>
-                            <Form.Control placeholder={domain.type} onChange = {this.handleChange}/>
-                        {/*</Form.Group>*/}
+                            <Form.Control placeholder={this.state.type} onChange = {this.handleChange}/>
+                        </Form.Group>
                     </Col>
                 </Row>
 
                 <Row>
                     <Col>
                         <Form.Group controlId="formGridType">
-                            <Form.Label>Type</Form.Label>
-                            <Form.Control placeholder={domain.type} onChange = {this.handleChange}/>
+                            <Form.Label>Notified Serial</Form.Label>
+                            <Form.Control placeholder={this.state.notifiedSerial} onChange = {this.handleChange}/>
                         </Form.Group>
                     </Col>
 
                     <Col>
                         <Form.Group controlId="formGridMaster">
                             <Form.Label>Master</Form.Label>
-                            <Form.Control placeholder={domain.master} onChange = {this.handleChange}/>
+                            <Form.Control placeholder={this.state.master} onChange = {this.handleChange}/>
                         </Form.Group>
                     </Col>
 
                     <Col>
                         <Form.Group controlId="formGridLastCheck">
                             <Form.Label>Last Check</Form.Label>
-                            <Form.Control placeholder={domain.lastCheck} onChange = {this.handleChange}/>
+                            <Form.Control placeholder={this.state.lastCheck} onChange = {this.handleChange}/>
                         </Form.Group>
                     </Col>
                 </Row>
@@ -101,7 +99,7 @@ class DomainForm extends React.Component{
                     <Col>
                         <Form.Group controlId="formGridComment">
                             <Form.Label>Comemnt</Form.Label>
-                            <Form.Control placeholder={domain.comment} onChange = {this.handleChange}/>
+                            <Form.Control placeholder={this.state.comment} onChange = {this.handleChange}/>
                         </Form.Group>
                     </Col>
                 </Row>
@@ -111,6 +109,32 @@ class DomainForm extends React.Component{
                 </Button>
             </Form>
         )
+    }
+
+    refreshDomainForm() {
+        fetch(API+this.urlId)
+            .then(response => {
+                if (response.ok) {
+                    return response;
+                }
+                throw Error(response.status);
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                this.setState((prev) => ({
+                    id : data.id,
+                    name : data.domain.name,
+                    master : data.domain.master,
+                    lastCheck: data.domain.lastCheck,
+                    type: data.domain.type,
+                    notifiedSerial: data.domain.notifiedSerial,
+                    account: data.domain.account,
+                    owner: data.owner,
+                    comment: data.comment
+                }));
+            })
+            .catch(error => console.log(error + " coś nie tak"));
     }
 }
 
