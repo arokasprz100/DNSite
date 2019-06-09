@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DomainExtensionServiceImpl implements DomainExtensionService {
@@ -26,5 +27,11 @@ public class DomainExtensionServiceImpl implements DomainExtensionService {
     @Override
     public List<DomainExtension> findAll() {
         return domainExtensionRepository.findAll();
+    }
+
+    @Override
+    public DomainExtension findById(Long id){
+        Optional<DomainExtension> res = domainExtensionRepository.findById(id);
+        return res.isPresent()?res.get():null;
     }
 }

@@ -1,6 +1,7 @@
 package com.dnsite.domainExtension.controller;
 
 
+import com.dnsite.domain.model.Domain;
 import com.dnsite.domainExtension.model.DomainExtension;
 import com.dnsite.domainExtension.service.DomainExtensionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,18 @@ public class DomainExtensionController {
     @ResponseBody
     public List<DomainExtension> findAll(){
         return domainExtensionService.findAll();
+    }
+
+    @GetMapping
+    @RequestMapping("/types")
+    @ResponseBody
+    public String domainTypes(){ return "[\"" + Domain.TYPE.MASTER.toString() + "\",\"" + Domain.TYPE.NATIVE.toString() + "\",\"" + Domain.TYPE.SLAVE.toString() +"\"]";}
+
+    @GetMapping
+    @RequestMapping("/{id}")
+    @ResponseBody
+    public DomainExtension findOneById(@PathVariable("id") Long id){
+        return domainExtensionService.findById(id);
     }
 
     @GetMapping

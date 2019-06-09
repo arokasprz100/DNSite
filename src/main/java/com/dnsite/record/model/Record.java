@@ -13,17 +13,33 @@ import javax.persistence.*;
 })
 public class Record {
 
+    public enum RTYPE{A,AAAA,CAA,CNAME,HINFO,LOC,MX,NAPTR,NS,PTR,RP,SOA,SPF,SRV,TXT,MBOXFW;
+        public int getValue() {
+            return this.ordinal();
+        }
+
+        public static RTYPE forValue(int value) {
+            return values()[value];
+        }
+
+        public String toString() {
+            return forValue(getValue()).name();
+        }
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(name="domain_id")
     private Domain domain = null;
 
     private String name;
 
-    private String type;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type")
+    private RTYPE type;
 
     private String content;
 
@@ -53,11 +69,11 @@ public class Record {
         this.name = name;
     }
 
-    public String getType() {
+    public RTYPE getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(RTYPE type) {
         this.type = type;
     }
 
@@ -109,5 +125,10 @@ public class Record {
         this.domain = domain;
     }
 
-
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Record )) return false;
+        return id != null && id.equals(((Record) o).getId());
+    }
 }

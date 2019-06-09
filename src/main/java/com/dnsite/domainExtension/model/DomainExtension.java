@@ -12,7 +12,7 @@ public class DomainExtension {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn
     private Domain domain = null;
 
@@ -54,9 +54,5 @@ public class DomainExtension {
     public void setOwner(Integer owner) {
         this.owner = owner;
     }
-
-    @Override
-    public String toString() {
-        return "{id: " + this.id + ", owner: " + this.owner +", comment: " + this.comment + "domain: " + domain.toString() + "}";
-    }
+    
 }
