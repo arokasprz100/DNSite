@@ -4,8 +4,13 @@ import com.dnsite.domain.model.Domain;
 
 import javax.persistence.*;
 
+
 @Entity
-@Table(name = "records")
+@Table(name = "records", indexes = {
+        @Index(columnList = "name", name="rec_name_index"),
+        @Index(columnList = "name, type", name="nametype_index"),
+        @Index(columnList = "domain_id", name="domain_id")
+})
 public class Record {
 
     @Id

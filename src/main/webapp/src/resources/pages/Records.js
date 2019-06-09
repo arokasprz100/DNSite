@@ -122,10 +122,20 @@ class Table extends React.Component {
 
     deleteRecord = (original) => {
         this.undoEditRecord(original);
-        this.setState( (previousState) => ( {
-            toDelete : [... previousState.toDelete,
-                original.tableIndex]
-        }));
+        if (original.id != "") {
+            this.setState( (previousState) => ( {
+                toDelete : [... previousState.toDelete,
+                    original.tableIndex]
+            }));
+        }
+        else {
+            var records = [...this.state.records];
+            var index = records.findIndex(obj => obj.id === original.id);
+            records.splice(index, 1);
+            this.setState ({
+                records : [...records]
+            });
+        }
     }
 
 
@@ -145,6 +155,25 @@ class Table extends React.Component {
         const selectedRows = this.getSelectedRows();
         let editedRows = Object.keys(this.state.editedContent).map(Number);
 
+        let committed = []
+        let notCommitted = []
+        selectedRows.forEach ( (key) => {
+            console.log("Selected: " + key);
+            var record = this.state.records.find((obj) => {return obj.tableIndex == key});
+            if (record.id != "") {
+                committed = [...committed, record.tableIndex];
+            }
+            else {
+                notCommitted = [...notCommitted, record.tableIndex]
+            }
+        });
+
+        console.log("Committed");
+        for (var index in committed) {
+            console.log(index);
+        }
+
+
         var editedAndNotSelected = editedRows.filter(function(obj) {
             return !selectedRows.some(function(obj2) {
                 return obj == obj2;
@@ -163,11 +192,19 @@ class Table extends React.Component {
             }
         });
 
+        let newRecords = []
+        this.state.records.forEach( record => {
+            if (notCommitted.find( (obj) => { return obj === record.tableIndex; }) === undefined) {
+                newRecords = [...newRecords, record];
+            }
+        });
+
         this.setState( (previousState) => ( {
             editedContent : newEditedContent,
-            toDelete : Array.from(new Set([... previousState.toDelete, ...selectedRows])),
+            toDelete : Array.from(new Set([... previousState.toDelete, ...committed])),
             selected: {},
-            selectAll: 0
+            selectAll: 0,
+            records: newRecords,
         }));
     }
 
@@ -186,8 +223,6 @@ class Table extends React.Component {
     editMultipleRecords = () => {
         let selectedRows = this.getSelectedRows();
         let editedRows = Object.keys(this.state.editedContent).map(Number);
-        console.log(selectedRows);
-        console.log(editedRows);
 
         var selectedAndNotEditedRows = selectedRows.filter(function(obj) {
             return !editedRows.some(function(obj2) {
@@ -195,7 +230,11 @@ class Table extends React.Component {
             });
         });
 
-        console.log(selectedAndNotEditedRows);
+        var deletedAndNotSelected = this.state.toDelete.filter(function(obj) {
+            return !selectedRows.some(function(obj2) {
+                return obj == obj2;
+            });
+        });
 
         let newEditedContent = {}
         selectedAndNotEditedRows.forEach( (item) => {
@@ -209,13 +248,12 @@ class Table extends React.Component {
             }
         });
 
-        console.log("New edited");
-        console.log(newEditedContent);
 
         this.setState( (previousState) => ( {
             editedContent: {...previousState.editedContent, ...newEditedContent},
             selected: {},
-            selectAll: 0
+            selectAll: 0,
+            toDelete: deletedAndNotSelected
         }));
     }
 
@@ -223,6 +261,23 @@ class Table extends React.Component {
 
     componentDidMount() {
         this.refreshTable();
+    }
+
+
+
+    setValueInAllEdited = (event, cellInfo) => {
+        var selected = this.getSelectedRows();
+        var edited = this.state.editedContent;
+        Object.values(edited).forEach( (record) => {
+            if (selected.find( (obj) => { return obj.tableIndex === record.tableIndex; }) !== undefined) {
+                record[cellInfo.column.id] = event.target.value;
+            }
+        });
+
+        this.setState( (previousState) => ( {
+            editedContent: edited
+        }));
+
     }
 
 
@@ -306,7 +361,7 @@ class Table extends React.Component {
             let isDeleted = this.state.toDelete.some(item => rowInfo.original.tableIndex === item);
             return {
                 style: {
-                    background: isDeleted ? 'red' : null,
+                    opacity: isDeleted ? 0.4 : 1.0,
                 },
             };
         }
@@ -342,8 +397,8 @@ class Table extends React.Component {
 
 
     renderFooter = (cellInfo, inputType) => {
-        if (this.state.editedContent && this.state.editedContent.length > 0) {
-            return (<input type={inputType} onChange= {this.setValueInAllEdited} />)
+        if (this.state.editedContent !== {}) {
+            return (<input type={inputType} onChange= { (e) => this.setValueInAllEdited(e, cellInfo)} />)
         }
         else {
             return (<div/>)
@@ -436,9 +491,7 @@ class Table extends React.Component {
 
 
     revertChanges() {
-        this.setState({
-            editedContent: {}
-        });
+        this.refreshTable();
     }
 
 
@@ -517,28 +570,33 @@ class Table extends React.Component {
         {
             Header : "ID",
             accessor: 'id',
+            sortable: false
         },
         {
             Header : 'Name',
             accessor: 'name',
+            sortable: false,
             Cell: this.renderTextCell,
             Footer : this.renderTextFooter
         },
         {
             Header : 'Type',
             accessor: 'type',
+            sortable: false,
             Cell: this.renderTextCell,
             Footer : this.renderTextFooter
         },
         {
             Header : 'Content',
             accessor: 'content',
+            sortable: false,
             Cell: this.renderTextCell,
             Footer : this.renderTextFooter
         },
         {
             Header : 'TTL',
             accessor: 'ttl',
+            sortable: false,
             Cell: this.renderNumberCell,
             Footer : this.renderNumberFooter
         },
@@ -570,12 +628,18 @@ class Table extends React.Component {
                 <ReactTable
                     data={this.state.records}
                     filterable
+                    defaultSorted={[{
+                      id   : 'tableIndex',
+                      desc : false,
+                    }]}
                     columns={columns}
                     getTrProps = {this.setRowProps}
                 />
-                <button onClick={ () => this.addRecord() }> Add record </button>
-                <button onClick={ () => this.commitChanges() }> Commit changes </button>
-                <button onClick={ () => this.revertChanges() }> Revert changes </button>
+                <div>
+                    <button onClick={ () => this.addRecord() }> Add record </button>
+                    <button onClick={ () => this.commitChanges() }> Commit changes </button>
+                    <button onClick={ () => this.revertChanges() }> Revert changes </button>
+                </div>
             </div>
         );
     }
