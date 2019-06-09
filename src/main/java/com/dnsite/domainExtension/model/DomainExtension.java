@@ -54,9 +54,5 @@ public class DomainExtension {
     public void setOwner(Integer owner) {
         this.owner = owner;
     }
-
-    @Override
-    public String toString() {
-        return "{id: " + this.id + ", owner: " + this.owner +", comment: " + this.comment + "domain: " + domain.toString() + "}";
-    }
+    
 }

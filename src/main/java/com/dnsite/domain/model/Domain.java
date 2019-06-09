@@ -6,6 +6,8 @@ import com.dnsite.utils.CustomConstraints.CheckCase;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Set;
 import com.dnsite.record.model.Record;
 
@@ -18,6 +20,27 @@ public class Domain {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    public enum TYPE{NATIVE,MASTER,SLAVE;
+
+        public int getValue() {
+            return this.ordinal();
+        }
+
+        public static TYPE forValue(int value) {
+            return values()[value];
+        }
+
+        public String toString() {
+            return forValue(getValue()).name();
+        }
+    }
+
+    public final static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type")
+    private TYPE type = TYPE.NATIVE;
+
     @Column(name = "name")
     @CheckCase(CaseMode.LOWER)
     @NotNull
@@ -29,11 +52,8 @@ public class Domain {
     @Column(name = "last_check")
     private int lastCheck;
 
-    @Column(name = "type")
-    private String type;
-
     @Column(name = "notified_serial")
-    private int notifiedSerial;
+    private int notifiedSerial = Integer.parseInt(dateFormat.format(new Date()))*100;
 
     @Column(name = "account")
     private String account;
@@ -42,7 +62,7 @@ public class Domain {
     @JsonIgnore
     private DomainExtension domainExtensions;
 
-    @OneToMany( mappedBy = "domain", cascade = CascadeType.MERGE)
+    @OneToMany( mappedBy = "domain", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Record> records;
 
@@ -78,11 +98,11 @@ public class Domain {
         this.lastCheck = lastCheck;
     }
 
-    public String getType() {
+    public TYPE getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(TYPE type) {
         this.type = type;
     }
 

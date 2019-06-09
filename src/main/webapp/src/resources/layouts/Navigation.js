@@ -7,7 +7,6 @@ const navList = [
   { name: "supermasters", path: "/supermasters" },
   { name: "domains", path: "/domains" },
   { name: "administration", path: "/administration" },
-  { name: "domain", path: "/domain/14"}
 ];
 
 class Navigation extends Component {

@@ -31,6 +31,11 @@ public class DomainExtensionController {
     }
 
     @GetMapping
+    @RequestMapping("/types")
+    @ResponseBody
+    public String domainTypes(){ return "[\"" + Domain.TYPE.MASTER.toString() + "\",\"" + Domain.TYPE.NATIVE.toString() + "\",\"" + Domain.TYPE.SLAVE.toString() +"\"]";}
+
+    @GetMapping
     @RequestMapping("/{id}")
     @ResponseBody
     public DomainExtension findOneById(@PathVariable("id") Long id){

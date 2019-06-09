@@ -3,6 +3,8 @@ import "../styles/Domains.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ReactTable from "react-table";
 import "react-table/react-table.css";
+import {Link} from "react-router-dom";
+
 
 class Domains extends React.Component {
 
@@ -63,7 +65,8 @@ class Table extends React.Component {
         const columns = [
             {
                 Header : "ID",
-                accessor: 'domain.id',
+                accessor: 'id',
+                Cell: ({original}) =>{return (<Link to={"/domain/"+original.id}> {original.id} </Link>);}
             },
             {
                 Header : "Domain Name",

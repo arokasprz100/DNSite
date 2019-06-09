@@ -6,6 +6,7 @@ import Supermasters from "../pages/Supermasters";
 import Domains from "../pages/Domains";
 import Administration from "../pages/Administration";
 import Domain from "../pages/Domain"
+import ReactDOM from 'react-dom'
 
 const MainPage = () => {
   return (
@@ -20,5 +21,7 @@ const MainPage = () => {
     </>
   );
 };
+
+ReactDOM.render(MainPage, document.getElementById('root'))
 
 export default MainPage;
