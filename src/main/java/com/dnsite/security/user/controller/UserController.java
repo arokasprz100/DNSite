@@ -33,9 +33,6 @@ public class UserController {
 
     @RequestMapping(value = "/remind-passwd", method = RequestMethod.GET)
     public String remindPasswd(Model model) {
-        if (userService.findAll().size() != 0){
-            model.addAttribute("isNotFirstUser", true);
-        }
         model.addAttribute("userForm", new User());
 
         return "remind-passwd";
@@ -43,9 +40,6 @@ public class UserController {
 
     @RequestMapping(value = "/remind-passwd", method = RequestMethod.POST)
     public String remindPasswd(@ModelAttribute("userForm") User userForm, BindingResult bindingResult, Model model) {
-        if (userService.findAll().size() != 0){
-            model.addAttribute("isNotFirstUser", true);
-        }
 
         String tempPassword = userService.generateTemporaryPassword(userForm.getUsername());
         emailService.sendTempPasswdMessage(userService.findByUsername(userForm.getUsername()).getEmail(), userForm.getUsername(), tempPassword);
@@ -56,18 +50,12 @@ public class UserController {
 
     @RequestMapping(value = "/registration", method = RequestMethod.GET)
     public String registration(Model model) {
-        if (userService.findAll().size() != 0){
-            model.addAttribute("isNotFirstUser", true);
-        }
         model.addAttribute("userForm", new User());
         return "registration";
     }
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public String registration(@ModelAttribute("userForm") User userForm, BindingResult bindingResult, Model model){
-        if (userService.findAll().size() != 0){
-            model.addAttribute("isNotFirstUser", true);
-        }
 
         userValidator.validate(userForm, bindingResult);
 

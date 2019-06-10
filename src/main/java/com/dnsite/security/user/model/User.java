@@ -27,22 +27,6 @@ public class User {
 
     private String email;
 
-    private String hostname;
-
-    private Long dbPort;
-
-    private String database;
-
-    private String powerAdminPassword;
-
-    private String powerAdminUsername;
-
-    private String hostmaster;
-
-    private String primaryNameServer;
-
-    private String secondNameServer;
-
     private boolean isUserAccepted;
 
     @Id
@@ -118,70 +102,6 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getHostname() {
-        return hostname;
-    }
-
-    public void setHostname(String hostname) {
-        this.hostname = hostname;
-    }
-
-    public Long getDbPort() {
-        return dbPort;
-    }
-
-    public void setDbPort(Long dbPort) {
-        this.dbPort = dbPort;
-    }
-
-    public String getDatabase() {
-        return database;
-    }
-
-    public void setDatabase(String database) {
-        this.database = database;
-    }
-
-    public String getPowerAdminPassword() {
-        return powerAdminPassword;
-    }
-
-    public void setPowerAdminPassword(String powerAdminPassword) {
-        this.powerAdminPassword = powerAdminPassword;
-    }
-
-    public String getPowerAdminUsername() {
-        return powerAdminUsername;
-    }
-
-    public void setPowerAdminUsername(String powerAdminUsername) {
-        this.powerAdminUsername = powerAdminUsername;
-    }
-
-    public String getHostmaster() {
-        return hostmaster;
-    }
-
-    public void setHostmaster(String hostmaster) {
-        this.hostmaster = hostmaster;
-    }
-
-    public String getPrimaryNameServer() {
-        return primaryNameServer;
-    }
-
-    public void setPrimaryNameServer(String primaryNameServer) {
-        this.primaryNameServer = primaryNameServer;
-    }
-
-    public String getSecondNameServer() {
-        return secondNameServer;
-    }
-
-    public void setSecondNameServer(String secondNameServer) {
-        this.secondNameServer = secondNameServer;
     }
 
     public boolean isUserAccepted() {
