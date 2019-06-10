@@ -10,7 +10,7 @@ class UserBlock extends Component {
           Witaj <span>{this.state.userName}</span>!
         </h3>
         <div className="userButtons">
-          <button>Ustawienia konta</button>|<button>Wyloguj</button>
+          <button onclick="location.href = 'localhost:8001/login';">Ustawienia konta</button>|<button>Wyloguj</button>
         </div>
       </div>
     );
