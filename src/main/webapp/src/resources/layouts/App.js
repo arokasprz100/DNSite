@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router } from "react-router-dom";
+import { HashRouter as Router } from "react-router-dom";
 import "../styles/App.css";
 import Header from "./Header";
 import Navigation from "./Navigation";
@@ -15,9 +15,9 @@ class App extends Component {
           <header>
             {<Header />}
             {<Navigation />}
+            <aside>{<UserBlock />}</aside>
           </header>
           <main>
-            <aside>{<UserBlock />}</aside>
             <article>{<MainPage />}</article>
           </main>
           <footer>{<Footer />}</footer>

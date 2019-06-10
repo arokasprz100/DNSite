@@ -7,7 +7,7 @@ import "react-table/react-table.css";
 class Zones extends React.Component {
   render() {
     return (
-      <div>
+      <div class="Table">
         <Table ref="supTable" />
         <Form onSubmit={this.onFormSubmit} />
       </div>

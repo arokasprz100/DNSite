@@ -2,15 +2,15 @@ import React, { Component } from "react";
 import "../styles/UserBlock.css";
 
 class UserBlock extends Component {
-  state = { userName: "Example" };
+  state = { userName: "User" };
   render() {
     return (
       <div className="userBlock">
         <h4>
-          Witaj <span>{this.state.userName}</span>!
+          Hello <span>{this.state.userName}</span>!
         </h4>
         <div className="userButtons">
-          <button>Ustawienia konta</button>|<button>Wyloguj</button>
+          <button>Change password</button><button>Logout</button>
         </div>
       </div>
     );

@@ -1,6 +1,8 @@
 .home {
   padding: 10px 20px;
   font-family: "Montserrat", sans-serif;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
 .home .title {
