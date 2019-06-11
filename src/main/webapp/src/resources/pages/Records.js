@@ -625,6 +625,11 @@ class Table extends React.Component {
 
         return (
             <div>
+                <div className="buttonsWrapper">
+                    <button onClick={() => this.addRecord()}> Add record</button>
+                    <button onClick={() => this.commitChanges()}> Commit changes</button>
+                    <button onClick={() => this.revertChanges()}> Revert changes</button>
+                </div>
                 <ReactTable
                     data={this.state.records}
                     filterable
@@ -635,11 +640,6 @@ class Table extends React.Component {
                     columns={columns}
                     getTrProps = {this.setRowProps}
                 />
-                <div>
-                    <button onClick={ () => this.addRecord() }> Add record </button>
-                    <button onClick={ () => this.commitChanges() }> Commit changes </button>
-                    <button onClick={ () => this.revertChanges() }> Revert changes </button>
-                </div>
             </div>
         );
     }
