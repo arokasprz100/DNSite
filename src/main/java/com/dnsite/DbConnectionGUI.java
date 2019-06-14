@@ -96,13 +96,30 @@ public class DbConnectionGUI extends Application {
         grid.add(dbNameTextField, 1, 5);
         pane.setCenter(label);
 
+        Label pg_dumpLoc= new Label("pg_dump localization:");
+        grid.add(pg_dumpLoc, 0, 6);
+
+        TextField pg_dumpLocTextField = new TextField();
+        grid.add(pg_dumpLocTextField, 1, 6);
+        pane.setCenter(label);
+
+        Label backupLoc= new Label("Backup localization:");
+        grid.add(backupLoc, 0, 7);
+
+        TextField backupLocTextField = new TextField();
+        grid.add(backupLocTextField, 1, 7);
+        pane.setCenter(label);
+
+
+
         Button btn = new Button("Sign in");
         HBox hbBtn = new HBox(10);
         hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
         hbBtn.getChildren().add(btn);
-        grid.add(hbBtn, 1, 6);
+        grid.add(hbBtn, 1, 8);
         Text error = new Text();
         error.setText("There was an error while connectiong to database");
+
 
         btn.setOnAction(e -> {
             dbConfig.setUsername(userTextField.getText());
@@ -110,12 +127,14 @@ public class DbConnectionGUI extends Application {
             dbConfig.setDbPort(dbportTextField.getText());
             dbConfig.setDbName(dbNameTextField.getText());
             dbConfig.setHostname(hostnameTextField.getText());
+            dbConfig.setPg_dumpLocalization(pg_dumpLocTextField.getText());
+            dbConfig.setBackupLocalization(backupLocTextField.getText());
             try {
                 testDbConnection();
                 stage.close();
             } catch (SQLException e1) {
 
-                grid.add(error, 1, 7);
+                grid.add(error, 1, 9);
                 e1.printStackTrace();
             }
         });
