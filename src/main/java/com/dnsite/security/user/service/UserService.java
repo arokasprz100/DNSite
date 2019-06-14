@@ -17,5 +17,5 @@ public interface UserService {
 
     void deleteUserById(Long id);
 
-    String generateTemporaryPassword(String username);
+    String setUserTemporaryPassword(String username);
 }

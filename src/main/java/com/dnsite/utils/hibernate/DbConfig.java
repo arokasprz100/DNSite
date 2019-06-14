@@ -11,6 +11,18 @@ public class DbConfig {
 
     private String dbName;
 
+    private String pg_dumpLocalization;
+
+    private String backupLocalization;
+
+    public String getBackupLocalization() { return backupLocalization; }
+
+    public void setBackupLocalization(String backupLocalization) { this.backupLocalization = backupLocalization; }
+
+    public String getPg_dumpLocalization() { return pg_dumpLocalization; }
+
+    public void setPg_dumpLocalization(String pg_dumpLocalization) { this.pg_dumpLocalization = pg_dumpLocalization; }
+
     public String getUsername() {
         return username;
     }
