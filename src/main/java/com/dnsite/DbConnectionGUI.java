@@ -15,8 +15,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -96,10 +98,17 @@ public class DbConnectionGUI extends Application {
         grid.add(dbNameTextField, 1, 5);
         pane.setCenter(label);
 
+        FileChooser fileChooser = new FileChooser();
         Label pg_dumpLoc= new Label("pg_dump localization:");
         grid.add(pg_dumpLoc, 0, 6);
 
-        TextField pg_dumpLocTextField = new TextField();
+        final String[] pg_dumpLocation = new String[1];
+        pg_dumpLocation[0] = "";
+        Button pg_dumpLocTextField = new Button("Select pg_dump location");
+        pg_dumpLocTextField.setOnAction(e -> {
+            File selectedFile = fileChooser.showOpenDialog(stage);
+            pg_dumpLocation[0] = selectedFile.getAbsolutePath();
+        });
         grid.add(pg_dumpLocTextField, 1, 6);
         pane.setCenter(label);
 
@@ -127,7 +136,7 @@ public class DbConnectionGUI extends Application {
             dbConfig.setDbPort(dbportTextField.getText());
             dbConfig.setDbName(dbNameTextField.getText());
             dbConfig.setHostname(hostnameTextField.getText());
-            dbConfig.setPg_dumpLocalization(pg_dumpLocTextField.getText());
+            dbConfig.setPg_dumpLocalization(pg_dumpLocation[0]);
             dbConfig.setBackupLocalization(backupLocTextField.getText());
             try {
                 testDbConnection();
