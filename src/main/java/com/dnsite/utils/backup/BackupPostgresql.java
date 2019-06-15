@@ -6,11 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
@@ -20,20 +18,34 @@ public class BackupPostgresql {
     private static final Logger log = LoggerFactory.getLogger(BackupPostgresql.class);
 
     private DbConfig dbConfig ;
-    private boolean backupFlag = false;
-
-    public boolean getBackupFlag(){return backupFlag;}
-
 
     public BackupPostgresql(){
         DbConfigService dbConfigService = new DbConfigService();
         dbConfig = dbConfigService.readDbConfigFile("dbconfig.yaml");
+    }
 
-        Path dest = Paths.get(dbConfig.getBackupLocalization());
-        Path pgdLoc = Paths.get(dbConfig.getPg_dumpLocalization());
-        if(Files.exists(dest) || Files.exists(pgdLoc))
-            backupFlag = true;
+    public boolean pathValidation(){
+        if( dbConfig.getPg_dumpLocalization().equals("null") && dbConfig.getBackupLocalization().equals("null")){
+            log.warn("Backup disabled");
+            return false;
+        }
 
+        File backupDest = new File(dbConfig.getBackupLocalization());
+        File pg_dumpLoc = new File(dbConfig.getPg_dumpLocalization());
+
+        if(!pg_dumpLoc.exists() ) {
+            log.warn("pg_dump localization doesn't exist");
+            return backupDest.exists();
+        }
+        if(!pg_dumpLoc.toString().contains("pg_dump")) {
+            log.warn("Wrong backup program selected, pg_dump.exe required");
+            return false;
+        }
+        if(!backupDest.exists()) {
+            log.warn("Backup destination doesn't exist");
+            return backupDest.exists();
+        }
+        return true;
     }
 
     public void createPostgreSQLBackup() throws IOException, InterruptedException {
@@ -55,7 +67,6 @@ public class BackupPostgresql {
 //                "--verbose", // printing steps
                 "--file",
                 dbConfig.getBackupLocalization() + "\\backup"+ formatter.format(date) + ".sql", "test");
-//                "C:\\backup\\backup" + formatter.format(date) + ".sql", "test");
         try {
             final Map<String, String> env = pb.environment();
             env.put("PGPASSWORD", dbConfig.getPassword());

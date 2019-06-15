@@ -24,19 +24,16 @@ public class ScheduledTasks {
     @Scheduled(fixedRate = 10000)
     public void makeDailyBackup() {
 
-        if(!backupPostgresql.getBackupFlag()){
-            log.warn("Wrong backup destination or pg_dump localization");
-            return;
-        }
+        if(backupPostgresql.pathValidation()){
+            try {
+                log.info("Creating database backup");
+                backupPostgresql.createPostgreSQLBackup();
+                log.info("Database backup created");
+            }
 
-        try {
-            log.info("Creating database backup");
-            backupPostgresql.createPostgreSQLBackup();
-            log.info("Database backup created");
-        }
-
-        catch (IOException | InterruptedException e) {
-            log.error(e.getMessage());
+            catch (IOException | InterruptedException e) {
+                log.error(e.getMessage());
+            }
         }
     }
 }
