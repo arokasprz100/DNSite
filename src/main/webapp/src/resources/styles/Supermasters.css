@@ -35,9 +35,16 @@ button{
   display: block;
   margin: 0 auto;
   cursor: pointer;
+  outline: none !important;
 }
 
 button:hover {
   border: 2px solid rgb(255, 88, 0);
   color: rgb(255, 88, 0);
+  outline: none !important;
+}
+
+button:focus {
+  box-shadow: none !important;
+  outline: none !important;
 }

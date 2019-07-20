@@ -43,6 +43,7 @@ body{
 
 .LoginControl:focus{
     box-shadow: none !important;
+    outline: none !important;
 }
 
 .login-button{

@@ -3,7 +3,6 @@
   flex-direction: column;
   background-color: white;
   color: #151515;
-  padding: 0px 20px 0px 20px;
   font-size: 15px;
   max-width: 300px;
   position: absolute;
@@ -28,6 +27,10 @@ h4{
   color: rgb(255, 88, 0);
 }
 
+.userButtons{
+  display: flex;
+}
+
 .userBlock button {
   margin-right: 5px;
   margin-bottom: 5px;
@@ -36,9 +39,31 @@ h4{
   display: block;
   font-family: "Montserrat", sans-serif;
   text-transform: uppercase;
+  transition: 0.3s;
 }
 
 .userBlock button:hover {
+  border: none !important;
+  background: none !important;
+  color: rgb(255, 88, 0);
+  cursor: pointer;
+}
+
+.userBlock a {
+  margin-right: 5px;
+  margin-bottom: 5px;
+  background: none;
+  border: none;
+  display: block;
+  font-family: "Montserrat", sans-serif;
+  text-transform: uppercase;
+  color: rgb(75,75,75);
+  padding: 3px 10px 3px 0px;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.userBlock a:hover {
   border: none !important;
   background: none !important;
   color: rgb(255, 88, 0);

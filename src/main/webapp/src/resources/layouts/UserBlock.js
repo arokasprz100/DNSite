@@ -1,37 +1,17 @@
 import React, { Component } from "react";
+import { NavLink } from "react-router-dom";
 import "../styles/UserBlock.css";
-import { Redirect } from 'react-router-dom'
-import { Route, Switch } from "react-router-dom";
 
 class UserBlock extends Component {
-  state = {
-      redirect: false
-    }
-    setRedirect = () => {
-      this.setState({
-        redirect: true
-      })
-    }
-    renderRedirect = () => {
-      if (this.state.redirect) {
-        return <Redirect to='/privacy-policy' />
-      }
-    }
+  state = { userName: "Admin" };
   render() {
     return (
       <div className="userBlock">
-        <h4>
-          Hello <span>User</span>!
-        </h4>
+        <h3>
+          Witaj <span>{this.state.userName}</span>!
+        </h3>
         <div className="userButtons">
-          <button>Profile settings</button>
-          <button>Change password</button>
-          {this.renderRedirect()}
-          <button onClick={this.setRedirect}>Logout</button>
-          <Route path = '/privacy-policy' component={() => {
-          window.location.href = 'http://localhost:8001/logout';
-          return null;
-          }}/>
+            <NavLink to="/changePassword">Zmiana hasła</NavLink>|<button>Wyloguj</button>
         </div>
       </div>
     );
