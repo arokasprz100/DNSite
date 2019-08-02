@@ -13,8 +13,7 @@ public class Comments {
     private Long id;
 
     @OneToOne (cascade = CascadeType.ALL)
-    @JoinColumn
-    @Column(name = "domain_id")
+    @JoinColumn (name = "domain")
     private Domain domain = null;
 
     @Column(name = "name")
