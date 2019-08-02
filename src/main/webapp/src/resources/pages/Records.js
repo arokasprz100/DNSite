@@ -1,71 +1,103 @@
-import React, {Component} from "react";
+import React from "react";
 import "../styles/Supermasters.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 
-const API = "http://localhost:8001/records/all";
+class Records extends React.Component {
 
-class Records extends Component {
+    // make sure those are NOT arrow functions due to 'this' binding
+    fetchValueConstraints()
+    {
+        Promise.all([
+            fetch('http://localhost:8001/records/types'),
+            fetch('http://localhost:8001/domains/domainIds')
+        ])
+        .then(([res1, res2]) => Promise.all([res1.json(), res2.json()]))
+        .then(([types, domainIds]) => {
+            let valueConstraints = JSON.parse(JSON.stringify(this.state.valueConstraints));
+            valueConstraints['types'] = types;
+            valueConstraints['domainIds'] = domainIds;
+            this.setState ({
+                valueConstraints : valueConstraints
+            });
+        })
+    }
 
-    render() {
+    render()
+    {
+        let emptyDataExample = { id : '', domainId : '', name : '', type : '', content : '', ttl : '' }
         return (
             <div>
-                <Table ref="supTable"/>
+                <Table ref = "supTable"
+                fetchValueConstraints = {this.fetchValueConstraints}
+                resourcesURLBase = "http://localhost:8001/records/"
+                emptyDataExample = {emptyDataExample}
+                resourceName = "record" />
             </div>
         );
     }
 }
 
-class Table extends React.Component {
+class Table extends React.Component
+{
 
-    constructor(props) {
+    constructor(props)
+    {
         super(props);
 
         this.state = {
-            records : [],
+            data : [],
             selected : {},
             toDelete : [],
             editedContent : {},
 
             currentIndex : 0,
-            selectAll : 0
+            selectAll : 0,
+
+            valueConstraints : {},
+            expanded:{}
         };
+
+        this.emptyDataExample = this.props.emptyDataExample;
+        this.fetchValueConstraints = this.props.fetchValueConstraints.bind(this);
     }
 
+    refreshTable = () =>
+    {
+        this.fetchValueConstraints();
 
-
-    refreshTable() {
-        fetch(API).then(response => {
-                if (response.ok) {
-                    return response;
-                }
+        fetch(this.props.resourcesURLBase + "all")
+        .then(response =>
+        {
+            if (response.ok) { return response; }
             throw Error(response.status);
-            })
-            .then(response => response.json())
-            .then(records => {
-                let currentTableIndex = this.state.currentIndex;
-                records.map((record, index) => {
-                    record.tableIndex = currentTableIndex;
-                    currentTableIndex = currentTableIndex + 1;
-
-                });
-                this.setState({
-                    records: records,
-                    selected: {},
-                    editedContent: {},
-                    toDelete: [],
-                    currentIndex : currentTableIndex
-                });
-            })
+        })
+        .then(response => response.json())
+        .then(data =>
+        {
+            let currentTableIndex = this.state.currentIndex;
+            data.map( (row, index) =>
+            {
+                row.tableIndex = currentTableIndex;
+                currentTableIndex = currentTableIndex + 1;
+            });
+            this.setState
+            ({
+                data: data,
+                selected: {},
+                editedContent: {},
+                toDelete: [],
+                currentIndex : currentTableIndex
+            });
+        })
         .catch(
             error => console.log("Following error occurred: " + error)
         );
     }
 
-
-
-    getSelectedRows = () => {
+    getSelectedRows = () =>
+    {
         return Object.keys(
             Object.fromEntries(
                 Object.entries(this.state.selected).filter(([k,v]) => v === true)
@@ -73,74 +105,56 @@ class Table extends React.Component {
         ).map(Number);
     }
 
-
-
-
-    editRecord = (original) => {
+    editRow = (original) =>
+    {
+        let originalCopy = JSON.parse(JSON.stringify(original));
         const tableIndexOfEdited = JSON.parse(JSON.stringify(original.tableIndex));
         this.setState( (previousState) => ( {
             editedContent : {...previousState.editedContent,
-                [tableIndexOfEdited] : {
-                    id: original.id,
-                    name: original.name,
-                    type: original.type,
-                    content: original.content,
-                    ttl: original.ttl,
-                }
+                [tableIndexOfEdited] : originalCopy
             }
         }));
     }
 
-
-    addRecord = (event) => {
+    addRow = (event) =>
+    {
+        let newRow = JSON.parse(JSON.stringify(this.emptyDataExample));
+        let newEditedRow = JSON.parse(JSON.stringify(this.emptyDataExample));
         let currentTableIndex = JSON.parse(JSON.stringify(this.state.currentIndex));
-        this.setState((previousState) => ( {
-            records : [... previousState.records,
-                {
-                    id : '',
-                    name: '',
-                    type: '',
-                    content: '',
-                    ttl: '',
-                    tableIndex : currentTableIndex
-                },
-            ],
-            editedContent : { ...previousState.editedContent,
-                [currentTableIndex] : {
-                   id : '',
-                   name: '',
-                   type: '',
-                   content: '',
-                   ttl: '',
-               }
-            },
+        newRow.tableIndex = currentTableIndex;
+        console.log(this.state.editedContent);
+        this.setState((previousState) =>
+        ({
+            data : [ ... previousState.data, newRow ],
+            editedContent : {  ...previousState.editedContent, [currentTableIndex] : newEditedRow },
             currentIndex : currentTableIndex + 1
         }));
     }
 
 
 
-    deleteRecord = (original) => {
-        this.undoEditRecord(original);
-        if (original.id != "") {
+    deleteRow = (original) =>
+    {
+        this.undoEditRow(original);
+        if (original.id !== '')
+        {
             this.setState( (previousState) => ( {
                 toDelete : [... previousState.toDelete,
                     original.tableIndex]
             }));
         }
         else {
-            var records = [...this.state.records];
-            var index = records.findIndex(obj => obj.id === original.id);
-            records.splice(index, 1);
+            var editedData = [...this.state.data];
+            var index = editedData.findIndex(obj => obj.tableIndex === original.tableIndex);
+            editedData.splice(index, 1);
             this.setState ({
-                records : [...records]
+                data : [...editedData]
             });
         }
     }
 
-
-
-    undoDeleteRecord = (original) => {
+    undoDeleteRow = (original) =>
+    {
         let toDelete = [...this.state.toDelete];
         var index = toDelete.indexOf(original.tableIndex);
         toDelete.splice(index, 1);
@@ -150,29 +164,22 @@ class Table extends React.Component {
     }
 
 
-
-    deleteMultipleRecords = () => {
+    deleteMultipleRows = () =>
+    {
         const selectedRows = this.getSelectedRows();
         let editedRows = Object.keys(this.state.editedContent).map(Number);
 
-        let committed = []
-        let notCommitted = []
+        let committed = [];
+        let notCommitted = [];
         selectedRows.forEach ( (key) => {
-            console.log("Selected: " + key);
-            var record = this.state.records.find((obj) => {return obj.tableIndex == key});
-            if (record.id != "") {
-                committed = [...committed, record.tableIndex];
+            var row = this.state.data.find((obj) => {return obj.tableIndex == key});
+            if (row.id !== '') {
+                committed = [...committed, row.tableIndex];
             }
             else {
-                notCommitted = [...notCommitted, record.tableIndex]
+                notCommitted = [...notCommitted, row.tableIndex]
             }
         });
-
-        console.log("Committed");
-        for (var index in committed) {
-            console.log(index);
-        }
-
 
         var editedAndNotSelected = editedRows.filter(function(obj) {
             return !selectedRows.some(function(obj2) {
@@ -182,20 +189,16 @@ class Table extends React.Component {
 
         let newEditedContent = {}
         editedAndNotSelected.forEach( (item) => {
-            let record = this.state.editedContent[item];
-            newEditedContent[item] = {
-                id : record.id,
-                name: record.name,
-                type: record.type,
-                content: record.content,
-                ttl: record.ttl,
-            }
+            let rowCopy = JSON.parse(JSON.stringify(this.state.editedContent[item]));
+            newEditedContent[item] = rowCopy
         });
 
-        let newRecords = []
-        this.state.records.forEach( record => {
-            if (notCommitted.find( (obj) => { return obj === record.tableIndex; }) === undefined) {
-                newRecords = [...newRecords, record];
+        let newData = []
+        this.state.data.forEach ( row =>
+        {
+            if (notCommitted.find( (obj) => { return obj === row.tableIndex; }) === undefined)
+            {
+                newData = [...newData, row];
             }
         });
 
@@ -204,13 +207,14 @@ class Table extends React.Component {
             toDelete : Array.from(new Set([... previousState.toDelete, ...committed])),
             selected: {},
             selectAll: 0,
-            records: newRecords,
+            data: newData,
         }));
     }
 
 
 
-    undoEditRecord = (original) => {
+    undoEditRow = (original) =>
+    {
         let editedContent = JSON.parse(JSON.stringify(this.state.editedContent));
         delete editedContent[original.tableIndex];
         this.setState( {
@@ -219,8 +223,9 @@ class Table extends React.Component {
     }
 
 
-
-    editMultipleRecords = () => {
+    // TODO: check
+    editMultipleRows = () =>
+    {
         let selectedRows = this.getSelectedRows();
         let editedRows = Object.keys(this.state.editedContent).map(Number);
 
@@ -238,14 +243,8 @@ class Table extends React.Component {
 
         let newEditedContent = {}
         selectedAndNotEditedRows.forEach( (item) => {
-            let record = JSON.parse(JSON.stringify(this.state.records.find(el => el.tableIndex === item)));
-            newEditedContent[item] = {
-                id : record.id,
-                name: record.name,
-                type: record.type,
-                content: record.content,
-                ttl: record.ttl,
-            }
+            let rowCopy = JSON.parse(JSON.stringify(this.state.data.find(el => el.tableIndex === item)));
+            newEditedContent[item] = rowCopy
         });
 
 
@@ -265,28 +264,25 @@ class Table extends React.Component {
 
 
 
-    setValueInAllEdited = (event, cellInfo) => {
+    setValueInAllEdited = (event, cellInfo) =>
+    {
         var selected = this.getSelectedRows();
-        var edited = this.state.editedContent;
-        Object.values(edited).forEach( (record) => {
-            if (selected.find( (obj) => { return obj.tableIndex === record.tableIndex; }) !== undefined) {
-                record[cellInfo.column.id] = event.target.value;
+        var edited = JSON.parse(JSON.stringify(this.state.editedContent));
+        Object.values(edited).forEach( (editedRow) =>
+        {
+            if (selected.find( (obj) => { return obj.tableIndex === editedRow.tableIndex; }) !== undefined) {
+                editedRow[cellInfo.column.id] = event.target.value;
             }
         });
-
         this.setState( (previousState) => ( {
             editedContent: edited
         }));
-
     }
 
-
-
-    changeEditedContent = (event, cellInfo) => {
-        let editedRow = this.state.editedContent[cellInfo.original.tableIndex];
+    changeEditedContent = (event, cellInfo) =>
+    {
+        let editedRow = JSON.parse(JSON.stringify(this.state.editedContent[cellInfo.original.tableIndex]));
         editedRow[cellInfo.column.id] = event.target.value;
-
-        console.log(this.state.editedContent);
 
         let notEditedRows = {}
         Object.keys(this.state.editedContent)
@@ -299,16 +295,16 @@ class Table extends React.Component {
         this.setState({
             editedContent : {...notEditedRows, [cellInfo.original.tableIndex] : editedRow}
         });
-
     }
 
 
-    renderNotEditable = cellInfo => {
+    renderNotEditable = cellInfo =>
+    {
         return (
             <div
                 style={{ backgroundColor: "#fafafa" }}
                 dangerouslySetInnerHTML={{
-                    __html: this.state.records[cellInfo.index][cellInfo.column.id]
+                    __html: this.state.data[cellInfo.index][cellInfo.column.id]
                 }}
             />
         );
@@ -316,24 +312,21 @@ class Table extends React.Component {
 
 
 
-    renderWhileEdited(cellInfo, inputType) {
+    renderWhileEdited = (cellInfo, inputType) =>
+    {
         return (
             <div>
                 <div
                     style={{ backgroundColor: "#fafafa" }}
                     dangerouslySetInnerHTML={{
-                        __html: this.state.records[cellInfo.index][cellInfo.column.id]
+                        __html: this.state.data[cellInfo.index][cellInfo.column.id]
                     }}
                 />
                 <div>
                     <input
-                        value={this.state.editedContent[cellInfo.original.tableIndex][cellInfo.column.id]}
+                        value = { this.state.editedContent[cellInfo.original.tableIndex][cellInfo.column.id] }
                         type = {inputType}
-                        style={
-                            { backgroundColor: "#fafafa",
-                                margin: "3px",
-                                width: "98%" }
-                        }
+                        style = { { backgroundColor: "#fafafa", margin: "3px", width: "98%" } }
                         onChange = { (e) => {this.changeEditedContent(e, cellInfo)}}
                     />
                  </div>
@@ -343,20 +336,23 @@ class Table extends React.Component {
     }
 
 
-    checkIfObjectIsEdited(cellInfo) {
+    checkIfObjectIsEdited = (cellInfo) =>
+    {
         return (Object.keys(this.state.editedContent)).map(Number)
             .some(item => cellInfo.original.tableIndex === item);
     }
 
 
 
-    checkIfObjectIsDeleted(cellInfo) {
+    checkIfObjectIsDeleted = (cellInfo) =>
+    {
         return this.state.toDelete.some(item => cellInfo.original.tableIndex === item);
     }
 
 
 
-    setRowProps = (state, rowInfo, column, instance) => {
+    setRowProps = (state, rowInfo, column, instance) =>
+    {
         if (rowInfo) {
             let isDeleted = this.state.toDelete.some(item => rowInfo.original.tableIndex === item);
             return {
@@ -372,7 +368,8 @@ class Table extends React.Component {
 
 
 
-    renderCell(cellInfo, inputType) {
+    renderCell = (cellInfo, inputType) =>
+    {
         const isEdited = this.checkIfObjectIsEdited(cellInfo);
         if (isEdited === false) {
             return this.renderNotEditable(cellInfo);
@@ -384,20 +381,57 @@ class Table extends React.Component {
 
 
 
-    renderTextCell = cellInfo => {
+    renderTextCell = cellInfo =>
+    {
         return this.renderCell(cellInfo, 'text');
     }
 
 
 
-    renderNumberCell = cellInfo => {
+    renderNumberCell = cellInfo =>
+    {
         return this.renderCell(cellInfo, 'number');
     }
 
 
+    renderSelectCell = cellInfo =>
+    {
+        const isEdited = this.checkIfObjectIsEdited(cellInfo);
+        if (isEdited === false) {
+            return this.renderNotEditable(cellInfo);
+        }
 
-    renderFooter = (cellInfo, inputType) => {
-        if (this.state.editedContent !== {}) {
+        let constraintName = cellInfo.column.id + "s";
+        return (
+            <div>
+                <div
+                    style = { { backgroundColor: "#fafafa" } }
+                    dangerouslySetInnerHTML = { {__html: this.state.data[cellInfo.index][cellInfo.column.id] } }
+                />
+                <div>
+                    <select
+                        value = { this.state.editedContent[cellInfo.original.tableIndex][cellInfo.column.id] }
+                        style = { { backgroundColor: "#fafafa", margin: "3px", width: "98%" } }
+                        onChange = { (e) => {this.changeEditedContent(e, cellInfo)}}
+                    >
+                     <option key='' value=''>--</option>;
+                    {
+                        this.state.valueConstraints[constraintName].map((key) => {
+                            return <option key={key} value={key}>{key}</option>;
+                        })
+                    }
+                    </select>
+                 </div>
+            </div>
+
+        );
+    }
+
+
+
+    renderFooter = (cellInfo, inputType) =>
+    {
+        if (Object.getOwnPropertyNames(this.state.editedContent).length != 0) {
             return (<input type={inputType} onChange= { (e) => this.setValueInAllEdited(e, cellInfo)} />)
         }
         else {
@@ -407,81 +441,94 @@ class Table extends React.Component {
 
 
 
-    renderNumberFooter = cellInfo => {
+    renderNumberFooter = cellInfo =>
+    {
         return this.renderFooter(cellInfo, 'number');
     }
 
 
 
-    renderTextFooter = cellInfo => {
+    renderTextFooter = cellInfo =>
+    {
         return this.renderFooter(cellInfo, 'text');
     }
 
 
+    renderSelectFooter = cellInfo =>
+    {
+        let constraintName = cellInfo.column.id + "s";
+        if (Object.getOwnPropertyNames(this.state.editedContent).length != 0)
+        {
+            return (<select onChange= { (e) => this.setValueInAllEdited(e, cellInfo)} >
+                {
+                    this.state.valueConstraints[constraintName].map((key) => {
+                        return <option key={key} value={key}>{key}</option>;
+                    })
+                }
+            </select>)
+        }
+        else {
+            return (<div/>)
+        }
+    }
 
-    renderDeleteButton = cellInfo => {
+
+
+    renderDeleteButton = cellInfo =>
+    {
         let isDeleted = this.checkIfObjectIsDeleted(cellInfo);
         if (isDeleted === false) {
             return (
-                <button onClick = { () => this.deleteRecord(cellInfo.original) } > Delete </button>
+                <button onClick = { () => this.deleteRow(cellInfo.original) } > Delete </button>
             );
         }
         else {
             return (
-                <button onClick = { () => this.undoDeleteRecord(cellInfo.original) } > Undo delete </button>
+                <button onClick = { () => this.undoDeleteRow(cellInfo.original) } > Undo delete </button>
             );
         }
     }
 
 
 
-    renderEditButton = cellInfo => {
+    renderEditButton = cellInfo =>
+    {
         const isEdited = this.checkIfObjectIsEdited(cellInfo);
         const isDeleted = this.checkIfObjectIsDeleted(cellInfo);
-        if (isDeleted) {
-            return <div/>
+        if (isDeleted) { return <div/> }
+        else if (isEdited)
+        {
+            return ( <button onClick = { () => this.undoEditRow(cellInfo.original) } > Revert changes </button> );
         }
-        else if (isEdited) {
-            return (
-                <button
-                    onClick = { () => this.undoEditRecord(cellInfo.original) }
-                > Revert changes </button>
-            );
-        }
-        else {
-            return (
-                <button
-                    onClick = { () => this.editRecord(cellInfo.original) }
-                > Edit </button>
-            );
+        else
+        {
+            return ( <button onClick = { () => this.editRow(cellInfo.original) } > Edit </button> );
         }
 
     }
 
 
-
-
-
-    toggleRow(recordTableIndex) {
-        console.log(this.state.selected);
+    toggleRow = (rowTableIndex) =>
+    {
         const newSelected = JSON.parse(JSON.stringify(this.state.selected));
-        newSelected[recordTableIndex] = !this.state.selected[recordTableIndex];
+        newSelected[rowTableIndex] = !this.state.selected[rowTableIndex];
+        let expanded = JSON.parse(JSON.stringify(this.state.expanded));
+        expanded[rowTableIndex] = true;
         this.setState({
             selected: newSelected,
-            selectAll: 2
+            selectAll: 2,
+            expanded : expanded
         });
     }
 
 
-    toggleSelectAll() {
+    toggleSelectAll = () =>
+    {
         let newSelected = {};
-
-        if (this.state.selectAll === 0) {
-            this.state.records.forEach(x => {
-                newSelected[x.tableIndex] = true;
-            });
+        if (this.state.selectAll === 0)
+        {
+            this.state.data.forEach( x => { newSelected[x.tableIndex] = true; } );
         }
-
         this.setState({
             selected: newSelected,
             selectAll: this.state.selectAll === 0 ? 1 : 0
@@ -490,49 +537,40 @@ class Table extends React.Component {
 
 
 
-    revertChanges() {
+    revertChanges = () =>
+    {
         this.refreshTable();
     }
 
 
-    commitChanges = () => {
+    commitChanges = () =>
+    {
         let editedContent = Object.values(this.state.editedContent);
-        fetch('http://localhost:8001/records/commit', {
-            method: 'post',
-            body: JSON.stringify(editedContent),
-            headers: {'Content-Type': 'application/json'}
-        }).then((response) => {
-            return response;
-        }).then((data) => {
-            console.log('Complete', data);
-            this.deleteRecordsFromDb();
-        });
-    }
-
-    deleteRecordsFromDb = () => {
-        let deletedItems = [];
+        let deletedContent = [];
         this.state.toDelete.forEach( (item) => {
-            let recordToDelete = this.state.records.find( (record) => {
-                return record.tableIndex === item;
+            let rowToDelete = this.state.data.find( (row) => {
+                return row.tableIndex === item;
             });
-            deletedItems = [...deletedItems, recordToDelete];
+            deletedContent = [...deletedContent, rowToDelete];
         });
-        fetch('http://localhost:8001/records/delete', {
-            method: 'post',
-            body: JSON.stringify(deletedItems),
-            headers: {'Content-Type': 'application/json'}
-        }).then((response) => {
-            return response;
-        }).then((data) => {
-            console.log('Complete', data);
-            this.setState({toDelete : []});
+
+        console.log(editedContent);
+
+        Promise.all
+        ([
+            fetch(this.props.resourcesURLBase + 'commit', { method: 'post', body: JSON.stringify(editedContent),
+                headers: {'Content-Type': 'application/json' } } ),
+            fetch(this.props.resourcesURLBase + 'delete', { method: 'post', body: JSON.stringify(deletedContent),
+                headers: {'Content-Type': 'application/json' } } )
+        ])
+        .then( ([response1, response2]) =>
+        {
+            console.log("Commit complete", response1);
+            console.log("Delete complete", response2);
+            this.setState( { toDelete : [] } );
             this.refreshTable();
-        });
-
+        })
     }
-
-
-
 
     renderTable() {
         const columns = [
@@ -540,14 +578,10 @@ class Table extends React.Component {
             Header : x => {
                 return (
                     <input
-                        type="checkbox"
-                        checked={this.state.selectAll === 1}
-                        ref={input => {
-                            if (input) {
-                                input.indeterminate = this.state.selectAll === 2;
-                            }
-                        }}
-                        onChange={() => this.toggleSelectAll()}
+                        type = "checkbox"
+                        checked = { this.state.selectAll === 1 }
+                        ref = { input => { if (input) { input.indeterminate = this.state.selectAll === 2; } } }
+                        onChange={ () => this.toggleSelectAll() }
                     />
                 );
             },
@@ -557,8 +591,8 @@ class Table extends React.Component {
                 return (
                     <input
                         type = "checkbox"
-                        className="checkbox"
-                        checked={this.state.selected[JSON.stringify(original.tableIndex)] === true}
+                        className = "checkbox"
+                        checked = { this.state.selected[JSON.stringify(original.tableIndex)] === true }
                         onChange = { () => this.toggleRow(original.tableIndex) }
                     />
                 );
@@ -573,6 +607,12 @@ class Table extends React.Component {
             sortable: false
         },
         {
+            Header : "DomainID",
+            accessor: 'domainId',
+            Cell: this.renderSelectCell,
+            Footer: this.renderSelectFooter
+        },
+        {
             Header : 'Name',
             accessor: 'name',
             sortable: false,
@@ -583,8 +623,8 @@ class Table extends React.Component {
             Header : 'Type',
             accessor: 'type',
             sortable: false,
-            Cell: this.renderTextCell,
-            Footer : this.renderTextFooter
+            Cell: this.renderSelectCell,
+            Footer : this.renderSelectFooter
         },
         {
             Header : 'Content',
@@ -606,9 +646,7 @@ class Table extends React.Component {
             Cell: this.renderDeleteButton,
             sortable: false,
             filterable: false,
-            Footer : (
-                <button onClick= { () => this.deleteMultipleRecords() } > Delete selected </button>
-            )
+            Footer : ( <button onClick= { () => this.deleteMultipleRows() } > Delete selected </button> )
         },
         {
             Header : 'Edit',
@@ -616,17 +654,18 @@ class Table extends React.Component {
             Cell: this.renderEditButton,
             sortable: false,
             filterable: false,
-            Footer : (
-                <button onClick= { () => this.editMultipleRecords() } > Edit selected </button>
-            )
-
+            Footer : ( <button onClick= { () => this.editMultipleRows() } > Edit selected </button> )
+        },
+        {
+          expander: true,
+          show: false
         }
         ];
 
         return (
             <div>
                 <ReactTable
-                    data={this.state.records}
+                    data={this.state.data}
                     filterable
                     defaultSorted={[{
                       id   : 'tableIndex',
@@ -634,9 +673,11 @@ class Table extends React.Component {
                     }]}
                     columns={columns}
                     getTrProps = {this.setRowProps}
+                    expanded={this.state.expanded}
+                    SubComponent={(v) => <div style={{ padding: '10px' }}>Hello {v.row._index}</div>}
                 />
                 <div>
-                    <button onClick={ () => this.addRecord() }> Add record </button>
+                    <button onClick={ () => this.addRow() }> Add {this.props.resourceName} </button>
                     <button onClick={ () => this.commitChanges() }> Commit changes </button>
                     <button onClick={ () => this.revertChanges() }> Revert changes </button>
                 </div>

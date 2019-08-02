@@ -29,5 +29,9 @@ public class DomainServiceImpl implements DomainService{
     }
 
     @Override
-    public Domain findById(Long id){return domainRepository.findById(id).isPresent()?domainRepository.findById(id).get():null;}
+    public Domain findById(Long id){
+        return domainRepository.findById(id).isPresent()
+            ? domainRepository.findById(id).get()
+            : null;
+    }
 }
