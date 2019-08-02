@@ -283,13 +283,15 @@ class Table extends React.Component {
 
         return (
             <div>
+                <div className="buttonsWrapper">
+                    <button onClick={() => this.addSupermaster()}> Add supermaster</button>
+                    <button onClick={() => this.commitChanges()}> Commit changes</button>
+                </div>
                 <ReactTable
                     data={this.state.data}
                     columns={columns}
                     defaultSorted={ [ { id : "account", desc: true} ] }
                 />
-                <button onClick={ () => this.addSupermaster() }> Add supermaster </button>
-                <button onClick={ () => this.commitChanges() }> Commit changes </button>
             </div>
 
         );

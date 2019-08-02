@@ -664,6 +664,11 @@ class Table extends React.Component
 
         return (
             <div>
+                <div className="buttonsWrapper">
+                    <button onClick={ () => this.addRow() }> Add {this.props.resourceName} </button>
+                    <button onClick={ () => this.commitChanges() }> Commit changes </button>
+                    <button onClick={ () => this.revertChanges() }> Revert changes </button>
+                </div>
                 <ReactTable
                     data={this.state.data}
                     filterable
@@ -676,11 +681,6 @@ class Table extends React.Component
                     expanded={this.state.expanded}
                     SubComponent={(v) => <div style={{ padding: '10px' }}>Hello {v.row._index}</div>}
                 />
-                <div>
-                    <button onClick={ () => this.addRow() }> Add {this.props.resourceName} </button>
-                    <button onClick={ () => this.commitChanges() }> Commit changes </button>
-                    <button onClick={ () => this.revertChanges() }> Revert changes </button>
-                </div>
             </div>
         );
     }

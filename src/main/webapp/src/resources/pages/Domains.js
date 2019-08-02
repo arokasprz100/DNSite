@@ -11,8 +11,8 @@ class Domains extends React.Component {
     render() {
         return (
             <div>
-                <Table ref="supTable"/>
                 <Form onSubmit = {this.onFormSubmit}/>
+                <Table ref="supTable"/>
             </div>
         );
     }
@@ -186,7 +186,7 @@ class Form extends React.Component {
     render() {
         let {domains} = this.state;
         return (
-            <form className="form-signin" style = {{width: '100%'}}>
+            <form className="form-signin buttonsWrapper" style = {{width: '100%'}}>
                 <table className = "table" style = {{width: '100%'}} >
                     <tbody>
                     {
