@@ -13,19 +13,6 @@ import javax.persistence.*;
 })
 public class Record {
 
-    public enum RTYPE{A,AAAA,CAA,CNAME,HINFO,LOC,MX,NAPTR,NS,PTR,RP,SOA,SPF,SRV,TXT,MBOXFW;
-        public int getValue() {
-            return this.ordinal();
-        }
-
-        public static RTYPE forValue(int value) {
-            return values()[value];
-        }
-
-        public String toString() {
-            return forValue(getValue()).name();
-        }
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -39,7 +26,7 @@ public class Record {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
-    private RTYPE type;
+    private RecordType type;
 
     private String content;
 
@@ -69,11 +56,11 @@ public class Record {
         this.name = name;
     }
 
-    public RTYPE getType() {
+    public RecordType getType() {
         return type;
     }
 
-    public void setType(RTYPE type) {
+    public void setType(RecordType type) {
         this.type = type;
     }
 

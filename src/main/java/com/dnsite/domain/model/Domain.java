@@ -18,6 +18,7 @@ import com.dnsite.record.model.Record;
         @Index(columnList = "name", name="name_index")
 })
 public class Domain {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
