@@ -21,7 +21,7 @@ public @interface CheckCase {
     @Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
     @Retention(RetentionPolicy.RUNTIME)
     @Documented
-    @interface List { //allows to specify multiple annotations on the same element
+    @interface List {
         CheckCase[] value();
     }
 }
