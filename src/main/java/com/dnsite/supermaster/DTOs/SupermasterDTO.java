@@ -10,6 +10,8 @@ public class SupermasterDTO {
 
     private String account;
 
+    private Long tableIndex;
+
     public SupermasterDTO() {}
 
     public SupermasterDTO(Supermaster supermaster) {
@@ -40,5 +42,13 @@ public class SupermasterDTO {
 
     public void setAccount(String account) {
         this.account = account;
+    }
+
+    public Long getTableIndex() {
+        return tableIndex;
+    }
+
+    public void setTableIndex(Long tableIndex) {
+        this.tableIndex = tableIndex;
     }
 }
