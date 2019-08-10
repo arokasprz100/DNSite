@@ -104,6 +104,9 @@ class ReusableTable extends React.Component
         let currentTableIndex = JSON.parse(JSON.stringify(this.state.currentIndex));
         newRow.tableIndex = currentTableIndex;
         newRow.isNewlyAdded = true;
+        newEditedRow.tableIndex = currentTableIndex;
+        newEditedRow.isNewlyAdded = true;
+
         this.setState((previousState) =>
         ({
             data : [ ... previousState.data, newRow ],
@@ -538,17 +541,17 @@ class ReusableTable extends React.Component
     }
 
 
-    checkRowsSelectionStatus = (newSelected) =>
+    checkRowsSelectionStatus = (newSelected, visibleRows) =>
     {
         let selectedCount = Object.keys(
             Object.fromEntries(Object.entries(newSelected).filter(([k,v]) => v === true))).map(Number).length;
-        let dataCount = this.state.data.length;
+        let visibleRowsCount = visibleRows.length;
 
         console.log("Selected count ", selectedCount);
-        console.log("Data count ", dataCount);
+        console.log("Data count ", visibleRowsCount);
 
         if (selectedCount === 0) return 0;
-        else if (selectedCount === dataCount) return 1;
+        else if (selectedCount === visibleRowsCount) return 1;
         else return 2;
     }
 
@@ -560,7 +563,8 @@ class ReusableTable extends React.Component
         let expanded = JSON.parse(JSON.stringify(this.state.expanded));
         expanded[rowTableIndex] = true;
 
-        let selectAllValue = this.checkRowsSelectionStatus(newSelected);
+        const visibleRows = this.table.getResolvedState().sortedData;
+        let selectAllValue = this.checkRowsSelectionStatus(newSelected, visibleRows);
 
         console.log("SelectAll ", selectAllValue);
 
@@ -583,7 +587,7 @@ class ReusableTable extends React.Component
             visibleRows.forEach( row => { newSelected[row[""].tableIndex] = false; } );
         }
 
-        let selectAllValue = this.checkRowsSelectionStatus(newSelected);
+        let selectAllValue = this.checkRowsSelectionStatus(newSelected, visibleRows);
 
         this.setState({
             selected: newSelected,
