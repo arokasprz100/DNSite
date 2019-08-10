@@ -622,6 +622,7 @@ class ReusableTable extends React.Component
         .then( ([response1, response2]) =>
         {
             console.log("Commit complete", response1);
+            response1.text().then((text)=>console.log(text));
             console.log("Delete complete", response2);
             this.renderTable = this.renderTableInReadOnlyMode;
             this.setState({

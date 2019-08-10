@@ -31,8 +31,8 @@ public class CheckCaseValidator implements ConstraintValidator<CheckCase, String
         }
         if (!isValid){
             constraintValidatorContext.disableDefaultConstraintViolation();
-            constraintValidatorContext.buildConstraintViolationWithTemplate("{com.dnsite.utils.CustomConstraints."+
-                    "constraintvalidatorcontext.CheckCase.message: Should be " + caseMode.toString() + "}").addConstraintViolation();
+            constraintValidatorContext.buildConstraintViolationWithTemplate("com.dnsite.utils.CustomConstraints."+
+                    "constraintvalidatorcontext.CheckCase.message: Should be " + caseMode.toString()).addConstraintViolation();
         }
 
         return isValid;

@@ -4,12 +4,17 @@ import com.dnsite.domain.DTOs.DomainDTO;
 import com.dnsite.domain.DTOs.DomainDTOToDomainConverter;
 import com.dnsite.domain.model.Domain;
 import com.dnsite.domain.service.DomainService;
+import com.dnsite.utils.DTOs.ConstraintViolationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Validation;
+import javax.validation.Validator;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/domains")
@@ -57,14 +62,23 @@ public class DomainController {
     @PostMapping
     @RequestMapping("/commit")
     @ResponseBody
-    public String commitChanges(@RequestBody List<DomainDTO> domainsFromClient){
+    public Set<ConstraintViolationDTO> commitChanges(@RequestBody List<DomainDTO> domainsFromClient){
 
         List<Domain> domains = new ArrayList<>();
+        Set<ConstraintViolationDTO> violations = new HashSet<>();
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+
         for (DomainDTO domainFromClient : domainsFromClient) {
-            domains.add(DomainDTOToDomainConverter.convert(domainFromClient));
+            Domain toAdd = DomainDTOToDomainConverter.convert(domainFromClient);
+            violations.addAll(ConstraintViolationDTO.ofSet(validator.validate(toAdd), domainFromClient.getTableIndex()));
+            domains.add(toAdd);
         }
-        domainService.saveInBatch(domains);
-        return "Domains saved";
+
+        if(violations.isEmpty()){
+            domainService.saveInBatch(domains);
+        }
+
+        return violations;
     }
 
     @GetMapping
