@@ -1,16 +1,17 @@
 package com.dnsite.comments.service;
 
-        import com.dnsite.comments.model.Comments;
+import com.dnsite.comments.model.Comment;
 
         import java.util.List;
 
 public interface CommentsService {
 
-    void saveInBatch(List<Comments> comments);
+    void saveInBatch(List<Comment> comments);
 
-    void deleteInBatch(List<Comments> comments);
+    void deleteInBatch(List<Comment> comments);
 
-    List<Comments> findAll();
+    List<Comment> findAll();
 
-    Comments findById(Long id);
+    List<Comment> findByDomain_Id(Long domainId);
+
 }

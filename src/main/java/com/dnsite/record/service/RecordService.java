@@ -8,6 +8,8 @@ public interface RecordService {
 
     List<Record> findAll();
 
+    List<Record> findByDomain_Id(Long domainId);
+
     void saveOrUpdate(List<Record> records);
 
     void deleteInBatch(List<Record> records);

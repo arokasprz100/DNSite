@@ -1,19 +1,21 @@
 package com.dnsite.comments.model;
 
 import com.dnsite.domain.model.Domain;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "comments")
-public class Comments {
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne (cascade = CascadeType.ALL)
+    @ManyToOne (cascade = CascadeType.ALL)
     @JoinColumn (name = "domain")
+    @JsonIgnore
     private Domain domain = null;
 
     @Column(name = "name")

@@ -1,6 +1,5 @@
 package com.dnsite.record.controller;
 
-import com.dnsite.domain.model.Domain;
 import com.dnsite.domain.service.DomainService;
 import com.dnsite.record.DTOs.RecordDTO;
 import com.dnsite.record.DTOs.RecordDTOToRecordConverter;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -31,8 +29,21 @@ public class RecordController {
     public List<RecordDTO> getRecords() {
 
         List<Record> records = recordService.findAll();
-        List<RecordDTO> recordsToClient = new ArrayList<RecordDTO>();
+        List<RecordDTO> recordsToClient = new ArrayList<>();
         for(Record record : records) {
+            recordsToClient.add(new RecordDTO(record));
+        }
+        return recordsToClient;
+    }
+
+    @GetMapping
+    @RequestMapping("/{domainId}")
+    @ResponseBody
+    public List<RecordDTO> getRecordsFromGivenDomain(@PathVariable("domainId") Long domainId) {
+
+        List<Record> foundRecords = recordService.findByDomain_Id(domainId);
+        List<RecordDTO> recordsToClient = new ArrayList<>();
+        for(Record record : foundRecords) {
             recordsToClient.add(new RecordDTO(record));
         }
         return recordsToClient;
@@ -44,7 +55,6 @@ public class RecordController {
     public String commitChanges(@RequestBody List<RecordDTO> recordsFromClient) {
         List<Record> records = new ArrayList<>();
         for(RecordDTO recordFromClient : recordsFromClient){
-            System.out.println("Domain id " + recordFromClient.getDomainId());
             records.add(RecordDTOToRecordConverter.convert(recordFromClient, domainService));
         }
         recordService.saveOrUpdate(records);

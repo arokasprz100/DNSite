@@ -23,6 +23,8 @@ public class RecordDTO {
 
     private Boolean disabled;
 
+    private Long tableIndex;
+
     public RecordDTO() {}
 
     public RecordDTO(Record record) {
@@ -73,6 +75,8 @@ public class RecordDTO {
         return disabled;
     }
 
+    public Long getTableIndex() { return tableIndex; }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -108,4 +112,6 @@ public class RecordDTO {
     public void setDisabled(Boolean disabled) {
         this.disabled = disabled;
     }
+
+    public void setTableIndex(Long tableIndex) { this.tableIndex = tableIndex; }
 }
