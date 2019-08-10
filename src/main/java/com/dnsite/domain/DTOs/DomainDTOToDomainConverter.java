@@ -13,6 +13,7 @@ public class DomainDTOToDomainConverter {
         domain.setName(domainFromClient.getName());
         domain.setLastCheck(domainFromClient.getLastCheck());
         domain.setAccount(domainFromClient.getAccount());
+        domain.setNotifiedSerial(domainFromClient.getNotifiedSerial());
 
         return domain;
     }

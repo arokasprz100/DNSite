@@ -16,6 +16,8 @@ public class DomainDTO {
 
     private String account;
 
+    private int notifiedSerial;
+
     private Long tableIndex;
 
     public DomainDTO() {}
@@ -27,6 +29,7 @@ public class DomainDTO {
         master = domain.getMaster();
         lastCheck = domain.getLastCheck();
         account = domain.getAccount();
+        notifiedSerial = domain.getNotifiedSerial();
     }
 
     public Long getId() {
@@ -75,6 +78,14 @@ public class DomainDTO {
 
     public void setAccount(String account) {
         this.account = account;
+    }
+
+    public int getNotifiedSerial() {
+        return notifiedSerial;
+    }
+
+    public void setNotifiedSerial(int notifiedSerial) {
+        this.notifiedSerial = notifiedSerial;
     }
 
     public Long getTableIndex() {
