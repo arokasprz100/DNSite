@@ -1,6 +1,6 @@
 package com.dnsite.domain.model;
 
-import com.dnsite.domainExtension.model.DomainExtension;
+import com.dnsite.comments.model.Comment;
 import com.dnsite.record.model.Record;
 import com.dnsite.utils.CustomConstraints.CaseMode;
 import com.dnsite.utils.CustomConstraints.CheckCase;
@@ -11,7 +11,6 @@ import javax.validation.constraints.NotNull;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Set;
-import com.dnsite.record.model.Record;
 
 @Entity
 @Table(name = "domains", indexes = {
@@ -61,13 +60,11 @@ public class Domain {
     @Column(name = "account")
     private String account;
 
-    @OneToOne(mappedBy = "domain", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private DomainExtension domainExtensions;
+    @OneToMany(mappedBy = "domain", cascade = CascadeType.ALL)
+    private Set<Comment> comments;
 
     @OneToMany( mappedBy = "domain", cascade = CascadeType.ALL)
     @JsonIgnore
-
     private Set<Record> records;
 
     public Long getId() {
@@ -126,12 +123,12 @@ public class Domain {
         this.account = account;
     }
 
-    public DomainExtension getDomainExtensions() {
-        return domainExtensions;
+    public Set<Comment> getComments() {
+        return comments;
     }
 
-    public void setDomainExtensions(DomainExtension domainExtensions) {
-        this.domainExtensions = domainExtensions;
+    public void setComment(Set<Comment> comments) {
+        this.comments = comments;
     }
 
     public Set<Record> getRecords() {

@@ -1,27 +1,38 @@
-import React from "react";
-import "../styles/Domains.css";
-import Button from "react-bootstrap/Button";
+import React from "react"
+import "../styles/Domains.css"
+import Button from "react-bootstrap/Button"
 import Form from 'react-bootstrap/Form'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
-import 'bootstrap/dist/css/bootstrap.min.css';
-import "react-table/react-table.css";
+import {Tab, Tabs} from 'react-bootstrap'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import ReusableTable from "../../ReusableTable.js"
 
 class Domain extends React.Component {
 
     render() {
         return (
             <div>
-                <DomainForm urlId = {this.props.match.params.id}/>
+                <DomainForm
+                    urlId = {this.props.match.params.id}
+                    resourcesURLBase = "http://localhost:8001/domains/"
+                />
+                <Tabs defaultActiveKey="records" id="domainTabs">
+                    <Tab eventKey="records" title="Records">
+                        <DomainRecordsTable
+                            domainId = {this.props.match.params.id}
+                        />
+                    </Tab>
+                    <Tab eventKey="comments" title="Comments">
+                        <DomainCommentsTable
+                            domainId = {this.props.match.params.id}
+                        />
+                    </Tab>
+                </Tabs>
             </div>
         );
     }
 }
-
-const API = "http://localhost:8001/domains/";
-const TypeAPI = API+"types";
-
-
 
 class DomainForm extends React.Component{
 
@@ -34,12 +45,9 @@ class DomainForm extends React.Component{
             notifiedSerial: '',
             master : '',
             lastCheck: '',
-            comment: '',
-            domainId: '',
-
             id : '',
             account: '',
-            owner: '',
+
             types: [],
             copy: {}
         };
@@ -62,19 +70,14 @@ class DomainForm extends React.Component{
     handleSubmit = e => {
         e.preventDefault();
         let domainExtension = [{
-            owner: this.state.owner,
-            comment: this.state.comment,
             id: this.state.id,
-            domain: {
-                id: this.state.domainId,
-                name: this.state.name,
-                type: this.state.type,
-                notifiedSerial: this.state.notifiedSerial,
-                master: this.state.master,
-                lastCheck: this.state.lastCheck
-            }
+            name: this.state.name,
+            type: this.state.type,
+            notifiedSerial: this.state.notifiedSerial,
+            master: this.state.master,
+            lastCheck: this.state.lastCheck
         }]
-        fetch('http://localhost:8001/domains', {
+        fetch(this.props.resourcesURLBase + 'commit', {
             method: 'post',
             body: JSON.stringify(domainExtension),
             headers: {'Content-Type': 'application/json'}
@@ -137,16 +140,6 @@ class DomainForm extends React.Component{
                     </Col>
                 </Row>
 
-                <Row>
-                    <Col>
-                        <Form.Group controlId="formGridComment">
-                            <Form.Label>Comment</Form.Label>
-                            <Form.Control name="comment" placeholder={this.state.comment} onChange = {this.handleChange} ref="commentForm"/>
-                            <Form.Text className="text-muted">{this.state.copy.comment}</Form.Text>
-                        </Form.Group>
-                    </Col>
-                </Row>
-
                 <Button variant="primary" type="submit">
                     Submit
                 </Button>
@@ -155,7 +148,7 @@ class DomainForm extends React.Component{
     }
 
     refreshDomainForm() {
-        fetch(API+this.urlId)
+        fetch(this.props.resourcesURLBase + this.urlId)
             .then(response => {
                 if (response.ok) {
                     return response;
@@ -167,24 +160,20 @@ class DomainForm extends React.Component{
                 console.log(data);
                 this.setState((prev) => ({
                     id : data.id,
-                    name : data.domain.name,
-                    master : data.domain.master,
-                    lastCheck: data.domain.lastCheck,
-                    type: data.domain.type,
-                    notifiedSerial: data.domain.notifiedSerial,
-                    account: data.domain.account,
-                    owner: data.owner,
-                    comment: data.comment,
+                    name : data.name,
+                    master : data.master,
+                    lastCheck: data.lastCheck,
+                    type: data.type,
+                    notifiedSerial: data.notifiedSerial,
+                    account: data.account,
                     copy : {
                         id : data.id,
-                        name : data.domain.name,
-                        master : data.domain.master,
-                        lastCheck: data.domain.lastCheck,
-                        type: data.domain.type,
-                        notifiedSerial: data.domain.notifiedSerial,
-                        account: data.domain.account,
-                        owner: data.owner,
-                        comment: data.comment
+                        name : data.name,
+                        master : data.master,
+                        lastCheck: data.lastCheck,
+                        type: data.type,
+                        notifiedSerial: data.notifiedSerial,
+                        account: data.account
                     }
                 }));
             })
@@ -192,7 +181,7 @@ class DomainForm extends React.Component{
     }
 
     fetchTypes() {
-        fetch(TypeAPI)
+        fetch(this.props.resourcesURLBase + "types")
             .then(response => {
                 if (response.ok) {
                     return response;
@@ -203,20 +192,81 @@ class DomainForm extends React.Component{
             .then(data => {
                 console.log(data);
                 this.setState((prev) => ({
-                    id : prev.id,
-                    name : prev.name,
-                    master : prev.master,
-                    lastCheck: prev.lastCheck,
-                    type: prev.type,
-                    notifiedSerial: prev.notifiedSerial,
-                    account: prev.account,
-                    owner: prev.owner,
-                    comment: prev.comment,
                     types: data
                 }));
                 this.refreshDomainForm();
             })
             .catch(error => console.log(error + " coś nie tak"));
+    }
+}
+
+
+class DomainRecordsTable extends React.Component
+{
+
+    // make sure those are NOT arrow functions due to 'this' binding
+    fetchValueConstraints()
+    {
+        Promise.all([
+            fetch('http://localhost:8001/records/types')
+        ])
+        .then(([result]) => Promise.all([result.json()]))
+        .then(([types]) => {
+            let valueConstraints = JSON.parse(JSON.stringify(this.state.valueConstraints));
+            valueConstraints['types'] = types;
+            this.setState ({
+                valueConstraints : valueConstraints
+            });
+        })
+    }
+
+    render()
+    {
+        let emptyDataExample = { id : '', domainId : this.props.domainId, name : '', type : '', content : '', ttl : '' };
+        const columns = [
+            { Header : "ID", accessor : "id", type: "none" },
+            { Header : "Name", accessor : "name", type: "text" },
+            { Header : "Type", accessor : "type", type: "select" },
+            { Header : "Content", accessor : "content", type: "text" },
+            { Header : "TTL", accessor : "ttl", type: "number" },
+        ];
+        return (
+            <div>
+                <ReusableTable ref = "domainRecordsTable"
+                fetchValueConstraints = {this.fetchValueConstraints}
+                resourcesURLBase = "http://localhost:8001/records/"
+                resourcesSelectURL = {this.props.domainId}
+                emptyDataExample = {emptyDataExample}
+                columns = {columns}
+                resourceName = "record" />
+            </div>
+        );
+    }
+}
+
+class DomainCommentsTable extends React.Component
+{
+    render()
+    {
+        let emptyDataExample = { id : '', domainId : this.props.domainId, name : '', type : '', modifiedAt : '', comment : '' };
+        const columns = [
+            { Header : "ID", accessor : "id", type: "none" },
+            { Header : "Name", accessor : "name", type: "text" },
+            { Header : "Type", accessor : "type", type: "text" },
+            { Header : "Modified at", accessor : "modifiedAt", type: "none" },
+            { Header : "Comment", accessor : "comment", type: "text" },
+        ];
+        return (
+            <div>
+                <ReusableTable ref = "domainCommentsTable"
+                fetchValueConstraints = { () => {} }
+                resourcesURLBase = "http://localhost:8001/comments/"
+                resourcesSelectURL = {this.props.domainId}
+                emptyDataExample = {emptyDataExample}
+                columns = {columns}
+                resourceName = "comment" />
+            </div>
+        );
     }
 }
 

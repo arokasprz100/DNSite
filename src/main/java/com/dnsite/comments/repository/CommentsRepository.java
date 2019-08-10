@@ -1,7 +1,11 @@
 package com.dnsite.comments.repository;
 
-import com.dnsite.comments.model.Comments;
+import com.dnsite.comments.model.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CommentsRepository extends JpaRepository<Comments, Long> {
+import java.util.List;
+
+public interface CommentsRepository extends JpaRepository<Comment, Long> {
+
+    List<Comment> findByDomain_Id(Long domainId);
 }
