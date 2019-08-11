@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-//import org.thymeleaf.TemplateEngine;
 
 @Service
 public class EmailServiceImpl implements EmailService {

@@ -16,12 +16,12 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Reimnd password</title>
+    <title>Remind password</title>
 
-    <link rel="shortcut icon" href="../src/resources/images/icon.png" />
-    <link href="${contextPath}/src/resources/css/bootstrap.min.css" rel="stylesheet">
-    <link href="${contextPath}/src/resources/css/common.css" rel="stylesheet">
-    <link href="${contextPath}/src/resources/styles/remind-password.css" rel="stylesheet">
+    <link rel="shortcut icon" href="../resources/images/icon.png" />
+    <link href="${contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
+    <link href="${contextPath}/resources/css/common.css" rel="stylesheet">
+    <link href="${contextPath}/resources/styles/remind-password.css" rel="stylesheet">
     <link
             href="https://fonts.googleapis.com/css?family=Montserrat:400,600,700,900|Varela"
             rel="stylesheet"
@@ -60,6 +60,6 @@
 </div>
 <!-- /container -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<script src="../src/resources/js/bootstrap.min.js"></script>
+<script src="${contextPath}/resources/js/bootstrap.min.js"></script>
 </body>
 </html>

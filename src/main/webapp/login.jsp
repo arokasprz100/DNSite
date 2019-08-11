@@ -16,15 +16,18 @@
 
     <title>Log in with your account</title>
 
-    <link rel="shortcut icon" href="./src/resources/images/icon.png" />
-    <link href="./src/resources/css/bootstrap.min.css" rel="stylesheet">
-    <link href="./src/resources/css/common.css" rel="stylesheet">
-    <link href="./src/resources/styles/LogInPage.css" rel="stylesheet">
+    <link rel="shortcut icon" href="../resources/images/icon.png" />
+    <link href="${contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
+    <link href="${contextPath}/resources/css/common.css" rel="stylesheet">
+    <link href="${contextPath}/resources/styles/LogInPage.css" rel="stylesheet">
     <link
             href="https://fonts.googleapis.com/css?family=Montserrat:400,600,700,900|Varela"
             rel="stylesheet"
     />
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet"
+        href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+        crossorigin="anonymous" />
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -68,6 +71,6 @@
 </div>
 <!-- /container -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<script src="./src/resources/js/bootstrap.min.js"></script>
+<script src="${contextPath}/resources/js/bootstrap.min.js"></script>
 </body>
 </html>
