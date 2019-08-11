@@ -1,15 +1,14 @@
-package com.dnsite.utils.CustomConstraints;
+package com.dnsite.utils.CustomConstraints.LetterCase;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class CheckCaseValidator implements ConstraintValidator<CheckCase, String> {
+public class LetterCaseValidator implements ConstraintValidator<LetterCase, String> {
 
-    private CaseMode caseMode;
-
+    private LetterCaseMode letterCaseMode;
     @Override
-    public void initialize(CheckCase constraintAnnotation) {
-        this.caseMode = constraintAnnotation.value();
+    public void initialize(LetterCase constraintAnnotation) {
+        this.letterCaseMode = constraintAnnotation.value();
     }
 
     @Override
@@ -20,10 +19,10 @@ public class CheckCaseValidator implements ConstraintValidator<CheckCase, String
 
         boolean isValid;
 
-        if(caseMode == CaseMode.UPPER){
+        if(letterCaseMode == LetterCaseMode.UPPER){
             isValid = s.equals(s.toUpperCase());
         }
-        else if (caseMode == CaseMode.LOWER){
+        else if (letterCaseMode == LetterCaseMode.LOWER){
             isValid = s.equals(s.toLowerCase());
         }
         else{
@@ -32,7 +31,7 @@ public class CheckCaseValidator implements ConstraintValidator<CheckCase, String
         if (!isValid){
             constraintValidatorContext.disableDefaultConstraintViolation();
             constraintValidatorContext.buildConstraintViolationWithTemplate("com.dnsite.utils.CustomConstraints."+
-                    "constraintvalidatorcontext.CheckCase.message: Should be " + caseMode.toString()).addConstraintViolation();
+                    "constraintvalidatorcontext.LetterCase.message: Should be " + letterCaseMode.toString()).addConstraintViolation();
         }
 
         return isValid;

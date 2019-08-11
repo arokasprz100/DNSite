@@ -1,7 +1,7 @@
 package com.dnsite.tsigKeys.model;
 
-import com.dnsite.utils.CustomConstraints.CaseMode;
-import com.dnsite.utils.CustomConstraints.CheckCase;
+import com.dnsite.utils.CustomConstraints.LetterCase.LetterCaseMode;
+import com.dnsite.utils.CustomConstraints.LetterCase.LetterCase;
 
 import javax.persistence.*;
 
@@ -15,7 +15,7 @@ public class TsigKeysModel {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long Id;
 
-    @CheckCase(CaseMode.LOWER)
+    @LetterCase(LetterCaseMode.LOWER)
     @Column(name = "name")
     private String name = "";
 
