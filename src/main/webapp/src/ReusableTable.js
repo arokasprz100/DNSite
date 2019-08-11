@@ -29,7 +29,9 @@ class ReusableTable extends React.Component
             selectAll : 0,
 
             valueConstraints : {},
+
             expanded:{},
+            errorMessages: [],
 
             tableMode : this.tableModes.EDIT
 
@@ -136,6 +138,7 @@ class ReusableTable extends React.Component
             });
         }
     }
+
 
     undoDeleteRow = (original) =>
     {
@@ -348,7 +351,12 @@ class ReusableTable extends React.Component
 
         if (rowInfo) {
             let isDeleted = this.state.toDelete.some(item => rowInfo.original.tableIndex === item);
-            properties.style = { opacity: isDeleted ? 0.4 : 1.0, };
+            let isIncorrect = (rowInfo.original.tableIndex in this.state.expanded
+                && this.state.expanded[rowInfo.original.tableIndex] === true);
+            properties.style = {
+                opacity: isDeleted ? 0.4 : 1.0,
+                backgroundColor : isIncorrect ? "red" : "white",
+            };
             return properties;
         }
         else {
@@ -560,8 +568,6 @@ class ReusableTable extends React.Component
     {
         const newSelected = JSON.parse(JSON.stringify(this.state.selected));
         newSelected[rowTableIndex] = !this.state.selected[rowTableIndex];
-        let expanded = JSON.parse(JSON.stringify(this.state.expanded));
-        expanded[rowTableIndex] = true;
 
         const visibleRows = this.table.getResolvedState().sortedData;
         let selectAllValue = this.checkRowsSelectionStatus(newSelected, visibleRows);
@@ -570,8 +576,7 @@ class ReusableTable extends React.Component
 
         this.setState({
             selected: newSelected,
-            selectAll: selectAllValue,
-            expanded : expanded
+            selectAll: selectAllValue
         });
     }
 
@@ -623,14 +628,29 @@ class ReusableTable extends React.Component
             fetch(this.props.resourcesURLBase + 'delete', { method: 'post', body: JSON.stringify(deletedContent),
                 headers: {'Content-Type': 'application/json' } } )
         ])
-        .then( ([response1, response2]) =>
+        .then( ([response1, response2]) => response1.json())
+        .then( (response1) =>
         {
-            console.log("Commit complete", response1);
-            console.log("Delete complete", response2);
-            this.renderTable = this.renderTableInReadOnlyMode;
-            this.setState({
-                tableMode: this.tableModes.COMMITTED
-            });
+
+            if (response1.length === 0) {
+                this.renderTable = this.renderTableInReadOnlyMode;
+                this.setState({
+                    tableMode: this.tableModes.COMMITTED
+                });
+            }
+            else {
+                let expandedRows = JSON.parse(JSON.stringify(this.state.expanded));
+                response1.map ( (errorMessage, index) => {
+                    expandedRows[errorMessage.rowNumber] = true;
+                } );
+
+
+                this.setState({
+                    expanded : expandedRows,
+                    errorMessages : response1
+                });
+
+            }
         })
     }
 
@@ -797,10 +817,25 @@ class ReusableTable extends React.Component
                       id   : 'tableIndex',
                       desc : false,
                     }]}
-                    columns={columns}
+                    columns = {columns}
                     getTrProps = {this.setRowProps}
-                    expanded={this.state.expanded}
-                    SubComponent={(v) => <div style={{ padding: '10px' }}>Hello {v.row._index}</div>}
+                    expanded = {this.state.expanded}
+                    SubComponent = { row => {
+                        return (
+                            <div style={{ padding: '10px', backgroundColor : 'red', }} >
+                                <ul>
+                                    {
+                                        this.state.errorMessages.filter( (errorMessage) => {
+                                            return errorMessage.rowNumber === row.original.tableIndex;
+                                        }).
+                                        map ( (errorMessage, index) => {
+                                            return <li> Error in {errorMessage.field}  :  {errorMessage.message} </li>
+                                        })
+                                    }
+                                </ul>
+                            </div>
+                        )
+                    }}
                 />
             </div>
         );

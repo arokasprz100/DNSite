@@ -14,6 +14,7 @@ public class DomainDTOToDomainConverter {
         domain.setLastCheck(domainFromClient.getLastCheck());
         domain.setAccount(domainFromClient.getAccount());
         domain.setNotifiedSerial(domainFromClient.getNotifiedSerial());
+        domain.setMaster(domainFromClient.getMaster());
 
         return domain;
     }

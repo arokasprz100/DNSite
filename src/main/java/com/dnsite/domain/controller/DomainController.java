@@ -46,10 +46,11 @@ public class DomainController {
         return new DomainDTO(domain);
     }
 
-    @GetMapping
+    @PostMapping
     @RequestMapping("/delete")
     @ResponseBody
     public String deleteDomains(@RequestBody List<Domain> domains){
+        // TODO: fix foreign key issue
         domainService.deleteInBatch(domains);
         return "Domains deleted";
     }
@@ -64,7 +65,9 @@ public class DomainController {
             domains.add(DomainDTOToDomainConverter.convert(domainFromClient));
         }
         domainService.saveInBatch(domains);
-        return "Domains saved";
+        return "[ {\"type\":\"com.dnsite.domain.model.Domain\",\"rowNumber\":0,\"field\":\"name\",\"message\":\"message 0\"}, "
+                + "{\"type\":\"com.dnsite.domain.model.Domain\",\"rowNumber\":0,\"field\":\"name\",\"message\":\"message 1\"}"
+                + "]";
     }
 
     @GetMapping
