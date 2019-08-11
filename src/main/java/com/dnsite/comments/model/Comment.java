@@ -1,9 +1,12 @@
 package com.dnsite.comments.model;
 
 import com.dnsite.domain.model.Domain;
+import com.dnsite.utils.CustomConstraints.LetterCase.LetterCase;
+import com.dnsite.utils.CustomConstraints.LetterCase.LetterCaseMode;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "comments")
@@ -15,22 +18,28 @@ public class Comment {
 
     @ManyToOne (cascade = CascadeType.ALL)
     @JoinColumn (name = "domain")
+    @NotNull
     @JsonIgnore
     private Domain domain = null;
 
     @Column(name = "name")
-    private String name = "";
+    @NotNull
+    @LetterCase(LetterCaseMode.LOWER)
+    private String name;
 
     @Column(name = "type")
-    private String type = "";
+    @NotNull
+    private String type;
 
     @Column(name = "modified_at")
+    @NotNull
     private int modifiedAt;
 
     @Column(name = "account")
-    private String account = "";
+    private String account = null;
 
     @Column(name = "comment")
+    @NotNull
     private String comment = "";
 
     public Long getId() {

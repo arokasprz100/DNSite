@@ -271,7 +271,7 @@ class ReusableTable extends React.Component
     changeEditedContent = (event, cellInfo) =>
     {
         let editedRow = JSON.parse(JSON.stringify(this.state.editedContent[cellInfo.original.tableIndex]));
-        editedRow[cellInfo.column.id] = event.target.value;
+        editedRow[cellInfo.column.id] = event.target.value === '' ? null : event.target.value;
 
         let notEditedRows = {}
         Object.keys(this.state.editedContent)
@@ -410,7 +410,7 @@ class ReusableTable extends React.Component
                     <select
                         value = { this.state.editedContent[cellInfo.original.tableIndex][cellInfo.column.id] }
                         style = { { backgroundColor: "#fafafa", margin: "3px", width: "98%" } }
-                        onChange = { (e) => {this.changeEditedContent(e, cellInfo)}}
+                        onChange = { (e) => { this.changeEditedContent(e, cellInfo)}}
                     >
                      <option key='' value=''>--</option>;
                     {
@@ -633,7 +633,7 @@ class ReusableTable extends React.Component
         .then( ([response1, response2]) => response1.json())
         .then( (response1) =>
         {
-
+            console.log(response1);
             if (response1.length === 0) {
                 this.renderTable = this.renderTableInReadOnlyMode;
                 this.setState({

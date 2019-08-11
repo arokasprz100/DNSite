@@ -19,11 +19,13 @@ public class RecordDTO {
 
     private Long priority;
 
-    private Long changeDate;
-
     private Boolean disabled;
 
     private Long tableIndex;
+
+    private String orderName;
+
+    private Boolean auth;
 
     public RecordDTO() {}
 
@@ -35,8 +37,9 @@ public class RecordDTO {
         content = record.getContent();
         ttl = record.getTtl();
         priority = record.getPriority();
-        changeDate = record.getChangeDate();
         disabled = record.getDisabled();
+        orderName = record.getOrderName();
+        auth = record.getAuth();
     }
 
     public Long getId() {
@@ -65,10 +68,6 @@ public class RecordDTO {
 
     public Long getPriority() {
         return priority;
-    }
-
-    public Long getChangeDate() {
-        return changeDate;
     }
 
     public Boolean getDisabled() {
@@ -105,13 +104,25 @@ public class RecordDTO {
         this.priority = priority;
     }
 
-    public void setChangeDate(Long changeDate) {
-        this.changeDate = changeDate;
-    }
-
     public void setDisabled(Boolean disabled) {
         this.disabled = disabled;
     }
 
     public void setTableIndex(Long tableIndex) { this.tableIndex = tableIndex; }
+
+    public String getOrderName() {
+        return orderName;
+    }
+
+    public void setOrderName(String orderName) {
+        this.orderName = orderName;
+    }
+
+    public Boolean getAuth() {
+        return auth;
+    }
+
+    public void setAuth(Boolean auth) {
+        this.auth = auth;
+    }
 }

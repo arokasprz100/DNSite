@@ -6,12 +6,17 @@ import com.dnsite.record.DTOs.RecordDTOToRecordConverter;
 import com.dnsite.record.model.Record;
 import com.dnsite.record.model.RecordType;
 import com.dnsite.record.service.RecordService;
+import com.dnsite.utils.DTOs.ConstraintViolationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Validation;
+import javax.validation.Validator;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/records")
@@ -52,14 +57,22 @@ public class RecordController {
     @PostMapping
     @RequestMapping("/commit")
     @ResponseBody
-    public String commitChanges(@RequestBody List<RecordDTO> recordsFromClient) {
+    public Set<ConstraintViolationDTO> commitChanges(@RequestBody List<RecordDTO> recordsFromClient) {
         List<Record> records = new ArrayList<>();
+        Set<ConstraintViolationDTO> violations = new HashSet<>();
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+
         for(RecordDTO recordFromClient : recordsFromClient){
-            records.add(RecordDTOToRecordConverter.convert(recordFromClient, domainService));
+            Record toAdd = RecordDTOToRecordConverter.convert(recordFromClient, domainService);
+            violations.addAll(ConstraintViolationDTO.ofSet(validator.validate(toAdd), recordFromClient.getTableIndex()));
+            records.add(toAdd);
         }
-        recordService.saveOrUpdate(records);
-        domainService.saveInBatch(SOAChangesApplier.apply(records));
-        return "Changes applied.";
+
+        if(violations.isEmpty()) {
+            recordService.saveOrUpdate(records);
+            domainService.saveInBatch(SOAChangesApplier.apply(records));
+        }
+        return violations;
     }
 
     @PostMapping

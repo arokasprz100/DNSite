@@ -17,13 +17,13 @@ public class TsigKeysModel {
 
     @LetterCase(LetterCaseMode.LOWER)
     @Column(name = "name")
-    private String name = "";
+    private String name;
 
     @Column(name = "algorithm")
-    private String algorithm = "";
+    private String algorithm;
 
     @Column(name = "secret")
-    private String secret = "";
+    private String secret;
 
     public Long getId() {
         return Id;
