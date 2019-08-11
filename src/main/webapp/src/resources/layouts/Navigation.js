@@ -3,7 +3,6 @@ import { NavLink } from "react-router-dom";
 import "../styles/Navigation.css";
 
 const navList = [
-  { name: "home", path: "/dnsite", exact: true },
   { name: "supermasters", path: "/supermasters" },
   { name: "domains", path: "/domains" },
   { name: "administration", path: "/administration" },
@@ -12,14 +11,18 @@ const navList = [
 
 class Navigation extends Component {
   state = {
-    navShown: false
+      userPanelShow: false
   };
-  navShow = () => {
-    const nav = document.getElementsByClassName("menu")[0];
-    if (!this.state.navShown) nav.classList.add("active");
-    else nav.classList.remove("active");
+    userPanelShow = () => {
+    const icon = document.getElementsByClassName("toggle")[0];
+    if (!this.state.userPanelShow) icon.classList.add("active");
+    else icon.classList.remove("active");
+
+    const userBlock = document.getElementsByClassName("userBlock")[0];
+    if (!this.state.userPanelShow) userBlock.classList.add("showBlock");
+    else userBlock.classList.remove("showBlock");
     this.setState({
-      navShown: !this.state.navShown
+        userPanelShow: !this.state.userPanelShow
     });
   };
 
@@ -32,16 +35,16 @@ class Navigation extends Component {
       </li>
     ));
     return (
-      <nav className="menu">
-        <span className="toggle" onClick={this.navShow}>
-          <i />
-          <i />
-          <i />
-        </span>
-        <div className="menuContent">
-          <ul>{menu}</ul>
-        </div>
-      </nav>
+        <>
+            <nav className="menu">
+                 <div className="menuContent">
+                    <ul>{menu}</ul>
+                 </div>
+            </nav>
+            <span className="toggle" onClick={this.userPanelShow}>
+              <i className="fas fa-user"></i>
+            </span>
+        </>
     );
   }
 }

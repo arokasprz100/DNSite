@@ -1,5 +1,4 @@
 import React from "react";
-import useRef from "react";
 import "./resources/styles/Supermasters.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ReactTable from "react-table";

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router } from "react-router-dom";
+import { HashRouter as Router } from "react-router-dom";
 import "../styles/App.css";
 import Header from "./Header";
 import Navigation from "./Navigation";
@@ -12,10 +12,12 @@ class App extends Component {
     return (
       <Router>
         <div className="app">
-          <header>{<Header />}</header>
-          {<Navigation />}
-          <main>
+          <header>
+            {<Header />}
+            {<Navigation />}
             <aside>{<UserBlock />}</aside>
+          </header>
+          <main>
             <article>{<MainPage />}</article>
           </main>
           <footer>{<Footer />}</footer>

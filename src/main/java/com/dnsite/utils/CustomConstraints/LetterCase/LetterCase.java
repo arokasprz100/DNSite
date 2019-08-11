@@ -4,7 +4,7 @@ import javax.validation.Constraint;
         import javax.validation.Payload;
         import java.lang.annotation.*;
 
-@Target({ElementType.FIELD, ElementType.PARAMETER})
+@Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.LOCAL_VARIABLE})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = LetterCaseValidator.class)
 @Documented

@@ -63,11 +63,11 @@ public class Domain {
     @Column(name = "account")
     private String account = null;
 
-    @OneToMany(mappedBy = "domain", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "domain", cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Comment> comments;
 
-    @OneToMany( mappedBy = "domain", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany( mappedBy = "domain", cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Record> records;
 

@@ -11,6 +11,7 @@
       href="https://fonts.googleapis.com/css?family=Montserrat:400,600,700,900|Varela"
       rel="stylesheet"
     />
+    <link rel="shortcut icon" href="../resources/images/icon.png" />
     <title>DNSite</title>
     <style>
       * {

@@ -8,17 +8,19 @@ import Domain from "../pages/Domain"
 import Administration from "../pages/Administration";
 import Records from "../pages/Records";
 import ReactDOM from 'react-dom'
+import Error404 from "../pages/Error404";
 
 const MainPage = () => {
   return (
     <>
       <Switch>
-        <Route path="/dnsite" exact component={Home} />
+        <Route path="/" exact component={Home} />
         <Route path="/supermasters" component={Supermasters} />
         <Route path="/domains" component={Domains} />
         <Route path="/records" component={Records} />
         <Route path="/administration" component={Administration} />
         <Route path="/domain/:id" component={Domain}/>
+        <Route component={Error404} />
       </Switch>
     </>
   );

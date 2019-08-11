@@ -1,12 +1,27 @@
 .userBlock {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  flex-direction: column;
   background-color: white;
   color: #151515;
-  padding: 10px 20px;
-  font-size: 18px;
-  border-bottom: 1px solid #151515;
+  padding: 0px 20px 0px 20px;
+  font-size: 15px;
+  max-width: 300px;
+  position: absolute;
+  right: -300px;
+  top: 70px;
+  transition: all 0.3s ease;
+  background-color: white;
+  z-index:1;
+}
+
+.showBlock{
+  right: 0;
+}
+
+h4{
+  align-self: center;
+  margin-top: 8px;
+  margin-bottom: 12px;
 }
 
 .userBlock span {
@@ -15,14 +30,17 @@
 
 .userBlock button {
   margin-right: 5px;
-  margin-left: 5px;
+  margin-bottom: 5px;
   background: none;
   border: none;
+  display: block;
   font-family: "Montserrat", sans-serif;
   text-transform: uppercase;
 }
 
 .userBlock button:hover {
+  border: none !important;
+  background: none !important;
   color: rgb(255, 88, 0);
   cursor: pointer;
 }
