@@ -23,6 +23,7 @@ public class CryptoKeyModel {
 
     @NotNull
     @Column(name = "flags")
+    @NotNull
     private int flags = 0;
 
     @Column(name = "active")

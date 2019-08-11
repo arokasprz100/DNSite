@@ -1,8 +1,13 @@
 package com.dnsite.record.model;
 
 import com.dnsite.domain.model.Domain;
+import com.dnsite.utils.CustomConstraints.LetterCase.LetterCase;
+import com.dnsite.utils.CustomConstraints.LetterCase.LetterCaseMode;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 
 @Entity
@@ -19,26 +24,34 @@ public class Record {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name="domain_id")
+    @JoinColumn(name="domain_id", nullable = false)
     private Domain domain = null;
 
-    private String name;
+    @Column(name = "name")
+    @LetterCase(LetterCaseMode.LOWER)
+    private String name = null;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
-    private RecordType type;
+    private RecordType type = null;
 
-    private String content;
+    @Column(name = "content")
+    private String content = null;
 
-    private Long ttl;
+    @Column(name = "ttl")
+    private Long ttl = null;
 
     @Column(name = "prio")
-    private Long priority;
+    private Long priority = null;
 
-    @Column(name = "change_date")
-    private Long changeDate;
+    @Column(name = "disabled")
+    private Boolean disabled = false;
 
-    private Boolean disabled;
+    @Column(name = "ordername")
+    private String orderName = null;
+
+    @Column(name = "auth")
+    private Boolean auth = true;
 
     public Long getId() {
         return id;
@@ -88,14 +101,6 @@ public class Record {
         this.priority = priority;
     }
 
-    public Long getChangeDate() {
-        return changeDate;
-    }
-
-    public void setChangeDate(Long changeDate) {
-        this.changeDate = changeDate;
-    }
-
     public Boolean getDisabled() {
         return disabled;
     }
@@ -110,6 +115,22 @@ public class Record {
 
     public void setDomain(Domain domain) {
         this.domain = domain;
+    }
+
+    public String getOrderName() {
+        return orderName;
+    }
+
+    public void setOrderName(String orderName) {
+        this.orderName = orderName;
+    }
+
+    public Boolean getAuth() {
+        return auth;
+    }
+
+    public void setAuth(Boolean auth) {
+        this.auth = auth;
     }
 
     @Override

@@ -28,6 +28,6 @@ public class RecordServiceImpl implements RecordService {
     }
 
     public void deleteInBatch(List<Record> records) {
-        recordRepository.deleteInBatch(records);
+        recordRepository.deleteAll(records);
     }
 }

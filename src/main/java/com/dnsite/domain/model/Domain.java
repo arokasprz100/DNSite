@@ -43,7 +43,8 @@ public class Domain {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
-    private TYPE type = TYPE.NATIVE;
+    @NotNull
+    private TYPE type;
 
     @Column(name = "name")
     @LetterCase(LetterCaseMode.LOWER)
@@ -51,7 +52,7 @@ public class Domain {
     private String name;
 
     @Column(name = "master")
-    private String master;
+    private String master = null;
 
     @Column(name = "last_check")
     private int lastCheck;
@@ -60,15 +61,13 @@ public class Domain {
     private int notifiedSerial = Integer.parseInt(dateFormat.format(new Date()))*100;
 
     @Column(name = "account")
-    private String account;
+    private String account = null;
 
-    @OneToMany(mappedBy = "domain", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
+    @OneToMany(mappedBy = "domain", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Comment> comments;
 
-    @OneToMany(mappedBy = "domain", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
+    @OneToMany( mappedBy = "domain", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Record> records;
 

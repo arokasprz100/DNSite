@@ -1,10 +1,12 @@
 package com.dnsite.supermaster.model;
 
+import com.dnsite.utils.CustomConstraints.IpAddress.IpAddress;
 import com.vladmihalcea.hibernate.type.basic.Inet;
 import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -20,9 +22,12 @@ public class SupermasterId implements Serializable {
             name = "ip",
             columnDefinition = "inet"
     )
+    @NotNull
+    @IpAddress
     private Inet ip;
 
     @Column(name = "nameserver")
+    @NotNull
     private String nameserver;
 
     public Inet getIp() {

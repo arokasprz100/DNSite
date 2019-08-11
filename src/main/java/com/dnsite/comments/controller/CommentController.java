@@ -5,12 +5,17 @@ import com.dnsite.comments.DTOs.CommentDTOToCommentConverter;
 import com.dnsite.comments.model.Comment;
 import com.dnsite.comments.service.CommentsService;
 import com.dnsite.domain.service.DomainService;
+import com.dnsite.utils.DTOs.ConstraintViolationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Validation;
+import javax.validation.Validator;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/comments")
@@ -52,13 +57,21 @@ public class CommentController {
     @PostMapping
     @RequestMapping("/commit")
     @ResponseBody
-    public String commitChanges(@RequestBody List<CommentDTO> commentsFromClient){
+    public Set<ConstraintViolationDTO> commitChanges(@RequestBody List<CommentDTO> commentsFromClient){
         List<Comment> comments = new ArrayList<>();
+        Set<ConstraintViolationDTO> violations = new HashSet<>();
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+
         for (CommentDTO commentFromClient : commentsFromClient) {
-            comments.add(CommentDTOToCommentConverter.convert(commentFromClient, domainService));
+            Comment toAdd = CommentDTOToCommentConverter.convert(commentFromClient, domainService);
+            violations.addAll(ConstraintViolationDTO.ofSet(validator.validate(toAdd), commentFromClient.getTableIndex()));
+            comments.add(toAdd);
         }
-        commentsService.saveInBatch(comments);
-        return "Comment saved";
+
+        if(violations.isEmpty()) {
+            commentsService.saveInBatch(comments);
+        }
+        return violations;
     }
 
 

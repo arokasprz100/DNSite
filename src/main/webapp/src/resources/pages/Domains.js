@@ -24,7 +24,7 @@ class Domains extends React.Component {
 
     render()
     {
-        const emptyDataExample = { id : '', name : '', master : '', type : ''};
+        const emptyDataExample = { id : "", name : null, master : null, type : null};
         const columns = [
             { Header : "ID", accessor : "id", type : "link" },
             { Header : "Domain Name", accessor : "name", type : "text" },

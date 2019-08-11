@@ -15,8 +15,9 @@ public class RecordDTOToRecordConverter {
         record.setContent(recordDTO.getContent());
         record.setTtl(recordDTO.getTtl());
         record.setPriority(recordDTO.getPriority());
-        record.setChangeDate(recordDTO.getChangeDate());
         record.setDisabled(recordDTO.getDisabled());
+        record.setOrderName(recordDTO.getOrderName());
+        record.setAuth(recordDTO.getAuth());
 
         return record;
     }
