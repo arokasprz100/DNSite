@@ -549,20 +549,6 @@ class ReusableTable extends React.Component
     }
 
 
-    checkRowsSelectionStatus = (newSelected, visibleRows) =>
-    {
-        let selectedCount = Object.keys(
-            Object.fromEntries(Object.entries(newSelected).filter(([k,v]) => v === true))).map(Number).length;
-        let visibleRowsCount = visibleRows.length;
-
-        console.log("Selected count ", selectedCount);
-        console.log("Data count ", visibleRowsCount);
-
-        if (selectedCount === 0) return 0;
-        else if (selectedCount === visibleRowsCount) return 1;
-        else return 2;
-    }
-
 
     toggleRow = (rowTableIndex) =>
     {
@@ -571,37 +557,57 @@ class ReusableTable extends React.Component
         let expanded = JSON.parse(JSON.stringify(this.state.expanded));
         expanded[rowTableIndex] = true;
 
-        const visibleRows = this.table.getResolvedState().sortedData;
-        let selectAllValue = this.checkRowsSelectionStatus(newSelected, visibleRows);
-
-        console.log("SelectAll ", selectAllValue);
-
         this.setState({
-            selected: newSelected,
-            selectAll: selectAllValue
-        });
+            selected: newSelected
+        }, this.handleSelectionChange);
     }
 
     // TODO: fix
     toggleSelectAll = () =>
     {
+        let newSelectAll = 0;
+        if (this.state.selectAll === 2) newSelectAll = 1;
+        else if (this.state.selectAll === 1) newSelectAll = 0;
+        else newSelectAll = 1;
+
         let newSelected = JSON.parse(JSON.stringify(this.state.selected));
         let visibleRows = this.table.getResolvedState().sortedData;
-        if (this.state.selectAll === 0 || this.state.selectAll === 1) {
+        if (newSelectAll === 1) {
             visibleRows.forEach( row => { newSelected[row[""].tableIndex] = true; } );
         }
         else {
             visibleRows.forEach( row => { newSelected[row[""].tableIndex] = false; } );
         }
 
-        let selectAllValue = this.checkRowsSelectionStatus(newSelected, visibleRows);
-
         this.setState({
-            selected: newSelected,
-            selectAll: selectAllValue
-        });
+            selected: newSelected
+        }, this.handleSelectionChange);
     }
 
+
+    handleSelectionChange = () =>
+    {
+        let visibleRows = this.table.getResolvedState().sortedData;
+        let filteredSelectedCount = 0;
+        visibleRows.forEach( (row) => {
+            if (row[""].tableIndex in this.state.selected && this.state.selected[row[""].tableIndex] === true) {
+                ++filteredSelectedCount;
+            }
+        });
+
+        let selectAll = 0;
+        if (filteredSelectedCount === 0) {
+            selectAll = 0;
+        }
+        else if (filteredSelectedCount === visibleRows.length) {
+            selectAll = 1;
+        }
+        else {
+            selectAll = 2;
+        }
+
+        this.setState({ selectAll : selectAll });
+    }
 
 
     revertChanges = () =>
@@ -637,7 +643,9 @@ class ReusableTable extends React.Component
             if (response1.length === 0) {
                 this.renderTable = this.renderTableInReadOnlyMode;
                 this.setState({
-                    tableMode: this.tableModes.COMMITTED
+                    tableMode: this.tableModes.COMMITTED,
+                    expanded: {},
+                    errorMessages: []
                 });
             }
             else {
@@ -806,7 +814,7 @@ class ReusableTable extends React.Component
         ];
         return (
             <div>
-                <div className="buttonsWrapper">
+                <div className = "buttonsWrapper">
                     <button onClick={ () => this.addRow() }> Add {this.props.resourceName} </button>
                     <button onClick={ () => this.commitChanges() }> Commit changes </button>
                     <button onClick={ () => this.revertChanges() }> Revert changes </button>
@@ -815,6 +823,7 @@ class ReusableTable extends React.Component
                     ref={(r) => (this.table = r)}
                     data={this.state.data}
                     filterable
+                    onFilteredChange={() => { this.handleSelectionChange(); }}
                     defaultSorted={[{
                       id   : 'tableIndex',
                       desc : false,

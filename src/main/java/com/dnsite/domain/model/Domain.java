@@ -5,6 +5,8 @@ import com.dnsite.record.model.Record;
 import com.dnsite.utils.CustomConstraints.LetterCase.LetterCaseMode;
 import com.dnsite.utils.CustomConstraints.LetterCase.LetterCase;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -60,11 +62,14 @@ public class Domain {
     @Column(name = "account")
     private String account;
 
-    @OneToMany(mappedBy = "domain", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "domain", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Comment> comments;
 
-    @OneToMany( mappedBy = "domain", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "domain", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Record> records;
 
     public Long getId() {
