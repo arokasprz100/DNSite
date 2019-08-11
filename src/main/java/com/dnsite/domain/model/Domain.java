@@ -2,8 +2,8 @@ package com.dnsite.domain.model;
 
 import com.dnsite.comments.model.Comment;
 import com.dnsite.record.model.Record;
-import com.dnsite.utils.CustomConstraints.CaseMode;
-import com.dnsite.utils.CustomConstraints.CheckCase;
+import com.dnsite.utils.CustomConstraints.LetterCase.LetterCaseMode;
+import com.dnsite.utils.CustomConstraints.LetterCase.LetterCase;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -44,7 +44,7 @@ public class Domain {
     private TYPE type = TYPE.NATIVE;
 
     @Column(name = "name")
-    @CheckCase(CaseMode.LOWER)
+    @LetterCase(LetterCaseMode.LOWER)
     @NotNull
     private String name;
 

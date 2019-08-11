@@ -84,6 +84,7 @@ class DomainForm extends React.Component{
         }).then((response) => {
             return response;
         }).then((data) => {
+            data.text().then((text) => console.log(text));
             console.log('Complete', data);
             this.refreshDomainForm();
         });

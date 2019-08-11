@@ -568,6 +568,8 @@ class ReusableTable extends React.Component
     {
         const newSelected = JSON.parse(JSON.stringify(this.state.selected));
         newSelected[rowTableIndex] = !this.state.selected[rowTableIndex];
+        let expanded = JSON.parse(JSON.stringify(this.state.expanded));
+        expanded[rowTableIndex] = true;
 
         const visibleRows = this.table.getResolvedState().sortedData;
         let selectAllValue = this.checkRowsSelectionStatus(newSelected, visibleRows);
@@ -817,9 +819,9 @@ class ReusableTable extends React.Component
                       id   : 'tableIndex',
                       desc : false,
                     }]}
-                    columns = {columns}
+                    columns={columns}
                     getTrProps = {this.setRowProps}
-                    expanded = {this.state.expanded}
+                    expanded={this.state.expanded}
                     SubComponent = { row => {
                         return (
                             <div style={{ padding: '10px', backgroundColor : 'red', }} >
