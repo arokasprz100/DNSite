@@ -57,7 +57,7 @@ class ReusableTable extends React.Component
         .then(response => response.json())
         .then(data =>
         {
-            let currentTableIndex = this.state.currentIndex;
+            let currentTableIndex = 0;
             data.map( (row, index) =>
             {
                 row.tableIndex = currentTableIndex;
@@ -70,7 +70,10 @@ class ReusableTable extends React.Component
                 selected: {},
                 editedContent: {},
                 toDelete: [],
-                currentIndex : currentTableIndex
+                currentIndex : currentTableIndex,
+                errorMessages: [],
+                expanded: {},
+                tableMode : this.tableModes.EDIT
             });
         })
         .catch(
@@ -553,8 +556,6 @@ class ReusableTable extends React.Component
     {
         const newSelected = JSON.parse(JSON.stringify(this.state.selected));
         newSelected[rowTableIndex] = !this.state.selected[rowTableIndex];
-        let expanded = JSON.parse(JSON.stringify(this.state.expanded));
-        expanded[rowTableIndex] = true;
 
         this.setState({
             selected: newSelected
@@ -626,8 +627,6 @@ class ReusableTable extends React.Component
             deletedContent = [...deletedContent, rowToDelete];
         });
 
-        console.log(editedContent);
-
         Promise.all
         ([
             fetch(this.props.resourcesURLBase + 'commit', { method: 'post', body: JSON.stringify(editedContent),
@@ -638,13 +637,12 @@ class ReusableTable extends React.Component
         .then( ([response1, response2]) => response1.json())
         .then( (response1) =>
         {
-            console.log(response1);
             if (response1.length === 0) {
                 this.renderTable = this.renderTableInReadOnlyMode;
                 this.setState({
-                    tableMode: this.tableModes.COMMITTED,
-                    expanded: {},
-                    errorMessages: []
+                    expanded : {},
+                    errorMessages : [],
+                    tableMode: this.tableModes.COMMITTED
                 });
             }
             else {
@@ -652,7 +650,6 @@ class ReusableTable extends React.Component
                 response1.map ( (errorMessage, index) => {
                     expandedRows[errorMessage.rowNumber] = true;
                 } );
-
 
                 this.setState({
                     expanded : expandedRows,
@@ -667,7 +664,6 @@ class ReusableTable extends React.Component
     continueAfterChanges = () =>
     {
         this.renderTable = this.renderTableInEditMode;
-        this.setState( { toDelete : [], tableMode: this.tableModes.EDIT } );
         this.refreshTable();
     }
 
@@ -713,6 +709,7 @@ class ReusableTable extends React.Component
 
     renderTableInEditMode()
     {
+        console.log("Render table in edit mode");
         let dataColumns = [];
         this.props.columns.forEach ( (columnMetaData) => {
 
@@ -811,6 +808,9 @@ class ReusableTable extends React.Component
               show: false
             }
         ];
+
+        console.log(this.state.errorMessages);
+        console.log(this.state.expanded);
         return (
             <div>
                 <div className = "buttonsWrapper">
@@ -831,6 +831,7 @@ class ReusableTable extends React.Component
                     getTrProps = {this.setRowProps}
                     expanded={this.state.expanded}
                     SubComponent = { row => {
+                        console.log("SubComponent render");
                         return (
                             <div style={{ padding: '10px', backgroundColor : 'red', }} >
                                 <ul>
