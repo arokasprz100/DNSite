@@ -6,6 +6,8 @@ import com.dnsite.security.service.SecurityServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class HistoryServiceImpl implements HistoryService {
 
@@ -22,5 +24,10 @@ public class HistoryServiceImpl implements HistoryService {
         history.setAction(action);
         history.setUserName(securityService.findLoggedInUsername());
         historyRepository.save(history);
+    }
+
+    @Override
+    public List<History> findAll() {
+        return historyRepository.findAll();
     }
 }
