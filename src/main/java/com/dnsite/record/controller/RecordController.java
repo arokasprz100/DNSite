@@ -68,7 +68,7 @@ public class RecordController {
             records.add(toAdd);
         }
 
-        if(violations.isEmpty()) {
+        if(violations.isEmpty() && records.size() != 0) {
             recordService.saveOrUpdate(records);
             domainService.saveInBatch(SOAChangesApplier.apply(records));
         }
@@ -79,9 +79,14 @@ public class RecordController {
     @RequestMapping("/delete")
     @ResponseBody
     public String deleteRecords(@RequestBody List<Record> records) {
-        recordService.deleteInBatch(records);
-        domainService.saveInBatch(SOAChangesApplier.apply(records));
-        return "Records deleted.";
+        if (records.size() != 0) {
+            recordService.deleteInBatch(records);
+            domainService.saveInBatch(SOAChangesApplier.apply(records));
+            return "Records deleted.";
+        }
+        else {
+            return "No records to delete.";
+        }
     }
 
     @GetMapping
