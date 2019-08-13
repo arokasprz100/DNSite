@@ -14,22 +14,30 @@ class ReusableTable extends React.Component
         super(props);
 
         this.state = {
+
+            // data stored in table
             data : [],
-            selected : {},
+            valueConstraints : {},
             toDelete : [],
             editedContent : {},
-
             currentIndex : 0,
+
+            // selection (checkbox) mechanism
+            selected : {},
             selectAll : 0,
 
-            valueConstraints : {},
-
+            // validation error display mechanism
             expanded:{},
             errorMessages: [],
+
+            // copying mechanism
+            focusedRow: -1,
+            copiedRow : {}
         };
 
         this.emptyDataExample = this.props.emptyDataExample;
         this.fetchValueConstraints = this.props.fetchValueConstraints.bind(this);
+        this.columnsSchema = this.props.columns;
         this.renderTable = this.renderTableInEditMode;
 
         this.table = {};
@@ -50,14 +58,13 @@ class ReusableTable extends React.Component
         .then(data =>
         {
             let currentTableIndex = 0;
-            data.map( (row, index) =>
+            data.forEach( (row) =>
             {
                 row.tableIndex = currentTableIndex;
                 row.isNewlyAdded = false;
                 currentTableIndex = currentTableIndex + 1;
             });
-            this.setState
-            ({
+            this.setState ({
                 data: data,
                 selected: {},
                 editedContent: {},
@@ -104,7 +111,7 @@ class ReusableTable extends React.Component
 
         this.setState((previousState) =>
         ({
-            data : [ ... previousState.data, newRow ],
+            data : [ ...previousState.data, newRow ],
             editedContent : {  ...previousState.editedContent, [currentTableIndex] : newEditedRow },
             currentIndex : currentTableIndex + 1
         }));
@@ -118,7 +125,7 @@ class ReusableTable extends React.Component
         if (original.id !== '')
         {
             this.setState( (previousState) => ( {
-                toDelete : [... previousState.toDelete,
+                toDelete : [...previousState.toDelete,
                     original.tableIndex]
             }));
         }
@@ -152,7 +159,7 @@ class ReusableTable extends React.Component
         let committed = [];
         let notCommitted = [];
         selectedRows.forEach ( (key) => {
-            var row = this.state.data.find((obj) => {return obj.tableIndex == key});
+            var row = this.state.data.find((obj) => {return obj.tableIndex === key});
             if (row.id !== '') {
                 committed = [...committed, row.tableIndex];
             }
@@ -163,7 +170,7 @@ class ReusableTable extends React.Component
 
         var editedAndNotSelected = editedRows.filter(function(obj) {
             return !selectedRows.some(function(obj2) {
-                return obj == obj2;
+                return obj === obj2;
             });
         });
 
@@ -184,7 +191,7 @@ class ReusableTable extends React.Component
 
         this.setState( (previousState) => ( {
             editedContent : newEditedContent,
-            toDelete : Array.from(new Set([... previousState.toDelete, ...committed])),
+            toDelete : Array.from(new Set([...previousState.toDelete, ...committed])),
             selected: {},
             selectAll: 0,
             data: newData,
@@ -211,13 +218,13 @@ class ReusableTable extends React.Component
 
         var selectedAndNotEditedRows = selectedRows.filter(function(obj) {
             return !editedRows.some(function(obj2) {
-                return obj == obj2;
+                return obj === obj2;
             });
         });
 
         var deletedAndNotSelected = this.state.toDelete.filter(function(obj) {
             return !selectedRows.some(function(obj2) {
-                return obj == obj2;
+                return obj === obj2;
             });
         });
 
@@ -239,7 +246,13 @@ class ReusableTable extends React.Component
 
 
     componentDidMount() {
+        document.addEventListener("keydown", this.handleKeyDown);
         this.refreshTable();
+    }
+
+
+    componentWillUnmount() {
+        document.removeEventListener("keydown", this.handleKeyDown);
     }
 
 
@@ -247,7 +260,6 @@ class ReusableTable extends React.Component
     setValueInAllEdited = (event, cellInfo) =>
     {
         var selected = this.getSelectedRows();
-        console.log(selected);
         var edited = JSON.parse(JSON.stringify(this.state.editedContent));
         Object.values(edited).forEach( (editedRow) =>
         {
@@ -255,7 +267,6 @@ class ReusableTable extends React.Component
                 editedRow[cellInfo.column.id] = event.target.value;
             }
         });
-        console.log(edited);
         this.setState( (previousState) => ( {
             editedContent: edited
         }));
@@ -269,7 +280,7 @@ class ReusableTable extends React.Component
         let notEditedRows = {}
         Object.keys(this.state.editedContent)
             .forEach((key) => {
-                if (key != cellInfo.original.tableIndex) {
+                if (key !== cellInfo.original.tableIndex) {
                     notEditedRows[key] = this.state.editedContent[key];
                 }
             });
@@ -338,7 +349,9 @@ class ReusableTable extends React.Component
 
         let properties = {
             onClick: (e) => {
-                console.log("xddddd");
+                if (rowInfo) {
+                    this.setState({ focusedRow : rowInfo.original.tableIndex });
+                }
             }
         };
 
@@ -346,9 +359,11 @@ class ReusableTable extends React.Component
             let isDeleted = this.state.toDelete.some(item => rowInfo.original.tableIndex === item);
             let isIncorrect = (rowInfo.original.tableIndex in this.state.expanded
                 && this.state.expanded[rowInfo.original.tableIndex] === true);
+            let isFocused = (this.state.focusedRow === rowInfo.original.tableIndex);
             properties.style = {
                 opacity: isDeleted ? 0.4 : 1.0,
                 backgroundColor : isIncorrect ? "red" : "white",
+                border : isFocused ? "1px solid black" : "0px",
             };
             return properties;
         }
@@ -422,7 +437,7 @@ class ReusableTable extends React.Component
 
     renderFooter = (cellInfo, inputType) =>
     {
-        if (Object.getOwnPropertyNames(this.state.editedContent).length != 0) {
+        if (Object.getOwnPropertyNames(this.state.editedContent).length !== 0) {
             return (<input type={inputType} onChange= { (e) => this.setValueInAllEdited(e, cellInfo)} />)
         }
         else {
@@ -448,7 +463,7 @@ class ReusableTable extends React.Component
     renderSelectFooter = cellInfo =>
     {
         let constraintName = cellInfo.column.id + "s";
-        if (Object.getOwnPropertyNames(this.state.editedContent).length != 0)
+        if (Object.getOwnPropertyNames(this.state.editedContent).length !== 0)
         {
             return (<select onChange= { (e) => this.setValueInAllEdited(e, cellInfo)} >
                 {
@@ -486,7 +501,8 @@ class ReusableTable extends React.Component
     {
         const isEdited = this.checkIfObjectIsEdited(cellInfo);
         const isDeleted = this.checkIfObjectIsDeleted(cellInfo);
-        if (isDeleted) { return <div/> }
+        const isNewlyAdded = cellInfo.original.isNewlyAdded;
+        if (isDeleted || isNewlyAdded) { return <div/> }
         else if (isEdited)
         {
             return ( <button onClick = { () => this.undoEditRow(cellInfo.original) } > Revert changes </button> );
@@ -532,11 +548,9 @@ class ReusableTable extends React.Component
     renderCellEditableOnlyWhenRowIsNew = (cellInfo) =>
     {
         if ( this.state.data[cellInfo.index].isNewlyAdded === true) {
-            console.log("Here");
             return this.renderCell(cellInfo, "text");
         }
         else {
-            console.log("Here2");
             return this.renderNotEditable(cellInfo);
         }
     }
@@ -601,6 +615,47 @@ class ReusableTable extends React.Component
     }
 
 
+    handleKeyDown = (event) =>
+    {
+        let charCode = String.fromCharCode(event.which).toLowerCase();
+
+        // metaKey is for MAC users
+        if((event.ctrlKey && charCode === 'c') || (event.metaKey && charCode === 'c'))
+        {
+            let focusedRowContent = JSON.parse(JSON.stringify(
+                this.state.data.find((element) => {return element.tableIndex === this.state.focusedRow})));
+            let copiedData = {};
+
+            for (const column of this.columnsSchema) {
+                if (column.type === "text" || column.type === "select" || column.type === "number" || column.type == "text_editableOnlyOnAdd") {
+                    copiedData[column.accessor] = focusedRowContent[column.accessor];
+                }
+            }
+
+            this.setState({ copiedRow : copiedData });
+        }
+        else if((event.ctrlKey && charCode === 'v') || (event.metaKey && charCode === 'v'))
+        {
+            if (this.state.focusedRow in this.state.editedContent)
+            {
+                let copiedContent = JSON.parse(JSON.stringify(this.state.copiedRow));
+                let oldEditedContent = JSON.parse(JSON.stringify(this.state.editedContent));
+
+                for (const column of this.columnsSchema) {
+                    if (column.type === "text" || column.type === "select" || column.type === "number"
+                        || (this.state.editedContent[this.state.focusedRow].isNewlyAdded == true && column.type == "text_editableOnlyOnAdd" ) )
+                    {
+                        oldEditedContent[this.state.focusedRow][column.accessor] = copiedContent[column.accessor];
+                    }
+                }
+
+                this.setState({ editedContent : oldEditedContent });
+            }
+
+        }
+    }
+
+
     revertChanges = () =>
     {
         this.refreshTable();
@@ -618,8 +673,8 @@ class ReusableTable extends React.Component
             deletedContent = [...deletedContent, rowToDelete];
         });
 
-        Promise.all
-        ([
+        Promise.all (
+        [
             fetch(this.props.resourcesURLBase + 'commit', { method: 'post', body: JSON.stringify(editedContent),
                 headers: {'Content-Type': 'application/json' } } ),
             fetch(this.props.resourcesURLBase + 'delete', { method: 'post', body: JSON.stringify(deletedContent),
@@ -630,6 +685,7 @@ class ReusableTable extends React.Component
         {
             if (response1.length === 0) {
                 this.renderTable = this.renderTableInReadOnlyMode;
+                document.removeEventListener("keydown", this.handleKeyDown);
                 // setState here is important, do not remove it
                 this.setState({
                     expanded : {},
@@ -638,7 +694,7 @@ class ReusableTable extends React.Component
             }
             else {
                 let expandedRows = JSON.parse(JSON.stringify(this.state.expanded));
-                response1.map ( (errorMessage, index) => {
+                response1.forEach ( (errorMessage) => {
                     expandedRows[errorMessage.rowNumber] = true;
                 } );
 
@@ -655,6 +711,7 @@ class ReusableTable extends React.Component
     continueAfterChanges = () =>
     {
         this.renderTable = this.renderTableInEditMode;
+        document.addEventListener("keydown", this.handleKeyDown);
         this.refreshTable();
     }
 
@@ -700,7 +757,6 @@ class ReusableTable extends React.Component
 
     renderTableInEditMode()
     {
-        console.log("Render table in edit mode");
         let dataColumns = [];
         this.props.columns.forEach ( (columnMetaData) => {
 
@@ -800,8 +856,6 @@ class ReusableTable extends React.Component
             }
         ];
 
-        console.log(this.state.errorMessages);
-        console.log(this.state.expanded);
         return (
             <div>
                 <div className = "buttonsWrapper">
@@ -822,15 +876,13 @@ class ReusableTable extends React.Component
                     getTrProps = {this.setRowProps}
                     expanded={this.state.expanded}
                     SubComponent = { row => {
-                        console.log("SubComponent render");
                         return (
                             <div style={{ padding: '10px', backgroundColor : 'red', }} >
                                 <ul>
                                     {
                                         this.state.errorMessages.filter( (errorMessage) => {
                                             return errorMessage.rowNumber === row.original.tableIndex;
-                                        }).
-                                        map ( (errorMessage, index) => {
+                                        }).map ( (errorMessage, index) => {
                                             return <li> Error in {errorMessage.field}  :  {errorMessage.message} </li>
                                         })
                                     }

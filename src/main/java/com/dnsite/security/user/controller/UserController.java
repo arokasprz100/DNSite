@@ -98,11 +98,6 @@ public class UserController {
         return "login";
     }
 
-    @RequestMapping(value = {"/dnsite"}, method = RequestMethod.GET)
-    public String dnsite(Model model) {
-        return "dnsite";
-    }
-
     @RequestMapping(value = {"/403"}, method = RequestMethod.GET)
     public String accessDeny(Model model) {
         return "403";
