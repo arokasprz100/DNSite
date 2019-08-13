@@ -13,11 +13,6 @@ class ReusableTable extends React.Component
     {
         super(props);
 
-        this.tableModes = {
-            EDIT: 'edit',
-            COMMITTED: 'committed'
-        };
-
         this.state = {
             data : [],
             selected : {},
@@ -31,9 +26,6 @@ class ReusableTable extends React.Component
 
             expanded:{},
             errorMessages: [],
-
-            tableMode : this.tableModes.EDIT
-
         };
 
         this.emptyDataExample = this.props.emptyDataExample;
@@ -72,8 +64,7 @@ class ReusableTable extends React.Component
                 toDelete: [],
                 currentIndex : currentTableIndex,
                 errorMessages: [],
-                expanded: {},
-                tableMode : this.tableModes.EDIT
+                expanded: {}
             });
         })
         .catch(
@@ -639,10 +630,10 @@ class ReusableTable extends React.Component
         {
             if (response1.length === 0) {
                 this.renderTable = this.renderTableInReadOnlyMode;
+                // setState here is important, do not remove it
                 this.setState({
                     expanded : {},
-                    errorMessages : [],
-                    tableMode: this.tableModes.COMMITTED
+                    errorMessages : []
                 });
             }
             else {
