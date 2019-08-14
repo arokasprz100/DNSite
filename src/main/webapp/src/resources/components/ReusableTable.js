@@ -286,8 +286,7 @@ class ReusableTable extends React.Component
     changeEditedContent = (event, cellInfo) =>
     {
         let editedRow = JSON.parse(JSON.stringify(this.state.editedContent[cellInfo.original.tableIndex]));
-        editedRow[cellInfo.column.id] = event.target.value === '' ? null : event.target.value;
-
+        editedRow[cellInfo.column.id] = event.target.value === '' ? null : event.target.value; // TODO: work on backend to validate empty strings
         let notEditedRows = {}
         Object.keys(this.state.editedContent)
             .forEach((key) => {
@@ -725,6 +724,7 @@ class ReusableTable extends React.Component
         {
             this.renderTable = this.renderTableInReadOnlyMode;
             document.removeEventListener("keydown", this.handleKeyDown);
+            document.removeEventListener("click", this.handleClick);
             // setState here is important, do not remove it
             this.setState({
                 expanded : {},
@@ -739,6 +739,7 @@ class ReusableTable extends React.Component
     {
         this.renderTable = this.renderTableInEditMode;
         document.addEventListener("keydown", this.handleKeyDown);
+        document.addEventListener("click", this.handleClick);
         this.refreshTable();
     }
 
