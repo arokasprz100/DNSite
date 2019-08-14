@@ -27,7 +27,7 @@ class ReusableTable extends React.Component
             selectAll : 0,
 
             // validation error display mechanism
-            expanded:{},
+            expanded: {},
             errorMessages: [],
 
             // copying mechanism
@@ -64,6 +64,7 @@ class ReusableTable extends React.Component
                 row.isNewlyAdded = false;
                 currentTableIndex = currentTableIndex + 1;
             });
+            let expanded = this.getAllRowsExpanded();
             this.setState ({
                 data: data,
                 selected: {},
@@ -71,7 +72,7 @@ class ReusableTable extends React.Component
                 toDelete: [],
                 currentIndex : currentTableIndex,
                 errorMessages: [],
-                expanded: {}
+                expanded: expanded
             });
         })
         .catch(
@@ -346,7 +347,6 @@ class ReusableTable extends React.Component
 
     setRowProps = (state, rowInfo, column, instance) =>
     {
-
         let properties = {
             onClick: (e) => {
                 if (rowInfo) {
@@ -357,19 +357,17 @@ class ReusableTable extends React.Component
 
         if (rowInfo) {
             let isDeleted = this.state.toDelete.some(item => rowInfo.original.tableIndex === item);
-            let isIncorrect = (rowInfo.original.tableIndex in this.state.expanded
-                && this.state.expanded[rowInfo.original.tableIndex] === true);
+            let isIncorrect = this.state.errorMessages.filter ( (errorMessage) => {
+                return errorMessage.rowNumber === rowInfo.original.tableIndex;
+            }).length;
             let isFocused = (this.state.focusedRow === rowInfo.original.tableIndex);
             properties.style = {
                 opacity: isDeleted ? 0.4 : 1.0,
-                backgroundColor : isIncorrect ? "red" : "white",
+                backgroundColor : isIncorrect !== 0 ? "red" : "white",
                 border : isFocused ? "1px solid black" : "0px",
             };
-            return properties;
         }
-        else {
-            return properties;
-        }
+        return properties;
     }
 
 
@@ -636,7 +634,7 @@ class ReusableTable extends React.Component
         }
         else if((event.ctrlKey && charCode === 'v') || (event.metaKey && charCode === 'v'))
         {
-            if (this.state.focusedRow in this.state.editedContent)
+            if (this.state.focusedRow in this.state.editedContent &&  Object.keys(this.state.copiedRow) !== 0)
             {
                 let copiedContent = JSON.parse(JSON.stringify(this.state.copiedRow));
                 let oldEditedContent = JSON.parse(JSON.stringify(this.state.editedContent));
@@ -659,6 +657,17 @@ class ReusableTable extends React.Component
     revertChanges = () =>
     {
         this.refreshTable();
+    }
+
+
+    getAllRowsExpanded = () => {
+        let expanded = {}
+        let currentIndex = 0;
+        this.state.data.forEach( (element) => {
+            expanded[currentIndex] = true;
+            ++currentIndex;
+        });
+        return expanded;
     }
 
 
@@ -872,10 +881,17 @@ class ReusableTable extends React.Component
                       id   : 'tableIndex',
                       desc : false,
                     }]}
+                    showPagination ={false}
                     columns={columns}
                     getTrProps = {this.setRowProps}
                     expanded={this.state.expanded}
                     SubComponent = { row => {
+                        let numberOfErrors = this.state.errorMessages.filter( (errorMessage) => {
+                            return errorMessage.rowNumber === row.original.tableIndex;
+                        }).length;
+                        if (numberOfErrors === 0) {
+                            return (<div/>);
+                        }
                         return (
                             <div style={{ padding: '10px', backgroundColor : 'red', }} >
                                 <ul>

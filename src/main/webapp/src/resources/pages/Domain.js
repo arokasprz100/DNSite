@@ -59,10 +59,6 @@ class DomainForm extends React.Component{
         this.fetchTypes();
     }
 
-    handleDomainInfo(event) {
-        event.preventDefault();
-    }
-
     handleChange = e => {
         this.setState({[e.target.name]: e.target.value});
     }
@@ -81,10 +77,8 @@ class DomainForm extends React.Component{
             method: 'post',
             body: JSON.stringify(domainExtension),
             headers: {'Content-Type': 'application/json'}
-        }).then((response) => {
-            return response;
-        }).then((data) => {
-            data.text().then((text) => console.log(text));
+        }).then( (response) => response.json()
+        ).then((data) => {
             console.log('Complete', data);
             this.refreshDomainForm();
         });
@@ -102,6 +96,8 @@ class DomainForm extends React.Component{
                             <Form.Text className="text-muted">{this.state.copy.name}</Form.Text>
                         </Form.Group>
                     </Col>
+                </Row>
+                <Row>
                     <Col>
                         <Form.Group controlId="formGridType">
                             <Form.Label>Type</Form.Label>
@@ -114,7 +110,6 @@ class DomainForm extends React.Component{
                         </Form.Group>
                     </Col>
                 </Row>
-
                 <Row>
                     <Col>
                         <Form.Group controlId="formGridType">
@@ -123,7 +118,8 @@ class DomainForm extends React.Component{
                             <Form.Text className="text-muted">{this.state.copy.notifiedSerial}</Form.Text>
                         </Form.Group>
                     </Col>
-
+                </Row>
+                <Row>
                     <Col>
                         <Form.Group controlId="formGridMaster">
                             <Form.Label>Master</Form.Label>
@@ -131,7 +127,8 @@ class DomainForm extends React.Component{
                             <Form.Text className="text-muted">{this.state.copy.master}</Form.Text>
                         </Form.Group>
                     </Col>
-
+                </Row>
+                <Row>
                     <Col>
                         <Form.Group controlId="formGridLastCheck">
                             <Form.Label>Last Check</Form.Label>
