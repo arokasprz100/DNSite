@@ -1,5 +1,5 @@
 import React from "react";
-import "./resources/styles/Supermasters.css";
+import "../styles/Supermasters.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ReactTable from "react-table";
 import "react-table/react-table.css";
@@ -31,7 +31,7 @@ class ReusableTable extends React.Component
             errorMessages: [],
 
             // copying mechanism
-            focusedRow: -1,
+            focusedRow: null,
             copiedRow : {}
         };
 
@@ -41,6 +41,7 @@ class ReusableTable extends React.Component
         this.renderTable = this.renderTableInEditMode;
 
         this.table = {};
+        this.tableDiv = {};
     }
 
 
@@ -248,12 +249,21 @@ class ReusableTable extends React.Component
 
     componentDidMount() {
         document.addEventListener("keydown", this.handleKeyDown);
+        document.addEventListener("click", this.handleClick);
         this.refreshTable();
     }
 
 
     componentWillUnmount() {
+        document.removeEventListener("click", this.handleClick);
         document.removeEventListener("keydown", this.handleKeyDown);
+    }
+
+
+    handleClick = (event) => {
+        if (!this.tableDiv.contains(event.target) && this.state.focusedRow !== null) {
+            this.setState({focusedRow: null});
+        }
     }
 
 
@@ -384,7 +394,6 @@ class ReusableTable extends React.Component
     }
 
 
-
     renderTextCell = cellInfo =>
     {
         return this.renderCell(cellInfo, 'text');
@@ -396,6 +405,8 @@ class ReusableTable extends React.Component
     {
         return this.renderCell(cellInfo, 'number');
     }
+
+
 
 
     renderSelectCell = cellInfo =>
@@ -620,6 +631,9 @@ class ReusableTable extends React.Component
         // metaKey is for MAC users
         if((event.ctrlKey && charCode === 'c') || (event.metaKey && charCode === 'c'))
         {
+            if (this.state.focusedRow === null) {
+                return;
+            }
             let focusedRowContent = JSON.parse(JSON.stringify(
                 this.state.data.find((element) => {return element.tableIndex === this.state.focusedRow})));
             let copiedData = {};
@@ -671,9 +685,32 @@ class ReusableTable extends React.Component
     }
 
 
-    commitChanges = () =>
+    commitAddAndUpdateChanges = () =>
     {
         let editedContent = Object.values(this.state.editedContent);
+
+        fetch(this.props.resourcesURLBase + 'commit', { method: 'post', body: JSON.stringify(editedContent), headers: {'Content-Type': 'application/json' } } )
+        .then( (response) => response.json())
+        .then( (response) =>
+        {
+            if (response.length === 0) {
+                this.commitDeleteChanges();
+            }
+            else {
+
+                let expanded = this.getAllRowsExpanded();
+                this.setState({
+                    expanded : expanded,
+                    errorMessages : response
+                });
+
+            }
+        })
+    }
+
+
+    commitDeleteChanges = () =>
+    {
         let deletedContent = [];
         this.state.toDelete.forEach( (item) => {
             let rowToDelete = this.state.data.find( (row) => {
@@ -682,35 +719,19 @@ class ReusableTable extends React.Component
             deletedContent = [...deletedContent, rowToDelete];
         });
 
-        Promise.all (
-        [
-            fetch(this.props.resourcesURLBase + 'commit', { method: 'post', body: JSON.stringify(editedContent),
-                headers: {'Content-Type': 'application/json' } } ),
-            fetch(this.props.resourcesURLBase + 'delete', { method: 'post', body: JSON.stringify(deletedContent),
-                headers: {'Content-Type': 'application/json' } } )
-        ])
-        .then( ([response1, response2]) => response1.json())
-        .then( (response1) =>
+
+        fetch(this.props.resourcesURLBase + 'delete', { method: 'post', body: JSON.stringify(deletedContent), headers: {'Content-Type': 'application/json' } } )
+        .then( (response) =>
         {
-            if (response1.length === 0) {
-                this.renderTable = this.renderTableInReadOnlyMode;
-                document.removeEventListener("keydown", this.handleKeyDown);
-                // setState here is important, do not remove it
-                this.setState({
-                    expanded : {},
-                    errorMessages : []
-                });
-            }
-            else {
-
-                let expanded = this.getAllRowsExpanded();
-                this.setState({
-                    expanded : expanded,
-                    errorMessages : response1
-                });
-
-            }
+            this.renderTable = this.renderTableInReadOnlyMode;
+            document.removeEventListener("keydown", this.handleKeyDown);
+            // setState here is important, do not remove it
+            this.setState({
+                expanded : {},
+                errorMessages : []
+            });
         })
+
     }
 
 
@@ -863,10 +884,10 @@ class ReusableTable extends React.Component
         ];
 
         return (
-            <div>
+            <div ref = { (r) => {this.tableDiv = r} } >
                 <div className = "buttonsWrapper">
                     <button onClick={ () => this.addRow() }> Add {this.props.resourceName} </button>
-                    <button onClick={ () => this.commitChanges() }> Commit changes </button>
+                    <button onClick={ () => this.commitAddAndUpdateChanges() }> Commit changes </button>
                     <button onClick={ () => this.revertChanges() }> Revert changes </button>
                 </div>
                 <ReactTable

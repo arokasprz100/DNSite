@@ -1,7 +1,7 @@
 import React from "react";
 import "../styles/Supermasters.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import ReusableTable from "../../ReusableTable.js";
+import ReusableTable from "../components/ReusableTable.js"
 
 class Records extends React.Component {
 

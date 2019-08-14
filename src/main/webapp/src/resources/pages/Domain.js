@@ -6,7 +6,7 @@ import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import {Tab, Tabs} from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import ReusableTable from "../../ReusableTable.js"
+import ReusableTable from "../components/ReusableTable.js"
 
 class Domain extends React.Component {
 
@@ -49,7 +49,9 @@ class DomainForm extends React.Component{
             account: '',
 
             types: [],
-            copy: {}
+            copy: {},
+
+            errorMessages: []
         };
 
         this.urlId = this.props.urlId;
@@ -60,7 +62,12 @@ class DomainForm extends React.Component{
     }
 
     handleChange = e => {
-        this.setState({[e.target.name]: e.target.value});
+        if (e.target.name === "type" && e.target.value !== "SLAVE") {
+            this.setState({[e.target.name]: e.target.value, master: ""});
+        }
+        else {
+            this.setState({[e.target.name]: e.target.value});
+        }
     }
 
     handleSubmit = e => {
@@ -79,68 +86,78 @@ class DomainForm extends React.Component{
             headers: {'Content-Type': 'application/json'}
         }).then( (response) => response.json()
         ).then((data) => {
-            console.log('Complete', data);
-            this.refreshDomainForm();
+            if (data.length === 0) {
+                console.log('Complete', data);
+                this.refreshDomainForm();
+            }
+            else {
+                console.log(data);
+                this.setState({ errorMessages : data });
+            }
+
+        });
+    }
+
+    getErrorMessages = (propertyName) => {
+        return this.state.errorMessages.filter( (element) => {
+            return element.field === propertyName;
+        }).map( (element) => {
+            return (<span>{element.message}</span>);
         });
     }
 
 
     render() {
         return (
-            <Form onSubmit={e => this.handleSubmit(e)}>
-                <Row>
-                    <Col>
-                        <Form.Group controlId="formGridName">
+            <Form style = {{display: 'flex', justifyContent: 'center', flexDirection: 'row',}} onSubmit={e => this.handleSubmit(e)}>
+                <Col>
+                    <Row style = {{display: 'flex', justifyContent: 'center', flexDirection: 'row',}} >
+                        <Form.Group controlId = "formGridName">
                             <Form.Label>Name</Form.Label>
-                            <Form.Control name="name" placeholder={this.state.name} onChange = {this.handleChange} ref="nameForm"/>
-                            <Form.Text className="text-muted">{this.state.copy.name}</Form.Text>
+                            <Form.Text className = "text-muted">{this.state.copy.name}</Form.Text>
+                            <Form.Control name = "name" placeholder = {this.state.name} onChange = {this.handleChange} ref = "nameForm"/>
+                            <Form.Text>{ this.getErrorMessages("name") }</Form.Text>
                         </Form.Group>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <Form.Group controlId="formGridType">
+                    </Row>
+                    <Row style = {{display: 'flex', justifyContent: 'center', flexDirection: 'row',}} >
+                        <Form.Group controlId = "formGridType">
                             <Form.Label>Type</Form.Label>
-                            <Form.Control name="type" as="select"  onChange = {this.handleChange} ref="typeForm">
+                            <Form.Text className = "text-muted">{this.state.copy.type}</Form.Text>
+                            <Form.Control name = "type" as = "select"  onChange = {this.handleChange} ref = "typeForm">
                                 {this.state.types.map((type) => {
                                     return (<option>{type}</option>)
                                 })}
                             </Form.Control>
-                            <Form.Text className="text-muted">{this.state.copy.type}</Form.Text>
+                            <Form.Text>{ this.getErrorMessages("type") }</Form.Text>
                         </Form.Group>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
+                    </Row>
+                    <Row style = {{display: 'flex', justifyContent: 'center', flexDirection: 'row',}} >
                         <Form.Group controlId="formGridType">
                             <Form.Label>Notified Serial</Form.Label>
-                            <Form.Control name="notifiedSerial" placeholder={this.state.notifiedSerial} disabled={true} ref="serialForm"/>
                             <Form.Text className="text-muted">{this.state.copy.notifiedSerial}</Form.Text>
+                            <Form.Control name="notifiedSerial" placeholder={this.state.notifiedSerial} disabled={true} ref="serialForm"/>
+                            <Form.Text>{ this.getErrorMessages("notifiedSerial") }</Form.Text>
                         </Form.Group>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
+                    </Row>
+                    <Row style = {{display: 'flex', justifyContent: 'center', flexDirection: 'row',}} >
                         <Form.Group controlId="formGridMaster">
                             <Form.Label>Master</Form.Label>
-                            <Form.Control name="master" placeholder={this.state.master} disabled = {this.state.type !== "SLAVE"} onChange = {this.handleChange} ref="masterForm"/>
                             <Form.Text className="text-muted">{this.state.copy.master}</Form.Text>
+                            <Form.Control name="master" placeholder={this.state.master} disabled = {this.state.type !== "SLAVE"} onChange = {this.handleChange} ref="masterForm"/>
+                            <Form.Text>{ this.getErrorMessages("master") }</Form.Text>
                         </Form.Group>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
+                    </Row>
+                    <Row style = {{display: 'flex', justifyContent: 'center', flexDirection: 'row',}} >
                         <Form.Group controlId="formGridLastCheck">
                             <Form.Label>Last Check</Form.Label>
-                            <Form.Control name="lastCheck" placeholder={this.state.lastCheck} disabled={true} ref="checkForm"/>
                             <Form.Text className="text-muted">{this.state.copy.lastCheck}</Form.Text>
+                            <Form.Control name="lastCheck" placeholder={this.state.lastCheck} disabled={true} ref="checkForm"/>
+                            <Form.Text>{ this.getErrorMessages("lastCheck") }</Form.Text>
                         </Form.Group>
-                    </Col>
-                </Row>
+                    </Row>
 
-                <Button variant="primary" type="submit">
-                    Submit
-                </Button>
+                    <Button variant="primary" type="submit"> Submit </Button>
+                </Col>
             </Form>
         )
     }
@@ -155,7 +172,6 @@ class DomainForm extends React.Component{
             })
             .then(response => response.json())
             .then(data => {
-                console.log(data);
                 this.setState((prev) => ({
                     id : data.id,
                     name : data.name,
@@ -172,7 +188,8 @@ class DomainForm extends React.Component{
                         type: data.type,
                         notifiedSerial: data.notifiedSerial,
                         account: data.account
-                    }
+                    },
+                    errorMessages: []
                 }));
             })
             .catch(error => console.log(error + " coś nie tak"));

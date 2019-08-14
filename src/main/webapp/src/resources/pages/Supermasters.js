@@ -2,7 +2,7 @@ import React from "react";
 import "../styles/Supermasters.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-table/react-table.css";
-import ReusableTable from "../../ReusableTable.js";
+import ReusableTable from "../components/ReusableTable.js"
 
 class Supermasters extends React.Component {
 
