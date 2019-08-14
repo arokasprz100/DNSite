@@ -702,13 +702,10 @@ class ReusableTable extends React.Component
                 });
             }
             else {
-                let expandedRows = JSON.parse(JSON.stringify(this.state.expanded));
-                response1.forEach ( (errorMessage) => {
-                    expandedRows[errorMessage.rowNumber] = true;
-                } );
 
+                let expanded = this.getAllRowsExpanded();
                 this.setState({
-                    expanded : expandedRows,
+                    expanded : expanded,
                     errorMessages : response1
                 });
 
