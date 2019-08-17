@@ -653,66 +653,80 @@ class ReusableTable extends React.Component
     }
 
 
+    handleCtrlCEvent = (event) =>
+    {
+        if (this.state.focusedRow === null) {
+            return;
+        }
+        let focusedRowContent = JSON.parse(JSON.stringify(
+            this.state.data.find((element) => {return element.tableIndex === this.state.focusedRow})));
+        let copiedData = {};
+
+        for (const column of this.columnsSchema) {
+            if (column.type === "text" || column.type === "select" || column.type === "number" || column.type == "text_editableOnlyOnAdd") {
+                copiedData[column.accessor] = focusedRowContent[column.accessor];
+            }
+        }
+
+        this.setState({ copiedRow : copiedData });
+    }
+
+
+    handleCtrlXEvent = (event) =>
+    {
+        if (this.state.focusedRow === null) {
+            return;
+        }
+        if (!(this.state.focusedRow in this.state.editedContent)) {
+            return;
+        }
+
+        let focusedRowContent = JSON.parse(JSON.stringify(this.state.editedContent[this.state.focusedRow]));
+        let copiedData = {};
+
+        for (const column of this.columnsSchema) {
+            if (column.type === "text" || column.type === "select" || column.type === "number" || column.type === "bool" || column.type == "text_editableOnlyOnAdd") {
+                copiedData[column.accessor] = focusedRowContent[column.accessor];
+            }
+        }
+
+        this.setState({ copiedRow : copiedData });
+    }
+
+
+    handleCtrlVEvent = (event) =>
+    {
+        if (this.state.focusedRow in this.state.editedContent &&  Object.keys(this.state.copiedRow) !== 0)
+        {
+            let copiedContent = JSON.parse(JSON.stringify(this.state.copiedRow));
+            let oldEditedContent = JSON.parse(JSON.stringify(this.state.editedContent));
+
+            for (const column of this.columnsSchema) {
+                if (column.type === "text" || column.type === "select" || column.type === "number" || column.type === "bool"
+                    || (this.state.editedContent[this.state.focusedRow].isNewlyAdded == true && column.type == "text_editableOnlyOnAdd" ) )
+                {
+                    oldEditedContent[this.state.focusedRow][column.accessor] = copiedContent[column.accessor];
+                }
+            }
+
+            this.setState({ editedContent : oldEditedContent });
+        }
+    }
+
+
     handleKeyDown = (event) =>
     {
         let charCode = String.fromCharCode(event.which).toLowerCase();
 
         // metaKey is for MAC users
-        if((event.ctrlKey && charCode === 'c') || (event.metaKey && charCode === 'c'))
-        {
-            if (this.state.focusedRow === null) {
-                return;
-            }
-            let focusedRowContent = JSON.parse(JSON.stringify(
-                this.state.data.find((element) => {return element.tableIndex === this.state.focusedRow})));
-            let copiedData = {};
-
-            for (const column of this.columnsSchema) {
-                if (column.type === "text" || column.type === "select" || column.type === "number" || column.type == "text_editableOnlyOnAdd") {
-                    copiedData[column.accessor] = focusedRowContent[column.accessor];
-                }
-            }
-
-            this.setState({ copiedRow : copiedData });
+        if((event.ctrlKey && charCode === 'c') || (event.metaKey && charCode === 'c')) {
+            this.handleCtrlCEvent(event);
         }
-        else if((event.ctrlKey && charCode === 'x') || (event.metaKey && charCode === 'x'))
-        {
-            if (this.state.focusedRow === null) {
-                return;
-            }
-            if (!(this.state.focusedRow in this.state.editedContent)) {
-                return;
-            }
-
-            let focusedRowContent = JSON.parse(JSON.stringify(this.state.editedContent[this.state.focusedRow]));
-            let copiedData = {};
-
-            for (const column of this.columnsSchema) {
-                if (column.type === "text" || column.type === "select" || column.type === "number" || column.type == "text_editableOnlyOnAdd") {
-                    copiedData[column.accessor] = focusedRowContent[column.accessor];
-                }
-            }
-
-            this.setState({ copiedRow : copiedData });
+        else if((event.ctrlKey && charCode === 'x') || (event.metaKey && charCode === 'x')) {
+            this.handleCtrlXEvent(event);
         }
-        else if((event.ctrlKey && charCode === 'v') || (event.metaKey && charCode === 'v'))
-        {
-            if (this.state.focusedRow in this.state.editedContent &&  Object.keys(this.state.copiedRow) !== 0)
-            {
-                let copiedContent = JSON.parse(JSON.stringify(this.state.copiedRow));
-                let oldEditedContent = JSON.parse(JSON.stringify(this.state.editedContent));
-
-                for (const column of this.columnsSchema) {
-                    if (column.type === "text" || column.type === "select" || column.type === "number"
-                        || (this.state.editedContent[this.state.focusedRow].isNewlyAdded == true && column.type == "text_editableOnlyOnAdd" ) )
-                    {
-                        oldEditedContent[this.state.focusedRow][column.accessor] = copiedContent[column.accessor];
-                    }
-                }
-
-                this.setState({ editedContent : oldEditedContent });
-            }
-
+        else if((event.ctrlKey && charCode === 'v') || (event.metaKey && charCode === 'v')) {
+            this.handleCtrlVEvent(event);
         }
     }
 
