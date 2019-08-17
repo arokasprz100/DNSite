@@ -48,13 +48,14 @@ class DomainRecordsTable extends React.Component
 
     render()
     {
-        let emptyDataExample = { id : '', domainId : this.props.domainId, name : '', type : '', content : '', ttl : '' };
+        let emptyDataExample = { id : '', domainId : this.props.domainId, name : '', type : '', content : '', ttl : '', disabled : ''  };
         const columns = [
             { Header : "ID", accessor : "id", type: "none" },
             { Header : "Name", accessor : "name", type: "text" },
             { Header : "Type", accessor : "type", type: "select" },
             { Header : "Content", accessor : "content", type: "text" },
             { Header : "TTL", accessor : "ttl", type: "number" },
+            { Header : "Disabled", accessor : "disabled", type: "bool" },
         ];
         return (
             <div>
@@ -75,7 +76,7 @@ class DomainCommentsTable extends React.Component
 {
     render()
     {
-        let emptyDataExample = { id : '', domainId : this.props.domainId, name : '', type : '', modifiedAt : '', comment : '' };
+        let emptyDataExample = { id : '', domainId : this.props.domainId, name : '', type : '', modifiedAt : '', comment : ''};
         const columns = [
             { Header : "ID", accessor : "id", type: "none" },
             { Header : "Name", accessor : "name", type: "text" },

@@ -239,8 +239,6 @@ class ReusableTable extends React.Component
 
         this.setState( (previousState) => ( {
             editedContent: {...previousState.editedContent, ...newEditedContent},
-            selected: {},
-            selectAll: 0,
             toDelete: deletedAndNotSelected
         }));
     }
@@ -405,6 +403,38 @@ class ReusableTable extends React.Component
         return this.renderCell(cellInfo, 'number');
     }
 
+
+    renderBoolCell = cellInfo =>
+    {
+        const isEdited = this.checkIfObjectIsEdited(cellInfo);
+        if (isEdited === false) {
+            return this.renderNotEditable(cellInfo);
+        }
+        else {
+            return (
+                <div>
+                    <div
+                        style={{ backgroundColor: "#fafafa" }}
+                        dangerouslySetInnerHTML={{
+                            __html: this.state.data[cellInfo.index][cellInfo.column.id]
+                        }}
+                    />
+                    <div>
+                        <select
+                            value = { this.state.editedContent[cellInfo.original.tableIndex][cellInfo.column.id] }
+                            style = { { backgroundColor: "#fafafa", margin: "3px", width: "98%" } }
+                            onChange = { (e) => { this.changeEditedContent(e, cellInfo)}}
+                        >
+                            <option key="" value=""> -- </option>
+                            <option key={true} value={true}> true </option>
+                            <option key={false} value={false}> false </option>
+                        </select>
+                     </div>
+                </div>
+
+            );
+        }
+    }
 
 
 
@@ -809,6 +839,10 @@ class ReusableTable extends React.Component
             {
                 dataColumn.Cell = this.renderTextCell;
                 dataColumn.Footer = this.renderTextFooter;
+            }
+            else if (columnMetaData.type === "bool")
+            {
+                dataColumn.Cell = this.renderBoolCell; // TODO: add footer
             }
             else if (columnMetaData.type === "link")
             {
