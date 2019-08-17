@@ -83,15 +83,15 @@ public class DomainController {
     }
 
     @GetMapping
-    @RequestMapping("/domainIds")
+    @RequestMapping("/domainInfos")
     @ResponseBody
-    public List<Long> getDomainIds() {
+    public List<String> getDomainIds() {
         List<Domain> domains = domainService.findAll();
-        List<Long> domainIds = new ArrayList<>();
+        List<String> domainInfos = new ArrayList<>();
         for(Domain domain : domains) {
-            domainIds.add(domain.getId());
+            domainInfos.add(domain.getId() + " - " + domain.getName());
         }
-        return domainIds;
+        return domainInfos;
     }
 
 }

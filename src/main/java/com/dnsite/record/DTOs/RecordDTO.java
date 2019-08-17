@@ -7,7 +7,7 @@ public class RecordDTO {
 
     private Long id;
 
-    private Long domainId;
+    private String domainInfo;
 
     private String name;
 
@@ -31,7 +31,7 @@ public class RecordDTO {
 
     public RecordDTO(Record record) {
         id = record.getId();
-        domainId = record.getDomain().getId();
+        domainInfo = record.getDomain().getId() + " - " + record.getDomain().getName();
         name = record.getName();
         type = record.getType();
         content = record.getContent();
@@ -46,8 +46,8 @@ public class RecordDTO {
         return id;
     }
 
-    public Long getDomainId() {
-        return domainId;
+    public String getDomainInfo() {
+        return domainInfo;
     }
 
     public String getName() {
@@ -80,8 +80,8 @@ public class RecordDTO {
         this.id = id;
     }
 
-    public void setDomainId(Long domainId) {
-        this.domainId = domainId;
+    public void setDomainInfo(String domainInfo) {
+        this.domainInfo = domainInfo;
     }
 
     public void setName(String name) {

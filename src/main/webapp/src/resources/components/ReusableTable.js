@@ -30,9 +30,13 @@ class ReusableTable extends React.Component
             expanded: {},
             errorMessages: [],
 
-            // copying mechanism
+            // copying row mechanism
             focusedRow: null,
-            copiedRow : {}
+            copiedRow : {},
+
+            // copying single value mechanism
+            focusedCell: { rowNumber: null, columnName: null},
+            copiedCell : {columnName: null, value : null}
         };
 
         this.emptyDataExample = this.props.emptyDataExample;
@@ -212,7 +216,6 @@ class ReusableTable extends React.Component
     }
 
 
-    // TODO: check
     editMultipleRows = () =>
     {
         let selectedRows = this.getSelectedRows();
@@ -259,8 +262,11 @@ class ReusableTable extends React.Component
 
 
     handleClick = (event) => {
-        if (!this.tableDiv.contains(event.target) && this.state.focusedRow !== null) {
-            this.setState({focusedRow: null});
+        if (!this.tableDiv.contains(event.target) && (this.state.focusedRow !== null || this.state.focusedCell.columnName !== null)) {
+            this.setState({
+                focusedRow: null,
+                focusedCell: {columnName: null, rowNumber: null}
+            });
         }
     }
 
@@ -354,14 +360,7 @@ class ReusableTable extends React.Component
 
     setRowProps = (state, rowInfo, column, instance) =>
     {
-        let properties = {
-            onClick: (e) => {
-                if (rowInfo) {
-                    this.setState({ focusedRow : rowInfo.original.tableIndex });
-                }
-            }
-        };
-
+        let properties = {};
         if (rowInfo) {
             let isDeleted = this.state.toDelete.some(item => rowInfo.original.tableIndex === item);
             let isIncorrect = this.state.errorMessages.filter ( (errorMessage) => {
@@ -374,6 +373,44 @@ class ReusableTable extends React.Component
                 border : isFocused ? "1px solid black" : "0px",
             };
         }
+        return properties;
+    }
+
+
+    setCellProps = (state, row, col, instance) =>
+    {
+        let properties = {
+            onClick: (e) => {
+                if (row && col)
+                {
+                    if (e.ctrlKey)
+                    {
+                        if (col.id !== "checkbox" && col.id !== "edit" && col.id !== "delete")
+                        {
+                            this.setState({
+                                focusedRow : null,
+                                focusedCell : { columnName : col.id, rowNumber : row.original.tableIndex}
+                            });
+                        }
+                    }
+                    else
+                    {
+                        this.setState({
+                            focusedRow : row.original.tableIndex,
+                            focusedCell: { columnName : null, rowNumber : null}
+                        });
+                    }
+                }
+            }
+        };
+
+        if (row && col) {
+            let isFocused = (this.state.focusedCell.columnName === col.id && this.state.focusedCell.rowNumber === row.original.tableIndex);
+            properties.style = {
+                border : isFocused ? "1px solid black" : "0px",
+            }
+        }
+
         return properties;
     }
 
@@ -429,7 +466,7 @@ class ReusableTable extends React.Component
                             <option key={true} value={true}> true </option>
                             <option key={false} value={false}> false </option>
                         </select>
-                     </div>
+                    </div>
                 </div>
 
             );
@@ -498,12 +535,33 @@ class ReusableTable extends React.Component
     }
 
 
+    renderBoolFooter = cellInfo =>
+    {
+        if (Object.getOwnPropertyNames(this.state.editedContent).length !== 0) {
+            return (
+                <select
+                    style = { { margin: "3px", width: "98%" } }
+                    onClick = { (e) => this.setSelectValueInAllEdited(e, cellInfo)}
+                >
+                    <option key="" value=""> -- </option>
+                    <option key={true} value={true}> true </option>
+                    <option key={false} value={false}> false </option>
+                </select>
+            )
+        }
+        else {
+            return (<div/>)
+        }
+
+    }
+
+
     renderSelectFooter = cellInfo =>
     {
         let constraintName = cellInfo.column.id + "s";
         if (Object.getOwnPropertyNames(this.state.editedContent).length !== 0)
         {
-            return (<select onChange= { (e) => this.setValueInAllEdited(e, cellInfo)} >
+            return (<select onClick = { (e) => this.setSelectValueInAllEdited(e, cellInfo)} >
                 {
                     this.state.valueConstraints[constraintName].map((key) => {
                         return <option key={key} value={key}>{key}</option>;
@@ -513,6 +571,14 @@ class ReusableTable extends React.Component
         }
         else {
             return (<div/>)
+        }
+    }
+
+
+    setSelectValueInAllEdited = (e, cellInfo) =>
+    {
+        if (e.detail === 0) {
+            this.setValueInAllEdited(e, cellInfo);
         }
     }
 
@@ -605,7 +671,7 @@ class ReusableTable extends React.Component
         }, this.handleSelectionChange);
     }
 
-    // TODO: fix
+
     toggleSelectAll = () =>
     {
         let newSelectAll = 0;
@@ -655,20 +721,25 @@ class ReusableTable extends React.Component
 
     handleCtrlCEvent = (event) =>
     {
-        if (this.state.focusedRow === null) {
-            return;
-        }
-        let focusedRowContent = JSON.parse(JSON.stringify(
-            this.state.data.find((element) => {return element.tableIndex === this.state.focusedRow})));
-        let copiedData = {};
+        if (this.state.focusedRow !== null)
+        {
+            let focusedRowContent = JSON.parse(JSON.stringify(
+                this.state.data.find((element) => {return element.tableIndex === this.state.focusedRow})));
+            let copiedData = {};
 
-        for (const column of this.columnsSchema) {
-            if (column.type === "text" || column.type === "select" || column.type === "number" || column.type == "text_editableOnlyOnAdd") {
-                copiedData[column.accessor] = focusedRowContent[column.accessor];
+            for (const column of this.columnsSchema) {
+                if (column.type === "text" || column.type === "select" || column.type === "number" || column.type == "text_editableOnlyOnAdd") {
+                    copiedData[column.accessor] = focusedRowContent[column.accessor];
+                }
             }
-        }
 
-        this.setState({ copiedRow : copiedData });
+            this.setState({ copiedRow : copiedData });
+
+        }
+        else if (this.state.focusedCell.columnName !== null && this.state.focusedCell.rowNumber !== null)
+        {
+
+        }
     }
 
 
@@ -876,7 +947,8 @@ class ReusableTable extends React.Component
             }
             else if (columnMetaData.type === "bool")
             {
-                dataColumn.Cell = this.renderBoolCell; // TODO: add footer
+                dataColumn.Cell = this.renderBoolCell;
+                dataColumn.Footer = this.renderBoolFooter;
             }
             else if (columnMetaData.type === "link")
             {
@@ -890,7 +962,6 @@ class ReusableTable extends React.Component
                 }
             }
             else if (columnMetaData.type === "text_editableOnlyOnAdd") {
-                // TODO: add footer
                 dataColumn.Cell = this.renderCellEditableOnlyWhenRowIsNew;
             }
 
@@ -931,6 +1002,7 @@ class ReusableTable extends React.Component
             {
                 Header : 'Delete',
                 accessor: '',
+                id: 'edit',
                 Cell: this.renderDeleteButton,
                 sortable: false,
                 filterable: false,
@@ -940,6 +1012,7 @@ class ReusableTable extends React.Component
             {
                 Header : 'Edit',
                 accessor: '',
+                id: 'edit',
                 Cell: this.renderEditButton,
                 sortable: false,
                 filterable: false,
@@ -968,9 +1041,9 @@ class ReusableTable extends React.Component
                       id   : 'tableIndex',
                       desc : false,
                     }]}
-                    showPagination ={false}
                     columns={columns}
                     getTrProps = {this.setRowProps}
+                    getTdProps = {this.setCellProps}
                     expanded={this.state.expanded}
                     SubComponent = { row => {
                         let numberOfErrors = this.state.errorMessages.filter( (errorMessage) => {

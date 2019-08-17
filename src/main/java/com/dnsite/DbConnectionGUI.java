@@ -127,7 +127,7 @@ public class DbConnectionGUI extends Application {
         hbBtn.getChildren().add(btn);
         grid.add(hbBtn, 1, 8);
         Text error = new Text();
-        error.setText("There was an error while connectiong to database");
+        error.setText("There was an error while connecting to database");
 
 
         btn.setOnAction(e -> {

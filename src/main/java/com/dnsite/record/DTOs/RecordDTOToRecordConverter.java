@@ -9,7 +9,7 @@ public class RecordDTOToRecordConverter {
         Record record = new Record();
 
         record.setId(recordDTO.getId());
-        record.setDomain(domainService.findById(recordDTO.getDomainId()));
+        record.setDomain(domainService.findById(extractDomainId(recordDTO.getDomainInfo())));
         record.setName(recordDTO.getName());
         record.setType(recordDTO.getType());
         record.setContent(recordDTO.getContent());
@@ -20,5 +20,14 @@ public class RecordDTOToRecordConverter {
         record.setAuth(recordDTO.getAuth());
 
         return record;
+    }
+
+    private static Long extractDomainId(String domainInfo) {
+        if (domainInfo.contains(" - ")) {
+            String[] stringParts = domainInfo.split(" - ");
+            return Long.parseLong(stringParts[0]);
+        }
+        return Long.parseLong(domainInfo);
+
     }
 }
