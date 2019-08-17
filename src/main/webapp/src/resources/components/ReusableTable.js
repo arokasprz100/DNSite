@@ -675,6 +675,26 @@ class ReusableTable extends React.Component
 
             this.setState({ copiedRow : copiedData });
         }
+        else if((event.ctrlKey && charCode === 'x') || (event.metaKey && charCode === 'x'))
+        {
+            if (this.state.focusedRow === null) {
+                return;
+            }
+            if (!(this.state.focusedRow in this.state.editedContent)) {
+                return;
+            }
+
+            let focusedRowContent = JSON.parse(JSON.stringify(this.state.editedContent[this.state.focusedRow]));
+            let copiedData = {};
+
+            for (const column of this.columnsSchema) {
+                if (column.type === "text" || column.type === "select" || column.type === "number" || column.type == "text_editableOnlyOnAdd") {
+                    copiedData[column.accessor] = focusedRowContent[column.accessor];
+                }
+            }
+
+            this.setState({ copiedRow : copiedData });
+        }
         else if((event.ctrlKey && charCode === 'v') || (event.metaKey && charCode === 'v'))
         {
             if (this.state.focusedRow in this.state.editedContent &&  Object.keys(this.state.copiedRow) !== 0)
