@@ -682,10 +682,10 @@ class ReusableTable extends React.Component
         let newSelected = JSON.parse(JSON.stringify(this.state.selected));
         let visibleRows = this.table.getResolvedState().sortedData;
         if (newSelectAll === 1) {
-            visibleRows.forEach( row => { newSelected[row[""].tableIndex] = true; } );
+            visibleRows.forEach( row => { newSelected[row._original.tableIndex] = true; } );
         }
         else {
-            visibleRows.forEach( row => { newSelected[row[""].tableIndex] = false; } );
+            visibleRows.forEach( row => { newSelected[row._original.tableIndex] = false; } );
         }
 
         this.setState({
@@ -699,7 +699,7 @@ class ReusableTable extends React.Component
         let visibleRows = this.table.getResolvedState().sortedData;
         let filteredSelectedCount = 0;
         visibleRows.forEach( (row) => {
-            if (row[""].tableIndex in this.state.selected && this.state.selected[row[""].tableIndex] === true) {
+            if (row._original.tableIndex in this.state.selected && this.state.selected[row._original.tableIndex] === true) {
                 ++filteredSelectedCount;
             }
         });
