@@ -738,36 +738,50 @@ class ReusableTable extends React.Component
         }
         else if (this.state.focusedCell.columnName !== null && this.state.focusedCell.rowNumber !== null)
         {
+            let focusedRow = JSON.parse(JSON.stringify(this.state.data.find((element) => {return element.tableIndex === this.state.focusedCell.rowNumber})));
+            let copiedValue = focusedRow[this.state.focusedCell.columnName];
 
+            this.setState( {copiedCell : {columnName : this.state.focusedCell.columnName, value : copiedValue}});
         }
     }
 
 
     handleCtrlXEvent = (event) =>
     {
-        if (this.state.focusedRow === null) {
-            return;
-        }
-        if (!(this.state.focusedRow in this.state.editedContent)) {
-            return;
-        }
-
-        let focusedRowContent = JSON.parse(JSON.stringify(this.state.editedContent[this.state.focusedRow]));
-        let copiedData = {};
-
-        for (const column of this.columnsSchema) {
-            if (column.type === "text" || column.type === "select" || column.type === "number" || column.type === "bool" || column.type == "text_editableOnlyOnAdd") {
-                copiedData[column.accessor] = focusedRowContent[column.accessor];
+        if (this.state.focusedRow !== null)
+        {
+            if (!(this.state.focusedRow in this.state.editedContent)) {
+                return;
             }
-        }
 
-        this.setState({ copiedRow : copiedData });
+            let focusedRowContent = JSON.parse(JSON.stringify(this.state.editedContent[this.state.focusedRow]));
+            let copiedData = {};
+
+            for (const column of this.columnsSchema) {
+                if (column.type === "text" || column.type === "select" || column.type === "number" || column.type === "bool" || column.type == "text_editableOnlyOnAdd") {
+                    copiedData[column.accessor] = focusedRowContent[column.accessor];
+                }
+            }
+
+            this.setState({ copiedRow : copiedData });
+        }
+        else if (this.state.focusedCell.columnName !== null && this.state.focusedCell.rowNumber !== null)
+        {
+            if (!(this.state.focusedCell.rowNumber in this.state.editedContent)) {
+                return;
+            }
+
+            let focusedRowContent = JSON.parse(JSON.stringify(this.state.editedContent[this.state.focusedCell.rowNumber]));
+            let copiedValue = focusedRowContent[this.state.focusedCell.columnName];
+
+            this.setState({ copiedCell : {columnName : this.state.focusedCell.columnName, value: copiedValue}});
+        }
     }
 
-
+    // TODO: restrict paste to only some types of cell for cell copy
     handleCtrlVEvent = (event) =>
     {
-        if (this.state.focusedRow in this.state.editedContent &&  Object.keys(this.state.copiedRow) !== 0)
+        if (this.state.focusedRow in this.state.editedContent && Object.keys(this.state.copiedRow) !== 0)
         {
             let copiedContent = JSON.parse(JSON.stringify(this.state.copiedRow));
             let oldEditedContent = JSON.parse(JSON.stringify(this.state.editedContent));
@@ -781,6 +795,24 @@ class ReusableTable extends React.Component
             }
 
             this.setState({ editedContent : oldEditedContent });
+        }
+        else if (this.state.focusedCell.columnName !== null && this.state.focusedCell.rowNumber !== null)
+        {
+            if (this.state.copiedCell.columnName === null || !(this.state.focusedCell.rowNumber in this.state.editedContent)) {
+                return;
+            }
+
+            if (this.state.copiedCell.columnName !== this.state.focusedCell.columnName) {
+                return;
+            }
+
+            let copiedValue = JSON.parse(JSON.stringify(this.state.copiedCell.value));
+            let editedContent = JSON.parse(JSON.stringify(this.state.editedContent));
+
+            editedContent[this.state.focusedCell.rowNumber][this.state.focusedCell.columnName] = copiedValue;
+
+            this.setState( {editedContent : editedContent} );
+
         }
     }
 
