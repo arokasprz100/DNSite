@@ -28,6 +28,7 @@ article {
   max-width: 100%;
   flex-grow: 1;
   background-color: white;
+  position: relative;
 }
 
 footer{
