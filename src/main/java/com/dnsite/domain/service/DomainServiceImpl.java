@@ -20,17 +20,24 @@ public class DomainServiceImpl implements DomainService{
     @Override
     public void deleteInBatch(List<Domain> domains){
         domainRepository.deleteInBatch(domains);
-        historyService.save("ZONE", "SAVE");
+        historyService.save("DOMAIN", "SAVE");
     }
 
     @Override
     public void saveInBatch(List<Domain> domains) {
         domainRepository.saveAll(domains);
-        historyService.save("ZONE", "SAVE");
+        historyService.save("DOMAIN", "SAVE");
     }
 
     @Override
     public List<Domain> findAll() {
         return domainRepository.findAll();
+    }
+
+    @Override
+    public Domain findById(Long id){
+        return domainRepository.findById(id).isPresent()
+            ? domainRepository.findById(id).get()
+            : null;
     }
 }

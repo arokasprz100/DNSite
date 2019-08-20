@@ -1,15 +1,23 @@
 package com.dnsite.supermaster.model;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "supermasters")
 public class Supermaster {
 
+    @Valid
     @EmbeddedId
-    SupermasterId supermasterId;
+    private SupermasterId supermasterId;
 
-    private String account;
+    @Column(name = "account")
+    @NotNull
+    private String account = "DNSite";
 
     public SupermasterId getSupermasterId() {
         return supermasterId;

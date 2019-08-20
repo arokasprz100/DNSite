@@ -1,3 +1,10 @@
+
+.buttonsWrapper {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
 .btn {
   border-radius: 0;
   background-color: white;

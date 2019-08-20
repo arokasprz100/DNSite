@@ -1,13 +1,22 @@
 package com.dnsite.record.controller;
 
+import com.dnsite.domain.service.DomainService;
+import com.dnsite.record.DTOs.RecordDTO;
+import com.dnsite.record.DTOs.RecordDTOToRecordConverter;
 import com.dnsite.record.model.Record;
+import com.dnsite.record.model.RecordType;
 import com.dnsite.record.service.RecordService;
+import com.dnsite.utils.DTOs.ConstraintViolationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Validation;
+import javax.validation.Validator;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/records")
@@ -16,32 +25,74 @@ public class RecordController {
     @Autowired
     private RecordService recordService;
 
-    @GetMapping
-    public String getPage(Model model) {
-        return "records";
-    }
+    @Autowired
+    private DomainService domainService;
 
     @GetMapping
     @RequestMapping("/all")
     @ResponseBody
-    public List<Record> getRecords() {
-        return recordService.findAll();
+    public List<RecordDTO> getRecords() {
+
+        List<Record> records = recordService.findAll();
+        List<RecordDTO> recordsToClient = new ArrayList<>();
+        for(Record record : records) {
+            recordsToClient.add(new RecordDTO(record));
+        }
+        return recordsToClient;
+    }
+
+    @GetMapping
+    @RequestMapping("/{domainId}")
+    @ResponseBody
+    public List<RecordDTO> getRecordsFromGivenDomain(@PathVariable("domainId") Long domainId) {
+
+        List<Record> foundRecords = recordService.findByDomain_Id(domainId);
+        List<RecordDTO> recordsToClient = new ArrayList<>();
+        for(Record record : foundRecords) {
+            recordsToClient.add(new RecordDTO(record));
+        }
+        return recordsToClient;
     }
 
     @PostMapping
     @RequestMapping("/commit")
     @ResponseBody
-    public String commitChanges(@RequestBody List<Record> records) {
-        recordService.saveOrUpdate(records);
-        return "Changes applied.";
+    public Set<ConstraintViolationDTO> commitChanges(@RequestBody List<RecordDTO> recordsFromClient) {
+        List<Record> records = new ArrayList<>();
+        Set<ConstraintViolationDTO> violations = new HashSet<>();
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+
+        for(RecordDTO recordFromClient : recordsFromClient){
+            Record toAdd = RecordDTOToRecordConverter.convert(recordFromClient, domainService);
+            violations.addAll(ConstraintViolationDTO.ofSet(validator.validate(toAdd), recordFromClient.getTableIndex()));
+            records.add(toAdd);
+        }
+
+        if(violations.isEmpty() && records.size() != 0) {
+            recordService.saveOrUpdate(records);
+            domainService.saveInBatch(SOAChangesApplier.apply(records));
+        }
+        return violations;
     }
 
     @PostMapping
     @RequestMapping("/delete")
     @ResponseBody
     public String deleteRecords(@RequestBody List<Record> records) {
-        recordService.deleteInBatch(records);
-        return "Records deleted.";
+        if (records.size() != 0) {
+            recordService.deleteInBatch(records);
+            domainService.saveInBatch(SOAChangesApplier.apply(records));
+            return "Records deleted.";
+        }
+        else {
+            return "No records to delete.";
+        }
     }
 
+    @GetMapping
+    @RequestMapping("/types")
+    @ResponseBody
+    public RecordType[] getRecordTypes(){
+        return RecordType.values();
+    }
 }

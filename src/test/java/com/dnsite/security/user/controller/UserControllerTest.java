@@ -1,6 +1,7 @@
 package com.dnsite.security.user.controller;
 /*
 import com.dnsite.security.service.SecurityService;
+import com.dnsite.security.user.model.Role;
 import com.dnsite.security.user.model.User;
 import com.dnsite.security.user.service.UserService;
 import com.dnsite.security.user.validator.UserValidator;
@@ -51,14 +52,14 @@ public class UserControllerTest {
     @Test
     public void firstUserInDatabaseSaveTest() {
         Mockito.when(bindingResult.hasErrors()).thenReturn(false);
-        Mockito.when(userService.findAll()).thenReturn(Collections.emptyList());
+        Mockito.when(userService.findByRole(Role.ADMIN.getAuthority())).thenReturn(Collections.emptyList());
         assertEquals("redirect:/", userController.registration(user, bindingResult, model));
     }
 
     @Test(expected = Exception.class)
     public void notFirstUserInDatabaseNeedConfirmToSaveTest() {
         Mockito.when(bindingResult.hasErrors()).thenReturn(false);
-        Mockito.when(userService.findAll()).thenReturn(Collections.singletonList(new User()));
+        Mockito.when(userService.findByRole(Role.ADMIN.getAuthority())).thenReturn(Collections.singletonList(new User()));
         assertEquals("redirect:/login", userController.registration(user, bindingResult, model));
     }
 }*/

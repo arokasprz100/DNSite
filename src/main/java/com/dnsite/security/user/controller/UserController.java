@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.util.List;
+
 @Controller
 public class UserController {
     private final static Logger log = Logger.getLogger(UserController.class);
-
-    private final String adminUsername = "Admin";
 
     @Autowired
     private UserService userService;
@@ -64,18 +64,22 @@ public class UserController {
             return "registration";
         }
 
-        if (userService.findAll().size() == 0){
+        List<User> admins = userService.findByRole(Role.ADMIN.getAuthority());
+        if (admins.size() == 0){
             userForm.setRole(Role.ADMIN.getAuthority());
             userService.save(userForm);
-
             log.info("First user of database saved");
-        }else{
+        }
+        else {
             log.info("Another user want to join system");
 
-            emailService.sendConfirmMessage(userService.findByUsername(adminUsername).getEmail(), userForm.getUsername(), userForm.getEmail());
+            for(User admin : admins) {
+                emailService.sendConfirmMessage(admin.getEmail(), userForm.getUsername(), userForm.getEmail());
+            }
             userForm.setRole(Role.USER.getAuthority());
             userService.save(userForm);
             log.info("Email was send to verification");
+
             return "redirect:/login";
         }
 
@@ -92,11 +96,6 @@ public class UserController {
         if (logout != null)
             model.addAttribute("message", "You have been logged out successfully.");
         return "login";
-    }
-
-    @RequestMapping(value = {"/dnsite"}, method = RequestMethod.GET)
-    public String dnsite(Model model) {
-        return "dnsite";
     }
 
     @RequestMapping(value = {"/403"}, method = RequestMethod.GET)

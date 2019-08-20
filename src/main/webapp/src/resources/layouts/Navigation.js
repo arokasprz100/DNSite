@@ -1,11 +1,13 @@
-import React, { Component } from "react";
-import { NavLink } from "react-router-dom";
+import React, {Component} from "react";
+import {NavLink} from "react-router-dom";
 import "../styles/Navigation.css";
 
 const navList = [
   { name: "supermasters", path: "/supermasters" },
-  { name: "zones", path: "/zones" },
-  { name: "administration", path: "/administration" }
+  { name: "domains", path: "/domains" },
+  { name: "administration", path: "/administration" },
+  { name: "history", path: "/history" },
+  { name: "records", path: "/records" }
 ];
 
 class Navigation extends Component {

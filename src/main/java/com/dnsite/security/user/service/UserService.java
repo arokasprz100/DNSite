@@ -11,6 +11,8 @@ public interface UserService {
 
     User findByUsername(String username);
 
+    List<User> findByRole(String role);
+
     List<User> findAll();
 
     void updateUserRole(Long id, Role role);

@@ -1,39 +1,57 @@
 package com.dnsite.record.model;
 
+import com.dnsite.domain.model.Domain;
+import com.dnsite.utils.CustomConstraints.LetterCase.LetterCase;
+import com.dnsite.utils.CustomConstraints.LetterCase.LetterCaseMode;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+
 
 @Entity
-@Table(name = "records")
+@Table(name = "records", indexes = {
+        @Index(columnList = "name", name="rec_name_index"),
+        @Index(columnList = "name, type", name="nametype_index"),
+        @Index(columnList = "domain_id", name="domain_id")
+})
 public class Record {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    /*
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(name="domain_id", nullable = false)
     private Domain domain = null;
-    */
 
-    // TODO: fix
-    public String domain;
+    @Column(name = "name")
+    @LetterCase(LetterCaseMode.LOWER)
+    private String name = null;
 
-    private String name;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type")
+    private RecordType type = null;
 
-    private String type;
+    @Column(name = "content")
+    private String content = null;
 
-    private String content;
-
-    private Long ttl;
+    @Column(name = "ttl")
+    private Long ttl = null;
 
     @Column(name = "prio")
-    private Long priority;
+    private Long priority = null;
 
-    @Column(name = "change_date")
-    private Long changeDate;
+    @Column(name = "disabled")
+    private Boolean disabled = false;
 
-    private Boolean disabled;
+    @Column(name = "ordername")
+    private String orderName = null;
+
+    @Column(name = "auth")
+    private Boolean auth = true;
 
     public Long getId() {
         return id;
@@ -51,11 +69,11 @@ public class Record {
         this.name = name;
     }
 
-    public String getType() {
+    public RecordType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(RecordType type) {
         this.type = type;
     }
 
@@ -83,14 +101,6 @@ public class Record {
         this.priority = priority;
     }
 
-    public Long getChangeDate() {
-        return changeDate;
-    }
-
-    public void setChangeDate(Long changeDate) {
-        this.changeDate = changeDate;
-    }
-
     public Boolean getDisabled() {
         return disabled;
     }
@@ -98,7 +108,7 @@ public class Record {
     public void setDisabled(Boolean disabled) {
         this.disabled = disabled;
     }
-/*
+
     public Domain getDomain() {
         return domain;
     }
@@ -106,6 +116,27 @@ public class Record {
     public void setDomain(Domain domain) {
         this.domain = domain;
     }
-*/
 
+    public String getOrderName() {
+        return orderName;
+    }
+
+    public void setOrderName(String orderName) {
+        this.orderName = orderName;
+    }
+
+    public Boolean getAuth() {
+        return auth;
+    }
+
+    public void setAuth(Boolean auth) {
+        this.auth = auth;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Record )) return false;
+        return id != null && id.equals(((Record) o).getId());
+    }
 }

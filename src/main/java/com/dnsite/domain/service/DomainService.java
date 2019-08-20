@@ -11,4 +11,6 @@ public interface DomainService {
     void deleteInBatch(List<Domain> domains);
 
     List<Domain> findAll();
+
+    Domain findById(Long id);
 }

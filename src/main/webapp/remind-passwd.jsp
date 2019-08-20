@@ -11,11 +11,12 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="text/html; charset=UTF-8; X-Content-Type-Options=nosniff" http-equiv="Content-Type" />
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Reimnd password</title>
+    <title>Remind password</title>
 
     <link rel="shortcut icon" href="../resources/images/icon.png" />
     <link href="${contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
