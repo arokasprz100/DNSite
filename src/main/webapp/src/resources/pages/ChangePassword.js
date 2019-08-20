@@ -15,7 +15,7 @@ class ChangePassword extends React.Component {
     }
 
     onSubmit = (e) => {
-        //wysłać request do API
+        //TODO: wysłać request do API
     }
 
     render(){
@@ -23,16 +23,16 @@ class ChangePassword extends React.Component {
             <div className="changePasswordWrapper">
                 <div className="inputsWrapper">
                     <div className="oldPasswordWrapper">
-                        <p>Wprowadź stare hasło:</p>
-                        <input value={this.state.oldPassword} placeholder="Stare hasło" onChange={this.handleChange} name="oldPassword"/>
+                        <p>Enter old password:</p>
+                        <input value={this.state.oldPassword} placeholder="Old password" onChange={this.handleChange} name="oldPassword"/>
                     </div>
                     <div className="newPasswordWrapper">
-                        <p>Wprowadź nowe hasło:</p>
-                        <input value={this.state.newPassword} placeholder="Nowe hasło" onChange={this.handleChange} name="newPassword"/>
-                        <input value={this.state.newPasswordConfirm} placeholder="Powtórz hasło" onChange={this.handleChange} name="newPasswordConfirm"/>
+                        <p>Enter new password:</p>
+                        <input value={this.state.newPassword} placeholder="New password" onChange={this.handleChange} name="newPassword"/>
+                        <input value={this.state.newPasswordConfirm} placeholder="Repeat password" onChange={this.handleChange} name="newPasswordConfirm"/>
                     </div>
                 </div>
-                <button onClick={this.onSubmit}>Zmień hasło</button>
+                <button onClick={this.onSubmit}>Change password</button>
             </div>
         )
     }

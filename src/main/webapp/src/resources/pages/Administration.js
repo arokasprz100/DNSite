@@ -17,7 +17,7 @@ class Administration extends React.Component {
             throw Error(response.status);
         })
         .then(response => response.json())
-        .then(data => { this.setState({ data: data, selected: {} }); })
+        .then(data => { this.setState({ data: data}); })
         .catch(error => console.log("Following error occurred: " + error));
     }
 

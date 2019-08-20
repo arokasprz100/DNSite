@@ -19,7 +19,7 @@ const Home = () => {
           </div>
           </div>
           <div className="authors">
-            <p>Aplikacja stworzona przez:</p>
+            <p>App created by:</p>
             <div className="authorsWrapper">
                 <p className="Author">Jarosław Cierpich</p>
                 <p className="Author">Arkadiusz Kasprzak</p>
