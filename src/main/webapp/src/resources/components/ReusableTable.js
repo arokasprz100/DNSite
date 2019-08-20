@@ -369,8 +369,9 @@ class ReusableTable extends React.Component
             let isFocused = (this.state.focusedRow === rowInfo.original.tableIndex);
             properties.style = {
                 opacity: isDeleted ? 0.4 : 1.0,
-                backgroundColor : isIncorrect !== 0 ? "red" : "white",
-                border : isFocused ? "1px solid black" : "0px",
+                backgroundColor: isIncorrect !== 0 ? "rgb(255,184,184)" : (isFocused ? "#f9f9f9" : "white"),
+                boxShadow: isIncorrect !== 0 ? "0 4px 20px -10px grey" : 'none',
+                zIndex:isIncorrect !== 0 ? "1" : "initial",
             };
         }
         return properties;
@@ -407,7 +408,7 @@ class ReusableTable extends React.Component
         if (row && col) {
             let isFocused = (this.state.focusedCell.columnName === col.id && this.state.focusedCell.rowNumber === row.original.tableIndex);
             properties.style = {
-                border : isFocused ? "1px solid black" : "0px",
+                backgroundColor: isFocused ? "#f9f9f9" : "white",
             }
         }
 
@@ -451,7 +452,7 @@ class ReusableTable extends React.Component
             return (
                 <div>
                     <div
-                        style={{ backgroundColor: "#fafafa" }}
+                        style={{ backgroundColor: "#fafafa", width: "100%" }}
                         dangerouslySetInnerHTML={{
                             __html: this.state.data[cellInfo.index][cellInfo.column.id]
                         }}
@@ -1085,7 +1086,7 @@ class ReusableTable extends React.Component
                             return (<div/>);
                         }
                         return (
-                            <div style={{ padding: '10px', backgroundColor : 'red', }} >
+                            <div style={{ padding: '0 10px', backgroundColor : 'rgb(255,204,204)',}} >
                                 <ul>
                                     {
                                         this.state.errorMessages.filter( (errorMessage) => {

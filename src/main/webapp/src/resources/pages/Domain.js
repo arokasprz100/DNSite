@@ -9,7 +9,7 @@ class Domain extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="exactDomain">
                 <DomainForm
                     urlId = {this.props.match.params.id}
                     resourcesURLBase = "http://localhost:8001/domains/"
@@ -59,7 +59,7 @@ class DomainRecordsTable extends React.Component
             { Header : "Disabled", accessor : "disabled", type: "bool" },
         ];
         return (
-            <div>
+            <div className="domain">
                 <ReusableTable ref = "domainRecordsTable"
                 fetchValueConstraints = {this.fetchValueConstraints}
                 resourcesURLBase = "http://localhost:8001/records/"
@@ -86,7 +86,7 @@ class DomainCommentsTable extends React.Component
             { Header : "Comment", accessor : "comment", type: "text" },
         ];
         return (
-            <div>
+            <div className="domain">
                 <ReusableTable ref = "domainCommentsTable"
                 fetchValueConstraints = { () => {} }
                 resourcesURLBase = "http://localhost:8001/comments/"

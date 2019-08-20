@@ -137,9 +137,8 @@ class DomainForm extends React.Component{
                             <Form.Text>{ this.getErrorMessages("lastCheck") }</Form.Text>
                         </Form.Group>
                     </Row>
-
-                    <Button variant="primary" type="submit"> Submit </Button>
                 </Col>
+                    <Button variant="primary" type="submit"> Submit </Button>
             </Form>
         )
     }

@@ -44,12 +44,29 @@
   flex-direction: row;
   font-size: 15px;
   font-weight: 600;
+  margin-bottom: 10px;
 }
 
-.authorsWrapper p {
+.authors p{
+  margin-bottom: 10px;
+}
+
+.authorsWrapper a, a:visited {
   font-family: "Montserrat", sans-serif;
   font-size: 13px;
-  margin-bottom: 10px;
-  margin-right: 20px;
   font-weight: 400;
+  color: #151515;
+  text-decoration: none;
+  line-height: 20px;
+}
+
+.authorsWrapper a:hover, a:active {
+  color: rgb(255, 77, 0);
+}
+
+.authorsWrapper p{
+  margin: 0 10px;
+  font-size: 18px;
+  font-weight: 200;
+  line-height: 20px;
 }

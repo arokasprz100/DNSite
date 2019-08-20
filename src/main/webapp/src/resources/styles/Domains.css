@@ -3,3 +3,133 @@
     top: 0;
     z-index: 1;
 }
+
+.rt-tr button{
+    background-color: inherit;
+    border: none;
+    font-size: 0.8rem;
+}
+
+.rt-tr input{
+    background-color: inherit !important;
+    border: none;
+    border-bottom: 2px solid #4b4b4b;
+    border-radius: 0px;
+}
+
+.rt-tr input:focus{
+    border-bottom: 2px solid rgb(255,77,0);
+}
+
+.rt-tr select{
+    background-color: inherit !important;
+    border: none;
+    border-bottom: 2px solid #4b4b4b;
+    border-radius: 0px;
+}
+
+.rt-tr select:focus select:active{
+    border-bottom: 2px solid rgb(255,77,0);
+}
+
+.rt-tr-group ul{
+    margin-top: 8px;
+    margin-bottom: 4px;
+}
+
+.rt-th {
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+
+.rt-td {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #151515;
+    background-color: inherit !important;
+}
+
+.rt-td div{
+    width: 100%;
+    background-color: inherit !important;
+}
+
+.rt-td a {
+    color: #151515 !important;
+}
+
+.rt-td a:hover {
+    color: rgb(255,77,0) !important;
+}
+
+.rt-td a {
+    background-color: inherit !important;
+}
+
+.toggle.active{
+    color: rgb(255,77,0) !important;
+}
+
+.active {
+    color: #151515;
+}
+
+.nav-item.active{
+    color: rgb(255,77,0) !important;
+}
+
+.nav-item{
+    color: #151515 !important;
+}
+
+.exactDomain{
+    font-family: "Montserrat" !important;
+}
+
+.exactDomain .col{
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 10px;
+}
+
+.exactDomain input{
+    background-color: inherit !important;
+    border: none;
+    border-bottom: 2px solid #4b4b4b;
+    border-radius: 0px;
+    width: 200px;
+}
+
+.exactDomain input:focus{
+    border-bottom: 2px solid rgb(255,77,0);
+    box-shadow: none !important;
+}
+
+.exactDomain select{
+    background-color: inherit !important;
+    border: none;
+    border-bottom: 2px solid #4b4b4b;
+    border-radius: 0px;
+    min-width: 200px;
+}
+
+.exactDomain select:focus select:active{
+    border-bottom: 2px solid rgb(255,77,0);
+    box-shadow: none !important;
+}
+
+.exactDomain form{
+    display: block !important;
+    margin-top: 20px;
+}
+
+.exactDomain small{
+    margin: 0;
+}
+
+.exactDomain label{
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: 600;
+}

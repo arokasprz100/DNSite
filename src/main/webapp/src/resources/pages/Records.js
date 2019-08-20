@@ -39,7 +39,7 @@ class Records extends React.Component {
             { Header : "Disabled", accessor : "disabled", type: "bool" },
         ];
         return (
-            <div>
+            <div className="records">
                 <ReusableTable ref = "recordsTable"
                 fetchValueConstraints = {this.fetchValueConstraints}
                 resourcesURLBase = "http://localhost:8001/records/"

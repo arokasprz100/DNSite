@@ -10,7 +10,7 @@
   top: 70px;
   transition: all 0.3s ease;
   background-color: white;
-  z-index:1;
+  z-index: 2;
 }
 
 .showBlock{

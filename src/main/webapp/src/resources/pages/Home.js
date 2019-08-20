@@ -21,11 +21,11 @@ const Home = () => {
           <div className="authors">
             <p>App created by:</p>
             <div className="authorsWrapper">
-                <p className="Author">Jarosław Cierpich</p>
-                <p className="Author">Arkadiusz Kasprzak</p>
-                <p className="Author">Jakub Kowalski</p>
-                <p className="Author">Krystian Molenda</p>
-                <p className="Author">Konrad Pasik</p>
+                <a href="https://github.com/Loniowsky">Jarosław Cierpich</a><p>|</p>
+                <a href="https://github.com/arokasprz100">Arkadiusz Kasprzak</a><p>|</p>
+                <a href="https://github.com/JakubKowalski1997">Jakub Kowalski</a><p>|</p>
+                <a href="https://github.com/pierwiastekzminusjeden">Krystian Molenda</a><p>|</p>
+                <a href="https://github.com/Pasik97">Konrad Pasik</a>
             </div>
       </div>
     </div>
