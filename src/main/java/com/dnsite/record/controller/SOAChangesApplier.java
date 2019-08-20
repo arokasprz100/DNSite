@@ -27,7 +27,7 @@ public class SOAChangesApplier {
             else {
                 domain.setNotifiedSerial(Integer.parseInt(Domain.dateFormat.format(new Date()))*100);
             }
-        }
+    }
 
         return domainsWithSOARecords;
     }

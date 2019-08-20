@@ -3,8 +3,6 @@ package com.dnsite.record.model;
 import com.dnsite.domain.model.Domain;
 import com.dnsite.utils.CustomConstraints.LetterCase.LetterCase;
 import com.dnsite.utils.CustomConstraints.LetterCase.LetterCaseMode;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -25,7 +23,8 @@ public class Record {
 
     @ManyToOne
     @JoinColumn(name="domain_id", nullable = false)
-    private Domain domain = null;
+    @NotNull
+    private Domain domain;
 
     @Column(name = "name")
     @LetterCase(LetterCaseMode.LOWER)
@@ -33,6 +32,7 @@ public class Record {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
+    @NotNull
     private RecordType type = null;
 
     @Column(name = "content")
