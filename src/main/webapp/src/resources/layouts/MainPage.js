@@ -23,6 +23,7 @@ const MainPage = () => {
         <Route path="/changePassword" component={ChangePassword} />
         <Route path="/history" component={HistoryPanel} />
         <Route path="/domain/:id" component={Domain}/>
+        <Route path="/privacy-policy" component={<div></div>}/>
         <Route component={Error404} />
       </Switch>
     </>
