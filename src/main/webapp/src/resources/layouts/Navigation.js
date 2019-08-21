@@ -5,9 +5,9 @@ import "../styles/Navigation.css";
 const navList = [
   { name: "supermasters", path: "/supermasters" },
   { name: "domains", path: "/domains" },
+  { name: "records", path: "/records" },
   { name: "administration", path: "/administration" },
-  { name: "history", path: "/history" },
-  { name: "records", path: "/records" }
+  { name: "history", path: "/history" }
 ];
 
 class Navigation extends Component {

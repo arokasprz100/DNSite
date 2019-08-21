@@ -33,7 +33,7 @@ class Records extends React.Component {
             { Header : "Domain", accessor : "domainInfo", type: "select" },
             { Header : "Name", accessor : "name", type: "text" },
             { Header : "Type", accessor : "type", type: "select" },
-            { Header : "Content", accessor : "content", type: "text" },
+            { Header : "Content", accessor : "content", type: "textarea" },
             { Header : "TTL", accessor : "ttl", type: "number" },
             { Header : "Priority", accessor : "priority", type: "number" },
             { Header : "Disabled", accessor : "disabled", type: "bool" },
