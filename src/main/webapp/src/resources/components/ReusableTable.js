@@ -30,6 +30,9 @@ class ReusableTable extends React.Component
             expanded: {},
             errorMessages: [],
 
+            // enable copying mechanism
+            isSmartCopyEnabled: false,
+
             // copying row mechanism
             focusedRow: null,
             copiedRow : {},
@@ -84,6 +87,21 @@ class ReusableTable extends React.Component
             error => console.log("Following error occurred: " + error)
         );
     }
+
+
+    toggleSmartCopy = () =>
+    {
+        const newValue = !this.state.isSmartCopyEnabled;
+        this.setState ({ isSmartCopyEnabled: newValue });
+    }
+
+
+    renderSmartCopyButton = () =>
+    {
+        const buttonText = (this.state.isSmartCopyEnabled ? "Disable smart copy" : "Enable smart copy");
+        return (<button onClick = { () => { this.toggleSmartCopy() } }> {buttonText} </button>);
+    }
+
 
     getSelectedRows = () =>
     {
@@ -721,6 +739,7 @@ class ReusableTable extends React.Component
 
     handleCtrlCEvent = (event) =>
     {
+        event.preventDefault();
         if (this.state.focusedRow !== null)
         {
             let focusedRowContent = JSON.parse(JSON.stringify(
@@ -748,6 +767,7 @@ class ReusableTable extends React.Component
 
     handleCtrlXEvent = (event) =>
     {
+        event.preventDefault();
         if (this.state.focusedRow !== null)
         {
             if (!(this.state.focusedRow in this.state.editedContent)) {
@@ -781,6 +801,7 @@ class ReusableTable extends React.Component
     // TODO: restrict paste to only some types of cell for cell copy
     handleCtrlVEvent = (event) =>
     {
+        event.preventDefault();
         if (this.state.focusedRow in this.state.editedContent && Object.keys(this.state.copiedRow) !== 0)
         {
             let copiedContent = JSON.parse(JSON.stringify(this.state.copiedRow));
@@ -819,6 +840,8 @@ class ReusableTable extends React.Component
 
     handleKeyDown = (event) =>
     {
+        if (!this.state.isSmartCopyEnabled) { return; }
+
         let charCode = String.fromCharCode(event.which).toLowerCase();
 
         // metaKey is for MAC users
@@ -867,7 +890,8 @@ class ReusableTable extends React.Component
                 let expanded = this.getAllRowsExpanded();
                 this.setState({
                     expanded : expanded,
-                    errorMessages : response
+                    errorMessages : response,
+                    isSmartCopyEnabled: false
                 });
 
             }
@@ -1063,6 +1087,7 @@ class ReusableTable extends React.Component
                     <button onClick={ () => this.addRow() }> Add {this.props.resourceName} </button>
                     <button onClick={ () => this.commitAddAndUpdateChanges() }> Commit changes </button>
                     <button onClick={ () => this.revertChanges() }> Revert changes </button>
+                    {this.renderSmartCopyButton()}
                 </div>
                 <ReactTable
                     ref={(r) => (this.table = r)}
