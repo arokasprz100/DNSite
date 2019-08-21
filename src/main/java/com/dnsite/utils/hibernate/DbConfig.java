@@ -15,6 +15,12 @@ public class DbConfig {
 
     private String backupLocalization;
 
+    private String hostmaster;
+
+    private String primaryNameserver;
+
+    private String secondaryNameserver;
+
     public String getBackupLocalization() { return backupLocalization; }
 
     public void setBackupLocalization(String backupLocalization) { this.backupLocalization = backupLocalization; }
@@ -61,5 +67,29 @@ public class DbConfig {
 
     public void setDbName(String dbName) {
         this.dbName = dbName;
+    }
+
+    public String getHostmaster() {
+        return hostmaster;
+    }
+
+    public void setHostmaster(String hostmaster) {
+        this.hostmaster = hostmaster;
+    }
+
+    public String getPrimaryNameserver() {
+        return primaryNameserver;
+    }
+
+    public void setPrimaryNameserver(String primaryNameserver) {
+        this.primaryNameserver = primaryNameserver;
+    }
+
+    public String getSecondaryNameserver() {
+        return secondaryNameserver;
+    }
+
+    public void setSecondaryNameserver(String secondaryNameserver) {
+        this.secondaryNameserver = secondaryNameserver;
     }
 }
