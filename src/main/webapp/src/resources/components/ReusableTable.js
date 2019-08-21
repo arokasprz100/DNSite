@@ -387,7 +387,7 @@ class ReusableTable extends React.Component
             let isFocused = (this.state.focusedRow === rowInfo.original.tableIndex);
             properties.style = {
                 opacity: isDeleted ? 0.4 : 1.0,
-                backgroundColor: isIncorrect !== 0 ? "rgb(255,184,184)" : (isFocused ? "#f0f0f0" : "white"),
+                backgroundColor: isFocused ? "#f0f0f0" : (isIncorrect !== 0 ? "rgb(255,184,184)" : "transparent"),
                 boxShadow: isIncorrect !== 0 ? "0 4px 20px -10px grey" : 'none',
                 zIndex:isIncorrect !== 0 ? "1" : "initial",
             };
@@ -426,7 +426,7 @@ class ReusableTable extends React.Component
         if (row && col) {
             let isFocused = (this.state.focusedCell.columnName === col.id && this.state.focusedCell.rowNumber === row.original.tableIndex);
             properties.style = {
-                backgroundColor: isFocused ? "#f0f0f0" : "white",
+                backgroundColor: isFocused ? "#f0f0f0" : "transparent",
             }
         }
 

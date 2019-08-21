@@ -47,12 +47,11 @@
     align-items: center;
     justify-content: center;
     color: #151515;
-    background-color: inherit !important;
 }
 
-.rt-td div{
+.rt-td div {
     width: 100%;
-    background-color: inherit !important;
+    background-color: transparent !important;
 }
 
 .rt-td a {
