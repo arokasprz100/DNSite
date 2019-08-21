@@ -6,7 +6,7 @@ public class CommentDTO {
 
     private Long id;
 
-    private Long domainId;
+    private String domainInfo;
 
     private String name = "";
 
@@ -24,7 +24,7 @@ public class CommentDTO {
 
     public CommentDTO(Comment originalComment) {
         id = originalComment.getId();
-        domainId = originalComment.getDomain().getId();
+        domainInfo = originalComment.getDomain().getId().toString();
         name = originalComment.getName();
         type = originalComment.getType();
         modifiedAt = originalComment.getModifiedAt();
@@ -40,12 +40,12 @@ public class CommentDTO {
         this.id = id;
     }
 
-    public Long getDomainId() {
-        return domainId;
+    public String getDomainInfo() {
+        return domainInfo;
     }
 
-    public void setDomainId(Long domainId) {
-        this.domainId = domainId;
+    public void setDomainInfo(String domainInfo) {
+        this.domainInfo = domainInfo;
     }
 
     public String getName() {

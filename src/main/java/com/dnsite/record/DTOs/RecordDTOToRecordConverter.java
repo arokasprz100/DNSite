@@ -2,6 +2,7 @@ package com.dnsite.record.DTOs;
 
 import com.dnsite.domain.service.DomainService;
 import com.dnsite.record.model.Record;
+import com.dnsite.utils.DTOs.DomainIdExtractor;
 
 public class RecordDTOToRecordConverter {
 
@@ -9,7 +10,7 @@ public class RecordDTOToRecordConverter {
         Record record = new Record();
 
         record.setId(recordDTO.getId());
-        record.setDomain(domainService.findById(extractDomainId(recordDTO.getDomainInfo())));
+        record.setDomain(domainService.findById(DomainIdExtractor.extract(recordDTO.getDomainInfo())));
         record.setName(recordDTO.getName());
         record.setType(recordDTO.getType());
         record.setContent(recordDTO.getContent());
@@ -22,12 +23,4 @@ public class RecordDTOToRecordConverter {
         return record;
     }
 
-    private static Long extractDomainId(String domainInfo) {
-        if (domainInfo.contains(" - ")) {
-            String[] stringParts = domainInfo.split(" - ");
-            return Long.parseLong(stringParts[0]);
-        }
-        return Long.parseLong(domainInfo);
-
-    }
 }
