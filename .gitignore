@@ -58,3 +58,8 @@ yarn-error.log*
 
 #db config
 dbconfig.yaml
+
+### Latex ###
+/documentation/src/reusableTable/reusableTableDevGuide.log
+/documentation/src/reusableTable/reusableTableDevGuide.aux
+/documentation/src/reusableTable/reusableTableDevGuide.synctex.gz
