@@ -10,6 +10,7 @@ import ReactDOM from 'react-dom'
 import Error404 from "../pages/Error404";
 import HistoryPanel from "../pages/History";
 import ChangePassword from "../pages/ChangePassword";
+import LogoutHelper from "../pages/LogoutHelper";
 
 const MainPage = () => {
   return (
@@ -23,7 +24,7 @@ const MainPage = () => {
         <Route path="/changePassword" component={ChangePassword} />
         <Route path="/history" component={HistoryPanel} />
         <Route path="/domain/:id" component={Domain}/>
-        <Route path="/privacy-policy" component={<div></div>}/>
+        <Route path="/privacy-policy" component={LogoutHelper}/>
         <Route component={Error404} />
       </Switch>
     </>

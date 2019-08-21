@@ -11,6 +11,7 @@
   transition: all 0.3s ease;
   background-color: white;
   z-index: 2;
+  padding-left: 10px;
 }
 
 .showBlock{
