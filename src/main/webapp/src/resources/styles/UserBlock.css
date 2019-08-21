@@ -6,15 +6,15 @@
   font-size: 15px;
   max-width: 300px;
   position: absolute;
-  right: -300px;
-  top: 70px;
+  right: 0px;
+  top: 0px;
   transition: all 0.3s ease;
   background-color: white;
   z-index: 2;
 }
 
 .showBlock{
-  right: 0;
+  top: 70px;
 }
 
 h4{

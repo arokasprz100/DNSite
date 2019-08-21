@@ -15,8 +15,8 @@ class App extends Component {
           <header>
             {<Header />}
             {<Navigation />}
-            <aside>{<UserBlock />}</aside>
           </header>
+          <aside>{<UserBlock />}</aside>
           <main>
             <article>{<MainPage />}</article>
           </main>

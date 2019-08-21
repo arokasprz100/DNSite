@@ -15,6 +15,10 @@ class Navigation extends Component {
       userPanelShow: false
   };
     userPanelShow = () => {
+    const header = document.getElementsByTagName("header")[0];
+    if (!this.state.userPanelShow) header.classList.add("deleteOverflow");
+    else header.classList.remove("deleteOverflow");
+
     const icon = document.getElementsByClassName("toggle")[0];
     if (!this.state.userPanelShow) icon.classList.add("active");
     else icon.classList.remove("active");
@@ -22,6 +26,7 @@ class Navigation extends Component {
     const userBlock = document.getElementsByClassName("userBlock")[0];
     if (!this.state.userPanelShow) userBlock.classList.add("showBlock");
     else userBlock.classList.remove("showBlock");
+
     this.setState({
         userPanelShow: !this.state.userPanelShow
     });
