@@ -396,6 +396,20 @@ class ReusableTable extends React.Component
     }
 
 
+    setReadonlyRowProps = (state, rowInfo, column, instance) =>
+    {
+        let properties = {};
+        if (rowInfo) {
+            let isEdited = (rowInfo.original.tableIndex in this.state.editedContent);
+            if (isEdited) {
+                properties.style = { backgroundColor: "#daffd9" };
+            }
+        }
+
+        return properties;
+    }
+
+
     setCellProps = (state, row, col, instance) =>
     {
         let properties = {
@@ -644,7 +658,7 @@ class ReusableTable extends React.Component
         if (hasBeenEdited) {
 
             return (
-                <div style={{ backgroundColor: "#7CFC00" }}>
+                <div>
                     <div
                         style={{ backgroundColor: "#fafafa" }}
                         dangerouslySetInnerHTML = {{ __html: this.state.data[cellInfo.index][cellInfo.column.id] }}
@@ -968,7 +982,7 @@ class ReusableTable extends React.Component
                       desc : false,
                     }]}
                     columns={columns}
-                    getTrProps = {this.setRowProps}
+                    getTrProps = {this.setReadonlyRowProps}
                 />
             </div>
         );
