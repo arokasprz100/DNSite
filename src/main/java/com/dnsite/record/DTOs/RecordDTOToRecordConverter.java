@@ -23,6 +23,9 @@ public class RecordDTOToRecordConverter {
     }
 
     private static Long extractDomainId(String domainInfo) {
+        if(domainInfo == null){
+            return -1L;
+        }
         if (domainInfo.contains(" - ")) {
             String[] stringParts = domainInfo.split(" - ");
             return Long.parseLong(stringParts[0]);
