@@ -4,7 +4,10 @@ import com.dnsite.domain.DTOs.DomainDTO;
 import com.dnsite.domain.DTOs.DomainDTOToDomainConverter;
 import com.dnsite.domain.model.Domain;
 import com.dnsite.domain.service.DomainService;
+import com.dnsite.record.model.Record;
+import com.dnsite.record.service.RecordService;
 import com.dnsite.utils.DTOs.ConstraintViolationDTO;
+import com.dnsite.utils.DTOs.SOARecordsCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +25,9 @@ public class DomainController {
 
     @Autowired
     DomainService domainService;
+
+    @Autowired
+    RecordService recordService;
 
     @GetMapping
     @RequestMapping("/all")
@@ -69,14 +75,20 @@ public class DomainController {
         Set<ConstraintViolationDTO> violations = new HashSet<>();
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
+        List<Record> SOARecordsToAdd = new ArrayList<>();
+
         for (DomainDTO domainFromClient : domainsFromClient) {
             Domain toAdd = DomainDTOToDomainConverter.convert(domainFromClient);
+            if (domainFromClient.getId() == null && domainFromClient.getType() != Domain.TYPE.SLAVE) {
+                SOARecordsToAdd.add(SOARecordsCreator.create(toAdd));
+            }
             violations.addAll(ConstraintViolationDTO.ofSet(validator.validate(toAdd), domainFromClient.getTableIndex()));
             domains.add(toAdd);
         }
 
         if(violations.isEmpty()){
             domainService.saveInBatch(domains);
+            recordService.saveOrUpdate(SOARecordsToAdd);
         }
 
         return violations;
