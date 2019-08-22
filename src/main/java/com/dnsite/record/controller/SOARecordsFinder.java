@@ -9,10 +9,8 @@ import com.dnsite.record.service.RecordServiceImpl;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SOARecordsFinder {
-    public static List<Record> byDomains(List<Domain> toSearch){
-
-        RecordService recordService = new RecordServiceImpl();
+class SOARecordsFinder {
+    static List<Record> byDomains(List<Domain> toSearch, RecordService recordService){
 
         List<Record> recordsSOA = new ArrayList<>();
 

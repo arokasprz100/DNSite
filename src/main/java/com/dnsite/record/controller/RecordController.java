@@ -74,7 +74,7 @@ public class RecordController {
             recordService.saveOrUpdate(records);
             List<Domain> domainsToChangeNotifiedSerial = DomainsToChangeNotifiedSerialFinder.byRecords(records);
             domainService.saveInBatch(NotifiedSerialApplier.toDomain(domainsToChangeNotifiedSerial));
-            List<Record> recordsSOAToChangeNotifiedSerial = SOARecordsFinder.byDomains(domainsToChangeNotifiedSerial);
+            List<Record> recordsSOAToChangeNotifiedSerial = SOARecordsFinder.byDomains(domainsToChangeNotifiedSerial, recordService);
             recordService.saveOrUpdate(NotifiedSerialApplier.toSOARecord(recordsSOAToChangeNotifiedSerial));
         }
         return violations;
