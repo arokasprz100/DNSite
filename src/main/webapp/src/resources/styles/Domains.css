@@ -8,6 +8,7 @@
     background-color: inherit;
     border: none;
     font-size: 0.8rem;
+    white-space: normal;
 }
 
 .rt-tr input{
@@ -15,6 +16,7 @@
     border: none;
     border-bottom: 2px solid #4b4b4b;
     border-radius: 0px;
+    margin-bottom: 3px;
 }
 
 .rt-tr input:focus{
@@ -26,10 +28,27 @@
     border: none;
     border-bottom: 2px solid #4b4b4b;
     border-radius: 0px;
+    margin-bottom: 3px;
 }
 
 .rt-tr select:focus select:active{
     border-bottom: 2px solid rgb(255,77,0);
+}
+
+.rt-tr textarea{
+    background-color: inherit !important;
+    border: none;
+    border-bottom: 2px solid #4b4b4b;
+    border-radius: 0px;
+    max-width: 100%;
+    margin-bottom: 3px;
+}
+
+.rt-tr textarea:focus{
+    border-bottom: 2px solid rgb(255,77,0);
+    outline:0px !important;
+    -webkit-appearance:none;
+    box-shadow: none !important;
 }
 
 .rt-tr-group ul{
@@ -47,11 +66,18 @@
     align-items: center;
     justify-content: center;
     color: #151515;
+    align-items: flex-end;
 }
 
 .rt-td div {
     width: 100%;
     background-color: transparent !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100%;
+    justify-content: space-between;
+    white-space: normal;
 }
 
 .rt-td a {
