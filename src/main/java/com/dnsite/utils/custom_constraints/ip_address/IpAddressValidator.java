@@ -1,4 +1,4 @@
-package com.dnsite.utils.CustomConstraints.IpAddress;
+package com.dnsite.utils.custom_constraints.ip_address;
 
 import com.vladmihalcea.hibernate.type.basic.Inet;
 
@@ -22,8 +22,8 @@ public class IpAddressValidator implements ConstraintValidator<IpAddress, Inet> 
 
         if (!isValid){
             constraintValidatorContext.disableDefaultConstraintViolation();
-            constraintValidatorContext.buildConstraintViolationWithTemplate("com.dnsite.utils.CustomConstraints."+
-                    "constraintvalidatorcontext.IpAddress.message: Not a valid IP Address").addConstraintViolation();
+            constraintValidatorContext.buildConstraintViolationWithTemplate("com.dnsite.utils.custom_constraints."+
+                    "constraintvalidatorcontext.ip_address.message: Not a valid IP Address").addConstraintViolation();
         }
 
         return isValid;

@@ -1,7 +1,7 @@
-package com.dnsite.tsigKeys.model;
+package com.dnsite.tsig_keys.model;
 
-import com.dnsite.utils.CustomConstraints.LetterCase.LetterCaseMode;
-import com.dnsite.utils.CustomConstraints.LetterCase.LetterCase;
+import com.dnsite.utils.custom_constraints.letter_case.LetterCaseMode;
+import com.dnsite.utils.custom_constraints.letter_case.LetterCase;
 
 import javax.persistence.*;
 

@@ -18,7 +18,7 @@ public class SOARecordsCreator {
         record.setDomain(masterDomain);
         record.setName(masterDomain.getName());
         record.setType(RecordType.SOA);
-        record.setContent(createRecordContent());
+        record.setContent(createRecordContent(masterDomain));
         record.setTtl(86400L);
         record.setPriority(0L);
         record.setDisabled(false);
@@ -27,11 +27,11 @@ public class SOARecordsCreator {
         return record;
     }
 
-    private static String createRecordContent() {
+    private static String createRecordContent(Domain masterDomain) {
         DbConfigService dbConfigService = new DbConfigService();
         DbConfig dbConfig = dbConfigService.readDbConfigFile("dbconfig.yaml");
-        return dbConfig.getPrimaryNameserver() + " " + dbConfig.getHostmaster() + " " + getCurrentDate()
-                + "00" + " 28800 7200 604800 86400";
+        return dbConfig.getPrimaryNameserver() + " " + dbConfig.getHostmaster() + " " + masterDomain.getNotifiedSerial()
+                + " 28800 7200 604800 86400";
     }
 
     private static String getCurrentDate() {

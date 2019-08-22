@@ -1,4 +1,4 @@
-package com.dnsite.utils.CustomConstraints.IpAddress;
+package com.dnsite.utils.custom_constraints.ip_address;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -10,7 +10,7 @@ import java.lang.annotation.*;
 @Documented
 public @interface IpAddress {
 
-    String message() default "{com.dnsite.utils.CustomConstraints.IpAddress" + "message}";
+    String message() default "{com.dnsite.utils.custom_constraints.ip_address" + "message}";
 
     Class<?>[] groups() default { };
 
