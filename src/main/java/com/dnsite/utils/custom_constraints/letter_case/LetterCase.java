@@ -1,4 +1,4 @@
-package com.dnsite.utils.CustomConstraints.LetterCase;
+package com.dnsite.utils.custom_constraints.letter_case;
 
 import javax.validation.Constraint;
         import javax.validation.Payload;
@@ -10,7 +10,7 @@ import javax.validation.Constraint;
 @Documented
 public @interface LetterCase {
 
-    String message() default "{com.dnsite.utils.CustomConstraints." + "message}";
+    String message() default "{com.dnsite.utils.custom_constraints." + "message}";
 
     Class<?>[] groups() default { };
 

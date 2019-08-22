@@ -1,8 +1,8 @@
 package com.dnsite.record.model;
 
 import com.dnsite.domain.model.Domain;
-import com.dnsite.utils.CustomConstraints.LetterCase.LetterCase;
-import com.dnsite.utils.CustomConstraints.LetterCase.LetterCaseMode;
+import com.dnsite.utils.custom_constraints.letter_case.LetterCase;
+import com.dnsite.utils.custom_constraints.letter_case.LetterCaseMode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

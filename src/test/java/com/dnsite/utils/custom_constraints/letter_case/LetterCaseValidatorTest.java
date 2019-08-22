@@ -1,4 +1,4 @@
-package com.dnsite.utils.CustomConstraints.LetterCase;
+package com.dnsite.utils.custom_constraints.letter_case;
 
 import org.junit.Before;
 import org.junit.Test;
