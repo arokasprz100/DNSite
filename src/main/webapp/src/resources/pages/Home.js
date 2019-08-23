@@ -12,10 +12,9 @@ const Home = () => {
             <p>A web-based control panel for PowerDNS</p>
           </div>
           <div className="content">
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nesciunt
-            voluptatibus earum amet impedit obcaecati ad vel saepe ullam mollitia
-            possimus aperiam aliquam deleniti, totam odit est dicta cum quisquam
-            sapiente.
+            DNSite is a management website for PostgreSQL based database used by PowerDNS.
+            Its main purpose is to allow making multiple changes to the data stored in database in a simple, fast and comfortable way.
+            If you would like to learn more please read attached documentation.
           </div>
           </div>
           <div className="authors">
