@@ -26,8 +26,10 @@ class Records extends React.Component {
 
     render()
     {
-        // TODO: change "" to nulls
-        let emptyDataExample = { id : '', domainInfo : '', name : '', type : '', content : '', ttl : '', priority : '', disabled : '' };
+        let emptyDataExample = {
+            id : '', domainInfo : null, name : null, type : null, content : null,
+            ttl : null, priority : null, disabled : null
+        };
         const columns = [
             { Header : "ID", accessor : "id", type: "none" },
             { Header : "Domain", accessor : "domainInfo", type: "select" },
