@@ -9,18 +9,15 @@ public final class PasswordGenerator {
     private static final String LOWER = "abcdefghijklmnopqrstuvwxyz";
     private static final String UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String DIGITS = "0123456789";
-    private PasswordUtils passwordUtils;
     private boolean useLower;
     private boolean useUpper;
     private boolean useDigits;
-
 
     private PasswordGenerator() {
         throw new UnsupportedOperationException("Empty constructor is not supported.");
     }
 
     private PasswordGenerator(PasswordGeneratorBuilder builder) {
-        passwordUtils = new PasswordUtils();
         this.useLower = builder.useLower;
         this.useUpper = builder.useUpper;
         this.useDigits = builder.useDigits;
@@ -57,11 +54,24 @@ public final class PasswordGenerator {
                 password.append(charCategory.charAt(position));
             }
 
-        } while (!passwordUtils.checkPassword((password.toString()), this.useLower, this.useUpper, this.useDigits));
+        }while(!checkPassword((password.toString())));
 
         return new String(password);
     }
 
+    private boolean checkPassword(String password){
+        System.out.println("check");
+        if (useLower && ! password.matches(".*[0-9]+.*")) {
+            return false;
+        }
+        if (useUpper && !password.matches(".*[A-Z]+.*")) {
+            return false;
+        }
+        if (useDigits && !password.matches(".*[a-z]+.*")) {
+            return false;
+        }
+        return true;
+    }
 
     public static class PasswordGeneratorBuilder {
 
