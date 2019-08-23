@@ -1,4 +1,4 @@
-package com.dnsite.domainMetaData.model;
+package com.dnsite.domain_meta_data.model;
 
 import com.dnsite.domain.model.Domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
