@@ -11,10 +11,10 @@ import java.util.regex.Pattern;
 public class NotifiedSerialApplier {
     public static List<Domain> toDomain(List<Domain> domainsToApply){
         for(Domain domain : domainsToApply){
-            Integer serial = domain.getNotifiedSerial();
-            String str = serial.toString();
-            if(str.contains(Domain.dateFormat.format(new Date()))){
-                domain.setNotifiedSerial(serial + 1);
+            int serial = domain.getNotifiedSerial();
+            String str = String.valueOf(serial);
+            if(!str.isEmpty()){
+                domain.setNotifiedSerial((int)((serial + 1)%1e10));
             }
             else {
                 domain.setNotifiedSerial(Integer.parseInt(Domain.dateFormat.format(new Date()))*100);
