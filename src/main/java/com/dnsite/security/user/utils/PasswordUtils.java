@@ -3,6 +3,7 @@ package com.dnsite.security.user.utils;
 import com.dnsite.security.DTOs.Passwords;
 import com.dnsite.security.user.model.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import  com.dnsite.security.user.utils.PasswordGenerator;
 
 import java.util.Random;
 
@@ -40,7 +41,6 @@ public final class PasswordUtils {
         }
         return "Valid";
     }
-
 
     public static String generateTemporaryPassword() {
         PasswordGenerator passwordGenerator = new PasswordGenerator.PasswordGeneratorBuilder()

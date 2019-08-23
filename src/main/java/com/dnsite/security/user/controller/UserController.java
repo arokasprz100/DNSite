@@ -112,7 +112,7 @@ public class UserController {
         String message = passwordUtils.checkNewPassword(password, user);
         if (message.equals("Valid")) {
             userService.setUserPassword(user.getUsername(), password.newPassword);
-            log.info("Password of user " + user.getUsername() + "has been changed");
+            log.info("Password of user " + user.getUsername() + " has been changed");
         } else {
             log.info("error during changing password: " + message);
             //return message and show in info dialog
