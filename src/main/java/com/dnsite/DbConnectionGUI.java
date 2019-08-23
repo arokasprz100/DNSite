@@ -120,17 +120,42 @@ public class DbConnectionGUI extends Application {
         pane.setCenter(label);
 
 
+        Label hostmaster = new Label("Hostmaster:");
+        grid.add(hostmaster, 0, 8);
+
+        TextField hostmasterTextField = new TextField();
+        grid.add(hostmasterTextField, 1, 8);
+        pane.setCenter(label);
+
+
+        Label primaryNameserver = new Label("Primary nameserver:");
+        grid.add(primaryNameserver, 0, 9);
+
+        TextField primaryNameserverTextField = new TextField();
+        grid.add(primaryNameserverTextField, 1, 9);
+        pane.setCenter(label);
+
+
+        Label secondaryNameserver = new Label("Secondary nameserver:");
+        grid.add(secondaryNameserver, 0, 10);
+
+        TextField secondaryNameserverTextField = new TextField();
+        grid.add(secondaryNameserverTextField, 1, 10);
+        pane.setCenter(label);
+
 
         Button btn = new Button("Sign in");
         HBox hbBtn = new HBox(10);
         hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
         hbBtn.getChildren().add(btn);
-        grid.add(hbBtn, 1, 8);
-        Text error = new Text();
-        error.setText("There was an error while connecting to database");
-
+        grid.add(hbBtn, 1, 11);
+        Text dbConnectionError = new Text();
+        dbConnectionError.setText("There was an error while connecting to database");
+        Text requiredFieldsError = new Text();
+        requiredFieldsError.setText("Hostmaster and nameservers are required");
 
         btn.setOnAction(e -> {
+            grid.getChildren().removeIf(node -> GridPane.getRowIndex(node) == 12 || GridPane.getRowIndex(node) == 13);
             dbConfig.setUsername(userTextField.getText());
             dbConfig.setPassword(pwBox.getText());
             dbConfig.setDbPort(dbportTextField.getText());
@@ -138,12 +163,24 @@ public class DbConnectionGUI extends Application {
             dbConfig.setHostname(hostnameTextField.getText());
             dbConfig.setPg_dumpLocalization(pg_dumpLocation[0]);
             dbConfig.setBackupLocalization(backupLocTextField.getText());
+            dbConfig.setHostmaster(hostmasterTextField.getText());
+            dbConfig.setPrimaryNameserver(primaryNameserverTextField.getText());
+            dbConfig.setSecondaryNameserver(secondaryNameserverTextField.getText());
             try {
-                testDbConnection();
-                stage.close();
+                if (hostmasterTextField.getText().isEmpty() || primaryNameserverTextField.getText().isEmpty()
+                        || secondaryNameserverTextField.getText().isEmpty())
+                {
+                    grid.add(requiredFieldsError, 1, 12);
+                    testDbConnection();
+                }
+                else
+                {
+                    testDbConnection();
+                    stage.close();
+                }
             } catch (SQLException e1) {
 
-                grid.add(error, 1, 9);
+                grid.add(dbConnectionError, 1, 13);
                 e1.printStackTrace();
             }
         });

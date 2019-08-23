@@ -4,7 +4,10 @@
   flex-direction: column;
   min-height: 100vh;
   color: #151515;
-  overflow: hidden;
+}
+
+.deleteOverflow {
+  overflow: inherit;
 }
 
 header {
@@ -14,6 +17,8 @@ header {
   align-items: center;
   background-image: url("../images/background.png");
   max-height: 70px;
+  overflow: hidden;
+  z-index:3
 }
 
 main {
@@ -38,6 +43,16 @@ footer{
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
-input:-webkit-autofill:active  {
+input:-webkit-autofill:active {
   -webkit-box-shadow: none !important;
+}
+
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+textarea:-webkit-autofill:active  {
+  -webkit-box-shadow: none !important;
+  outline:0px !important;
+  -webkit-appearance:none;
+  box-shadow: none !important;
 }

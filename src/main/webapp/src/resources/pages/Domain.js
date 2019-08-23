@@ -9,7 +9,7 @@ class Domain extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="exactDomain">
                 <DomainForm
                     urlId = {this.props.match.params.id}
                     resourcesURLBase = "http://localhost:8001/domains/"
@@ -50,16 +50,16 @@ class DomainRecordsTable extends React.Component
     {
         let emptyDataExample = { id : '', domainInfo : this.props.domainId, name : '', type : '', content : '', ttl : '', priority : '', disabled : ''  };
         const columns = [
-            { Header : "ID", accessor : "id", type: "none" },
-            { Header : "Name", accessor : "name", type: "text" },
-            { Header : "Type", accessor : "type", type: "select" },
-            { Header : "Content", accessor : "content", type: "text" },
-            { Header : "TTL", accessor : "ttl", type: "number" },
-            { Header : "Priority", accessor : "priority", type: "number" },
-            { Header : "Disabled", accessor : "disabled", type: "bool" },
+            { Header : "ID", accessor : "id", type: "none"},
+            { Header : "Name", accessor : "name", type: "text"},
+            { Header : "Type", accessor : "type", type: "select"},
+            { Header : "Content", accessor : "content", type: "textarea"},
+            { Header : "TTL", accessor : "ttl", type: "number"},
+            { Header : "Priority", accessor : "priority", type: "number"},
+            { Header : "Disabled", accessor : "disabled", type: "bool"},
         ];
         return (
-            <div>
+            <div className="domain">
                 <ReusableTable ref = "domainRecordsTable"
                 fetchValueConstraints = {this.fetchValueConstraints}
                 resourcesURLBase = "http://localhost:8001/records/"
@@ -79,14 +79,14 @@ class DomainCommentsTable extends React.Component
     {
         let emptyDataExample = { id : '', domainInfo : this.props.domainId, name : '', type : '', modifiedAt : '', comment : ''};
         const columns = [
-            { Header : "ID", accessor : "id", type: "none" },
-            { Header : "Name", accessor : "name", type: "text" },
-            { Header : "Type", accessor : "type", type: "text" },
-            { Header : "Modified at", accessor : "modifiedAt", type: "none" },
-            { Header : "Comment", accessor : "comment", type: "text" },
+            { Header : "ID", accessor : "id", type: "none"},
+            { Header : "Name", accessor : "name", type: "text"},
+            { Header : "Type", accessor : "type", type: "text"},
+            { Header : "Modified at", accessor : "modifiedAt", type: "none"},
+            { Header : "Comment", accessor : "comment", type: "textarea"},
         ];
         return (
-            <div>
+            <div className="domain">
                 <ReusableTable ref = "domainCommentsTable"
                 fetchValueConstraints = { () => {} }
                 resourcesURLBase = "http://localhost:8001/comments/"

@@ -33,7 +33,7 @@ class Domains extends React.Component {
         ];
 
         return (
-            <div>
+            <div className="domains">
                 <ReusableTable ref="domainsTable"
                 fetchValueConstraints = {this.fetchValueConstraints}
                 resourcesURLBase = "http://localhost:8001/domains/"

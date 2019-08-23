@@ -6,7 +6,7 @@ import "../styles/UserBlock.css";
 
 class UserBlock extends Component {
   state = {
-    userName: "Admin", //TODO: fetch from server
+    userName: "Admin",
     redirect: false
   };
 

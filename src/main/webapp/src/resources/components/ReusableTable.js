@@ -30,6 +30,9 @@ class ReusableTable extends React.Component
             expanded: {},
             errorMessages: [],
 
+            // enable copying mechanism
+            isSmartCopyEnabled: false,
+
             // copying row mechanism
             focusedRow: null,
             copiedRow : {},
@@ -84,6 +87,21 @@ class ReusableTable extends React.Component
             error => console.log("Following error occurred: " + error)
         );
     }
+
+
+    toggleSmartCopy = () =>
+    {
+        const newValue = !this.state.isSmartCopyEnabled;
+        this.setState ({ isSmartCopyEnabled: newValue });
+    }
+
+
+    renderSmartCopyButton = () =>
+    {
+        const buttonText = (this.state.isSmartCopyEnabled ? "Disable smart copy" : "Enable smart copy");
+        return (<button onClick = { () => { this.toggleSmartCopy() } }> {buttonText} </button>);
+    }
+
 
     getSelectedRows = () =>
     {
@@ -321,6 +339,21 @@ class ReusableTable extends React.Component
 
     renderWhileEdited = (cellInfo, inputType) =>
     {
+        let secondRow = ( inputType !== "textarea" ?
+            <input
+                value = { this.state.editedContent[cellInfo.original.tableIndex][cellInfo.column.id] }
+                type = {inputType}
+                style = { { backgroundColor: "#fafafa", margin: "3px", width: "98%" } }
+                onChange = { (e) => {this.changeEditedContent(e, cellInfo)}}
+            />
+            :
+            <textarea
+                value = { this.state.editedContent[cellInfo.original.tableIndex][cellInfo.column.id] }
+                onChange = { (e) => {this.changeEditedContent(e, cellInfo)}}
+                cols = "45"
+                rows = "3">
+            </textarea>
+        );
         return (
             <div>
                 <div
@@ -330,12 +363,7 @@ class ReusableTable extends React.Component
                     }}
                 />
                 <div>
-                    <input
-                        value = { this.state.editedContent[cellInfo.original.tableIndex][cellInfo.column.id] }
-                        type = {inputType}
-                        style = { { backgroundColor: "#fafafa", margin: "3px", width: "98%" } }
-                        onChange = { (e) => {this.changeEditedContent(e, cellInfo)}}
-                    />
+                    { secondRow }
                  </div>
             </div>
 
@@ -369,10 +397,30 @@ class ReusableTable extends React.Component
             let isFocused = (this.state.focusedRow === rowInfo.original.tableIndex);
             properties.style = {
                 opacity: isDeleted ? 0.4 : 1.0,
-                backgroundColor : isIncorrect !== 0 ? "red" : "white",
-                border : isFocused ? "1px solid black" : "0px",
+                backgroundColor: isFocused ? "#f0f0f0" : (isIncorrect !== 0 ? "rgb(255,184,184)" : "transparent"),
+                boxShadow: isIncorrect !== 0 ? "0 4px 20px -10px grey" : 'none',
+                zIndex:isIncorrect !== 0 ? "1" : "initial",
             };
         }
+        return properties;
+    }
+
+
+    setReadonlyRowProps = (state, rowInfo, column, instance) =>
+    {
+        let properties = {};
+        if (rowInfo) {
+            let isEdited = (rowInfo.original.tableIndex in this.state.editedContent);
+            let isDeleted = this.state.toDelete.some(item => rowInfo.original.tableIndex === item);
+            if (isDeleted) {
+                properties.style = { opacity: 0.4 }
+            }
+            else if (isEdited) {
+                properties.style = { backgroundColor: "#daffd9" };
+            }
+
+        }
+
         return properties;
     }
 
@@ -407,7 +455,7 @@ class ReusableTable extends React.Component
         if (row && col) {
             let isFocused = (this.state.focusedCell.columnName === col.id && this.state.focusedCell.rowNumber === row.original.tableIndex);
             properties.style = {
-                border : isFocused ? "1px solid black" : "0px",
+                backgroundColor: isFocused ? "#f0f0f0" : "transparent",
             }
         }
 
@@ -434,6 +482,11 @@ class ReusableTable extends React.Component
     }
 
 
+    renderTextAreaCell = cellInfo =>
+    {
+        return this.renderCell(cellInfo, 'textarea');
+    }
+
 
     renderNumberCell = cellInfo =>
     {
@@ -451,7 +504,7 @@ class ReusableTable extends React.Component
             return (
                 <div>
                     <div
-                        style={{ backgroundColor: "#fafafa" }}
+                        style={{ backgroundColor: "#fafafa", width: "100%" }}
                         dangerouslySetInnerHTML={{
                             __html: this.state.data[cellInfo.index][cellInfo.column.id]
                         }}
@@ -513,7 +566,16 @@ class ReusableTable extends React.Component
     renderFooter = (cellInfo, inputType) =>
     {
         if (Object.getOwnPropertyNames(this.state.editedContent).length !== 0) {
-            return (<input type={inputType} onChange= { (e) => this.setValueInAllEdited(e, cellInfo)} />)
+            if (inputType !== "textarea") {
+                return (<input type={inputType} onChange= { (e) => this.setValueInAllEdited(e, cellInfo)} />)
+            }
+            else {
+                return (<textarea
+                    onChange = { (e) => {this.setValueInAllEdited(e, cellInfo)}}
+                    cols = "45"
+                    rows = "3">
+                </textarea>)
+            }
         }
         else {
             return (<div/>)
@@ -534,6 +596,11 @@ class ReusableTable extends React.Component
         return this.renderFooter(cellInfo, 'text');
     }
 
+
+    renderTextAreaFooter = cellInfo =>
+    {
+        return this.renderFooter(cellInfo, 'textarea');
+    }
 
     renderBoolFooter = cellInfo =>
     {
@@ -625,7 +692,7 @@ class ReusableTable extends React.Component
         if (hasBeenEdited) {
 
             return (
-                <div style={{ backgroundColor: "#7CFC00" }}>
+                <div>
                     <div
                         style={{ backgroundColor: "#fafafa" }}
                         dangerouslySetInnerHTML = {{ __html: this.state.data[cellInfo.index][cellInfo.column.id] }}
@@ -721,6 +788,7 @@ class ReusableTable extends React.Component
 
     handleCtrlCEvent = (event) =>
     {
+        event.preventDefault();
         if (this.state.focusedRow !== null)
         {
             let focusedRowContent = JSON.parse(JSON.stringify(
@@ -728,7 +796,7 @@ class ReusableTable extends React.Component
             let copiedData = {};
 
             for (const column of this.columnsSchema) {
-                if (column.type === "text" || column.type === "select" || column.type === "number" || column.type == "text_editableOnlyOnAdd") {
+                if (column.type === "text" || column.type === "textarea" || column.type === "select" || column.type === "number" || column.type == "text_editableOnlyOnAdd") {
                     copiedData[column.accessor] = focusedRowContent[column.accessor];
                 }
             }
@@ -748,6 +816,7 @@ class ReusableTable extends React.Component
 
     handleCtrlXEvent = (event) =>
     {
+        event.preventDefault();
         if (this.state.focusedRow !== null)
         {
             if (!(this.state.focusedRow in this.state.editedContent)) {
@@ -758,7 +827,7 @@ class ReusableTable extends React.Component
             let copiedData = {};
 
             for (const column of this.columnsSchema) {
-                if (column.type === "text" || column.type === "select" || column.type === "number" || column.type === "bool" || column.type == "text_editableOnlyOnAdd") {
+                if (column.type === "text" || column.type === "textarea" || column.type === "select" || column.type === "number" || column.type === "bool" || column.type == "text_editableOnlyOnAdd") {
                     copiedData[column.accessor] = focusedRowContent[column.accessor];
                 }
             }
@@ -781,13 +850,14 @@ class ReusableTable extends React.Component
     // TODO: restrict paste to only some types of cell for cell copy
     handleCtrlVEvent = (event) =>
     {
+        event.preventDefault();
         if (this.state.focusedRow in this.state.editedContent && Object.keys(this.state.copiedRow) !== 0)
         {
             let copiedContent = JSON.parse(JSON.stringify(this.state.copiedRow));
             let oldEditedContent = JSON.parse(JSON.stringify(this.state.editedContent));
 
             for (const column of this.columnsSchema) {
-                if (column.type === "text" || column.type === "select" || column.type === "number" || column.type === "bool"
+                if (column.type === "text" || column.type === "textarea" || column.type === "select" || column.type === "number" || column.type === "bool"
                     || (this.state.editedContent[this.state.focusedRow].isNewlyAdded == true && column.type == "text_editableOnlyOnAdd" ) )
                 {
                     oldEditedContent[this.state.focusedRow][column.accessor] = copiedContent[column.accessor];
@@ -819,6 +889,8 @@ class ReusableTable extends React.Component
 
     handleKeyDown = (event) =>
     {
+        if (!this.state.isSmartCopyEnabled) { return; }
+
         let charCode = String.fromCharCode(event.which).toLowerCase();
 
         // metaKey is for MAC users
@@ -867,7 +939,8 @@ class ReusableTable extends React.Component
                 let expanded = this.getAllRowsExpanded();
                 this.setState({
                     expanded : expanded,
-                    errorMessages : response
+                    errorMessages : response,
+                    isSmartCopyEnabled: false
                 });
 
             }
@@ -943,7 +1016,7 @@ class ReusableTable extends React.Component
                       desc : false,
                     }]}
                     columns={columns}
-                    getTrProps = {this.setRowProps}
+                    getTrProps = {this.setReadonlyRowProps}
                 />
             </div>
         );
@@ -976,6 +1049,12 @@ class ReusableTable extends React.Component
             {
                 dataColumn.Cell = this.renderTextCell;
                 dataColumn.Footer = this.renderTextFooter;
+            }
+            else if (columnMetaData.type === "textarea")
+            {
+                dataColumn.minWidth = 220;
+                dataColumn.Cell = this.renderTextAreaCell;
+                dataColumn.Footer = this.renderTextAreaFooter;
             }
             else if (columnMetaData.type === "bool")
             {
@@ -1063,6 +1142,7 @@ class ReusableTable extends React.Component
                     <button onClick={ () => this.addRow() }> Add {this.props.resourceName} </button>
                     <button onClick={ () => this.commitAddAndUpdateChanges() }> Commit changes </button>
                     <button onClick={ () => this.revertChanges() }> Revert changes </button>
+                    {this.renderSmartCopyButton()}
                 </div>
                 <ReactTable
                     ref={(r) => (this.table = r)}
@@ -1085,7 +1165,7 @@ class ReusableTable extends React.Component
                             return (<div/>);
                         }
                         return (
-                            <div style={{ padding: '10px', backgroundColor : 'red', }} >
+                            <div style={{ padding: '0 10px', backgroundColor : 'rgb(255,204,204)',}} >
                                 <ul>
                                     {
                                         this.state.errorMessages.filter( (errorMessage) => {

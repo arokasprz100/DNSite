@@ -15,7 +15,7 @@ class Supermasters extends React.Component {
             { Header : "Account", accessor : "account", type: "text" },
         ];
         return (
-            <div>
+            <div className="supermasters">
                 <ReusableTable ref = "supermastersTable"
                 fetchValueConstraints = {() => {}}
                 resourcesURLBase = "http://localhost:8001/supermasters/"
