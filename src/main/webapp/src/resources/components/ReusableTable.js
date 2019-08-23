@@ -796,7 +796,7 @@ class ReusableTable extends React.Component
             let copiedData = {};
 
             for (const column of this.columnsSchema) {
-                if (column.type === "text" || column.type === "textarea" || column.type === "select" || column.type === "number" || column.type == "text_editableOnlyOnAdd") {
+                if (column.type === "text" || column.type === "textarea" || column.type === "select" || column.type === "number" || column.type === "bool" || column.type == "text_editableOnlyOnAdd") {
                     copiedData[column.accessor] = focusedRowContent[column.accessor];
                 }
             }
@@ -847,7 +847,6 @@ class ReusableTable extends React.Component
         }
     }
 
-    // TODO: restrict paste to only some types of cell for cell copy
     handleCtrlVEvent = (event) =>
     {
         event.preventDefault();
