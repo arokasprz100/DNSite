@@ -15,7 +15,20 @@ class ChangePassword extends React.Component {
     }
 
     onSubmit = (e) => {
-        //TODO: wysłać request do API
+        console.log(JSON.stringify(this.state));
+        return fetch('http://localhost:8001/changePasswd', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(this.state)
+        }).then(response => {
+            if (response.ok) { return response; }
+            throw Error(response.status);
+        })
+            .then(response => console.log(response))
+            .catch(error => console.error(error));
+
     }
 
     render(){
