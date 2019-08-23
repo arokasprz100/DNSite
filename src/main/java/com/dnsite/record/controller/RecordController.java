@@ -1,5 +1,6 @@
 package com.dnsite.record.controller;
 
+import com.dnsite.domain.model.Domain;
 import com.dnsite.domain.service.DomainService;
 import com.dnsite.record.DTOs.RecordDTO;
 import com.dnsite.record.DTOs.RecordDTOToRecordConverter;
@@ -7,6 +8,7 @@ import com.dnsite.record.model.Record;
 import com.dnsite.record.model.RecordType;
 import com.dnsite.record.service.RecordService;
 import com.dnsite.utils.DTOs.ConstraintViolationDTO;
+import com.dnsite.utils.notified_serial.NotifiedSerialApplier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -70,7 +72,10 @@ public class RecordController {
 
         if(violations.isEmpty() && records.size() != 0) {
             recordService.saveOrUpdate(records);
-            domainService.saveInBatch(SOAChangesApplier.apply(records));
+            List<Domain> domainsToChangeNotifiedSerial = DomainsToChangeNotifiedSerialFinder.byRecords(records);
+            domainService.saveInBatch(NotifiedSerialApplier.toDomain(domainsToChangeNotifiedSerial));
+            List<Record> recordsSOAToChangeNotifiedSerial = SOARecordsFinder.byDomains(domainsToChangeNotifiedSerial, recordService);
+            recordService.saveOrUpdate(NotifiedSerialApplier.toSOARecord(recordsSOAToChangeNotifiedSerial));
         }
         return violations;
     }
@@ -78,10 +83,20 @@ public class RecordController {
     @PostMapping
     @RequestMapping("/delete")
     @ResponseBody
-    public String deleteRecords(@RequestBody List<Record> records) {
+    public String deleteRecords(@RequestBody List<RecordDTO> recordsFromClient) {
+        List<Record> records = new ArrayList<>();
+
+        for(RecordDTO recordFromClient : recordsFromClient){
+            Record toAdd = RecordDTOToRecordConverter.convert(recordFromClient, domainService);
+            records.add(toAdd);
+        }
+
         if (records.size() != 0) {
+            List<Domain> domainsToChangeNotifiedSerial = DomainsToChangeNotifiedSerialFinder.byRecords(records);
             recordService.deleteInBatch(records);
-            domainService.saveInBatch(SOAChangesApplier.apply(records));
+            domainService.saveInBatch(NotifiedSerialApplier.toDomain(domainsToChangeNotifiedSerial));
+            List<Record> recordsSOAToChangeNotifiedSerial = SOARecordsFinder.byDomains(domainsToChangeNotifiedSerial, recordService);
+            recordService.saveOrUpdate(NotifiedSerialApplier.toSOARecord(recordsSOAToChangeNotifiedSerial));
             return "Records deleted.";
         }
         else {

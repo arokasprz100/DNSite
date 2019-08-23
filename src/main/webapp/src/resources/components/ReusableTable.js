@@ -308,7 +308,7 @@ class ReusableTable extends React.Component
     changeEditedContent = (event, cellInfo) =>
     {
         let editedRow = JSON.parse(JSON.stringify(this.state.editedContent[cellInfo.original.tableIndex]));
-        editedRow[cellInfo.column.id] = event.target.value === '' ? null : event.target.value; // TODO: work on backend to validate empty strings
+        editedRow[cellInfo.column.id] = event.target.value === '' ? null : event.target.value;
         let notEditedRows = {}
         Object.keys(this.state.editedContent)
             .forEach((key) => {
@@ -796,7 +796,7 @@ class ReusableTable extends React.Component
             let copiedData = {};
 
             for (const column of this.columnsSchema) {
-                if (column.type === "text" || column.type === "textarea" || column.type === "select" || column.type === "number" || column.type == "text_editableOnlyOnAdd") {
+                if (column.type === "text" || column.type === "textarea" || column.type === "select" || column.type === "number" || column.type === "bool" || column.type == "text_editableOnlyOnAdd") {
                     copiedData[column.accessor] = focusedRowContent[column.accessor];
                 }
             }
@@ -847,7 +847,6 @@ class ReusableTable extends React.Component
         }
     }
 
-    // TODO: restrict paste to only some types of cell for cell copy
     handleCtrlVEvent = (event) =>
     {
         event.preventDefault();
@@ -876,12 +875,18 @@ class ReusableTable extends React.Component
                 return;
             }
 
-            let copiedValue = JSON.parse(JSON.stringify(this.state.copiedCell.value));
-            let editedContent = JSON.parse(JSON.stringify(this.state.editedContent));
+            let columnType = this.columnsSchema.find((elem) => { return elem.accessor === this.state.focusedCell.columnName}).type;
 
-            editedContent[this.state.focusedCell.rowNumber][this.state.focusedCell.columnName] = copiedValue;
+            if (columnType === "text" || columnType === "textarea" || columnType === "number" || columnType === "select" || columnType === "bool"
+                || (this.state.editedContent[this.state.focusedCell.rowNumber].isNewlyAdded == true && columnType == "text_editableOnlyOnAdd" ))
+            {
+                let copiedValue = JSON.parse(JSON.stringify(this.state.copiedCell.value));
+                let editedContent = JSON.parse(JSON.stringify(this.state.editedContent));
 
-            this.setState( {editedContent : editedContent} );
+                editedContent[this.state.focusedCell.rowNumber][this.state.focusedCell.columnName] = copiedValue;
+
+                this.setState( {editedContent : editedContent} );
+            }
 
         }
     }

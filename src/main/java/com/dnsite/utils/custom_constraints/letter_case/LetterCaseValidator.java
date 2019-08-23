@@ -1,4 +1,4 @@
-package com.dnsite.utils.CustomConstraints.LetterCase;
+package com.dnsite.utils.custom_constraints.letter_case;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -30,8 +30,8 @@ public class LetterCaseValidator implements ConstraintValidator<LetterCase, Stri
         }
         if (!isValid){
             constraintValidatorContext.disableDefaultConstraintViolation();
-            constraintValidatorContext.buildConstraintViolationWithTemplate("com.dnsite.utils.CustomConstraints."+
-                    "constraintvalidatorcontext.LetterCase.message: Should be " + letterCaseMode.toString()).addConstraintViolation();
+            constraintValidatorContext.buildConstraintViolationWithTemplate("com.dnsite.utils.custom_constraints."+
+                    "constraintvalidatorcontext.letter_case.message: Should be " + letterCaseMode.toString()).addConstraintViolation();
         }
 
         return isValid;

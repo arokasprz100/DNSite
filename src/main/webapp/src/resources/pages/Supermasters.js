@@ -8,7 +8,7 @@ class Supermasters extends React.Component {
 
     render()
     {
-        let emptyDataExample = { ip : '', nameserver : '', account : '' };
+        let emptyDataExample = { ip : '', nameserver : null, account : null };
         const columns = [
             { Header : "IP", accessor : "ip", type: "text_editableOnlyOnAdd" },
             { Header : "Nameserver", accessor : "nameserver", type: "text_editableOnlyOnAdd" },

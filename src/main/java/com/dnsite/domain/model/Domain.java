@@ -2,9 +2,8 @@ package com.dnsite.domain.model;
 
 import com.dnsite.comments.model.Comment;
 import com.dnsite.record.model.Record;
-import com.dnsite.utils.CustomConstraints.LetterCase.LetterCaseMode;
-import com.dnsite.utils.CustomConstraints.LetterCase.LetterCase;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.dnsite.utils.custom_constraints.letter_case.LetterCaseMode;
+import com.dnsite.utils.custom_constraints.letter_case.LetterCase;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 

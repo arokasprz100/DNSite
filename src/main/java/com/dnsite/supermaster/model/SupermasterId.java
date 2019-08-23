@@ -1,6 +1,6 @@
 package com.dnsite.supermaster.model;
 
-import com.dnsite.utils.CustomConstraints.IpAddress.IpAddress;
+import com.dnsite.utils.custom_constraints.ip_address.IpAddress;
 import com.vladmihalcea.hibernate.type.basic.Inet;
 import org.hibernate.annotations.TypeDef;
 

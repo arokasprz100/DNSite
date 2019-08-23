@@ -1,8 +1,8 @@
 package com.dnsite.comments.model;
 
 import com.dnsite.domain.model.Domain;
-import com.dnsite.utils.CustomConstraints.LetterCase.LetterCase;
-import com.dnsite.utils.CustomConstraints.LetterCase.LetterCaseMode;
+import com.dnsite.utils.custom_constraints.letter_case.LetterCase;
+import com.dnsite.utils.custom_constraints.letter_case.LetterCaseMode;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
