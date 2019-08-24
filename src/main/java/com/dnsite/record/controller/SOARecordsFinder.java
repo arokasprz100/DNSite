@@ -4,7 +4,6 @@ import com.dnsite.domain.model.Domain;
 import com.dnsite.record.model.Record;
 import com.dnsite.record.model.RecordType;
 import com.dnsite.record.service.RecordService;
-import com.dnsite.record.service.RecordServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;

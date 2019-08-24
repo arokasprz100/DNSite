@@ -83,10 +83,20 @@ public class RecordController {
     @PostMapping
     @RequestMapping("/delete")
     @ResponseBody
-    public String deleteRecords(@RequestBody List<Record> records) {
+    public String deleteRecords(@RequestBody List<RecordDTO> recordsFromClient) {
+        List<Record> records = new ArrayList<>();
+
+        for(RecordDTO recordFromClient : recordsFromClient){
+            Record toAdd = RecordDTOToRecordConverter.convert(recordFromClient, domainService);
+            records.add(toAdd);
+        }
+
         if (records.size() != 0) {
+            List<Domain> domainsToChangeNotifiedSerial = DomainsToChangeNotifiedSerialFinder.byRecords(records);
             recordService.deleteInBatch(records);
-            domainService.saveInBatch(DomainsToChangeNotifiedSerialFinder.byRecords(records));
+            domainService.saveInBatch(NotifiedSerialApplier.toDomain(domainsToChangeNotifiedSerial));
+            List<Record> recordsSOAToChangeNotifiedSerial = SOARecordsFinder.byDomains(domainsToChangeNotifiedSerial, recordService);
+            recordService.saveOrUpdate(NotifiedSerialApplier.toSOARecord(recordsSOAToChangeNotifiedSerial));
             return "Records deleted.";
         }
         else {
