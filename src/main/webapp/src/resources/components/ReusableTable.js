@@ -796,7 +796,7 @@ class ReusableTable extends React.Component
             let copiedData = {};
 
             for (const column of this.columnsSchema) {
-                if (column.type === "text" || column.type === "textarea" || column.type === "select" || column.type === "number" || column.type === "bool" || column.type == "text_editableOnlyOnAdd") {
+                if (column.type === "text" || column.type === "textarea" || column.type === "select" || column.type === "number" || column.type === "bool" || column.type === "text_editableOnlyOnAdd") {
                     copiedData[column.accessor] = focusedRowContent[column.accessor];
                 }
             }
@@ -827,7 +827,7 @@ class ReusableTable extends React.Component
             let copiedData = {};
 
             for (const column of this.columnsSchema) {
-                if (column.type === "text" || column.type === "textarea" || column.type === "select" || column.type === "number" || column.type === "bool" || column.type == "text_editableOnlyOnAdd") {
+                if (column.type === "text" || column.type === "textarea" || column.type === "select" || column.type === "number" || column.type === "bool" || column.type === "text_editableOnlyOnAdd") {
                     copiedData[column.accessor] = focusedRowContent[column.accessor];
                 }
             }
@@ -857,7 +857,7 @@ class ReusableTable extends React.Component
 
             for (const column of this.columnsSchema) {
                 if (column.type === "text" || column.type === "textarea" || column.type === "select" || column.type === "number" || column.type === "bool"
-                    || (this.state.editedContent[this.state.focusedRow].isNewlyAdded == true && column.type == "text_editableOnlyOnAdd" ) )
+                    || (this.state.editedContent[this.state.focusedRow].isNewlyAdded === true && column.type === "text_editableOnlyOnAdd" ) )
                 {
                     oldEditedContent[this.state.focusedRow][column.accessor] = copiedContent[column.accessor];
                 }
@@ -878,7 +878,7 @@ class ReusableTable extends React.Component
             let columnType = this.columnsSchema.find((elem) => { return elem.accessor === this.state.focusedCell.columnName}).type;
 
             if (columnType === "text" || columnType === "textarea" || columnType === "number" || columnType === "select" || columnType === "bool"
-                || (this.state.editedContent[this.state.focusedCell.rowNumber].isNewlyAdded == true && columnType == "text_editableOnlyOnAdd" ))
+                || (this.state.editedContent[this.state.focusedCell.rowNumber].isNewlyAdded === true && columnType === "text_editableOnlyOnAdd" ))
             {
                 let copiedValue = JSON.parse(JSON.stringify(this.state.copiedCell.value));
                 let editedContent = JSON.parse(JSON.stringify(this.state.editedContent));

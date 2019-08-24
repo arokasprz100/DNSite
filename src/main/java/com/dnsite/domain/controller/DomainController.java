@@ -8,6 +8,7 @@ import com.dnsite.record.model.Record;
 import com.dnsite.record.service.RecordService;
 import com.dnsite.utils.DTOs.ConstraintViolationDTO;
 import com.dnsite.utils.DTOs.SOARecordsCreator;
+import com.dnsite.utils.notified_serial.NotifiedSerialApplier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -24,10 +25,10 @@ import java.util.Set;
 public class DomainController {
 
     @Autowired
-    DomainService domainService;
+    private DomainService domainService;
 
     @Autowired
-    RecordService recordService;
+    private RecordService recordService;
 
     @GetMapping
     @RequestMapping("/all")
@@ -61,7 +62,6 @@ public class DomainController {
     @RequestMapping("/delete")
     @ResponseBody
     public String deleteDomains(@RequestBody List<Domain> domains){
-        // TODO: fix foreign key issue
         domainService.deleteInBatch(domains);
         return "Domains deleted";
     }
@@ -76,14 +76,20 @@ public class DomainController {
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
         List<Record> SOARecordsToAdd = new ArrayList<>();
+        List<Domain> newMasterDomains = new ArrayList<>();
 
         for (DomainDTO domainFromClient : domainsFromClient) {
             Domain toAdd = DomainDTOToDomainConverter.convert(domainFromClient);
             if (domainFromClient.getId() == null && domainFromClient.getType() != Domain.TYPE.SLAVE) {
-                SOARecordsToAdd.add(SOARecordsCreator.create(toAdd));
+                newMasterDomains.add(toAdd);
             }
             violations.addAll(ConstraintViolationDTO.ofSet(validator.validate(toAdd), domainFromClient.getTableIndex()));
             domains.add(toAdd);
+        }
+
+        NotifiedSerialApplier.toDomain(newMasterDomains);
+        for (Domain domain : newMasterDomains) {
+            SOARecordsToAdd.add(SOARecordsCreator.create(domain));
         }
 
         if(violations.isEmpty()){

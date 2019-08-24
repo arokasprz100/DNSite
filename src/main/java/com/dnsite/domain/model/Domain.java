@@ -115,7 +115,9 @@ public class Domain {
     }
 
     public void setNotifiedSerial(int notifiedSerial) {
-        this.notifiedSerial = notifiedSerial;
+        if (this.notifiedSerial < notifiedSerial) {
+            this.notifiedSerial = notifiedSerial;
+        }
     }
 
     public String getAccount() {

@@ -1,0 +1,83 @@
+\documentclass[11pt]{article}
+%%% Preambuła %%%
+\usepackage[T1]{fontenc}
+\usepackage[polish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{hyperref}
+\usepackage{mathptmx}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\selectlanguage{polish}
+\usepackage{titlesec}
+
+\definecolor{backgroundColor}{HTML}{3D3D3D}
+
+%%% Strona tytułowa %%%
+\title 
+{	
+	{
+		\textbf{\textsf{\Huge\color{orange}DNS\color{white}ite}} \\ [0.1in]
+		\normalfont\sffamily\LARGE\color{white}
+		Aplikacja webowa do zarządzania serwerem DNS \\[0.1in]
+		Dokumentacja techniczna\\ [1.5in]
+		\large 
+		Inżynieria Oprogramowania \\
+		Wydział Fizyki i Informatyki Stosowanej \\
+		Informatyka Stosowana, 3 rok \\
+	}
+}
+
+\author 
+{
+	\color{white}\normalfont\sffamily Arkadiusz Kasprzak \and 
+	\color{white}\normalfont\sffamily Jarosław Cierpich \and 
+	\color{white}\normalfont\sffamily Jakub Kowalski \and 
+	\color{white}\normalfont\sffamily Konrad Pasik \and 
+	\color{white}\normalfont\sffamily Krystian Molenda
+}
+\date{}
+
+
+\definecolor{ao}{rgb}{0.0, 0.0, 1.0}	
+\definecolor{forestgreen(web)}{rgb}{0.13, 0.55, 0.13}
+\definecolor{darkbrown}{rgb}{0.4, 0.26, 0.13}
+\definecolor{darkorange}{rgb}{0.91, 0.41, 0.17}
+
+\titleformat{\section}
+  {\normalfont\sffamily\Large\bfseries\color{darkorange}}
+  {\thesection}{1em}{}
+
+\titleformat{\subsection}
+  {\normalfont\sffamily\large\bfseries\color{darkorange}}
+  {\thesubsection}{1em}{}
+
+\titleformat{\subsubsection}
+  {\normalfont\sffamily\normalsize\bfseries\color{darkorange}}
+  {\thesubsubsection}{1em}{}
+	
+
+\begin{document}
+
+
+%%% Strona tytułowa %%%
+\pagecolor{backgroundColor}
+\maketitle
+\thispagestyle{empty}
+
+
+\newpage
+\clearpage
+\pagenumbering{arabic}
+\pagecolor{white}
+
+%%% Spis treści %%%
+\tableofcontents
+
+\newpage 
+
+
+
+
+\end{document}

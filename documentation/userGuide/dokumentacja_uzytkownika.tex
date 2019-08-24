@@ -22,7 +22,7 @@
 		\textbf{\textsf{\Huge\color{orange}DNS\color{white}ite}} \\ [0.1in]
 		\normalfont\sffamily\LARGE\color{white}
 		Aplikacja webowa do zarządzania serwerem DNS \\[0.1in]
-		Dokumentacja użytkownika\\ [0.1in]
+		Dokumentacja użytkownika\\ [1.5in]
 		\large 
 		Inżynieria Oprogramowania \\
 		Wydział Fizyki i Informatyki Stosowanej \\
@@ -41,16 +41,23 @@
 \date{}
 
 
+\definecolor{ao}{rgb}{0.0, 0.0, 1.0}	
+\definecolor{forestgreen(web)}{rgb}{0.13, 0.55, 0.13}
+\definecolor{darkbrown}{rgb}{0.4, 0.26, 0.13}
+\definecolor{darkorange}{rgb}{0.91, 0.41, 0.17}
+
 \titleformat{\section}
-  {\normalfont\sffamily\Large\bfseries\color{orange}}
+  {\normalfont\sffamily\Large\bfseries\color{darkorange}}
   {\thesection}{1em}{}
 
 \titleformat{\subsection}
-  {\normalfont\sffamily\large\bfseries\color{orange}}
+  {\normalfont\sffamily\large\bfseries\color{darkorange}}
   {\thesubsection}{1em}{}
+
+\titleformat{\subsubsection}
+  {\normalfont\sffamily\normalsize\bfseries\color{darkorange}}
+  {\thesubsubsection}{1em}{}
 	
-\definecolor{ao}{rgb}{0.0, 0.0, 1.0}	
-\definecolor{forestgreen(web)}{rgb}{0.13, 0.55, 0.13}
 
 \begin{document}
 
@@ -58,15 +65,22 @@
 %%% Strona tytułowa %%%
 \pagecolor{backgroundColor}
 \maketitle
+\thispagestyle{empty}
 
 
 \newpage
+\clearpage
+\pagenumbering{arabic}
 \pagecolor{white}
 
 %%% Spis treści %%%
 \tableofcontents
 
 \newpage 
+
+\section{Wstęp}
+\textbf{DNSite} to aplikacja webowa do zarządzania serwerem DNS. Dostarcza ona użytkownikowi możliwości łatwej i wygodnej edycji danych związanych z serwerem PowerDNS przechowywanych w bazie PostgreSQL.\newline
+Niniejsza dokumentacja użytkownika została przygotowana dla pierwszego pełnego wydania aplikacji. Zawiera instrukcję instalacji oraz konfiguracji aplikacji, jak również poradnik ułatwiający poznanie wszystkich funkcjonalności.
 
 \section{Instalacja}
 Aplikacja dostarczona została w postaci pliku \emph{fat JAR}, a zatem wszystkie biblioteki potrzebne do jej działania są już dołączone. Oprócz samej aplikacji do działania wymagane są:
@@ -75,6 +89,7 @@ Aplikacja dostarczona została w postaci pliku \emph{fat JAR}, a zatem wszystkie
 \item Baza danych PostgreSQL 11
 \item Aplikacja pgAdmin 4
 \end{itemize}
+Należy zadbać o to, by przed uruchomieniem aplikacji baza danych była już stworzona - może natomiast nie zawierać tabel.
 W celu uruchomienia aplikacji należy \textbf{tutaj JAKUBIAN PODA CO}
 
 
@@ -129,7 +144,11 @@ Umożliwia on wprowadzenie danych \textbf{logowania} (nazwa użytkownika i hasł
 \centering
 \includegraphics[scale=0.5]{res/3_rejestracja}
 \end{figure}
-Pierwszy utworzony użytkownik otrzymuje automatycznie prawa administratora i dostęp do aplikacji. Każdy następny musi zostać zatwierdzony przez zweryfikowane już konto (czyli konto mające dostęp do aplikacji). Do właściciela takiego konta wysyłana jest wiadomość e-mail z powiadomieniem.
+Pierwszy utworzony użytkownik otrzymuje automatycznie prawa administratora i dostęp do aplikacji. Każdy następny musi zostać zatwierdzony przez zweryfikowane już konto (czyli konto mające dostęp do aplikacji). Do właścicieli takiego konta wysyłana jest wiadomość e-mail z powiadomieniem. Poniżej przykład takiej wiadomości:
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{res/x_mail_potwierdzenie}
+\end{figure}
 
 \subsection{Rodzaje kont w aplikacji DNSite}
 Aplikacja wyróżnia dwa rodzaje kont:
@@ -182,13 +201,101 @@ Rdzeniem funkcjonalności aplikacji \emph{DNSite} jest możliwość przeprowadza
 \item Domains
 \item Records
 \end{itemize}
-w panelu nawigacyjnym. W kilku kolejnych rozdziałach tego poradnika wykorzystany zostanie widok poświęcony rekordom DNS.
+w panelu nawigacyjnym. W kilku kolejnych podrozdziałach tego poradnika wykorzystany zostanie widok poświęcony rekordom DNS.
 
+\subsubsection{Wstęp do możliwości komponentu tabeli}
 Praca na danych oparta jest na tabeli zbudowanej w ten sposób, by ułatwić wykonywanie wielu operacji w krótkim czasie. Komponent tabeli prezentuje się następująco:
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{res/x_tabela}
 \end{figure}
+W tym przypadku w tabeli znajduje się jeden rekord typu SOA. Wiersz tabeli oprócz danych zawiera:
+\begin{itemize}
+\item tzw. \emph{checkbox} (po lewej) pozwalający zaznaczyć rekord - służy to do wybierania rekordów, na których mają zostać przeprowadzone operacje działające na wielu rekordach jednocześnie
+\item przycisk \emph{Delete} - usuwa rekord z tabeli - rekord jest wtedy dalej widoczny w tabeli - zmienia się przezroczystość wiersza - można go przywrócić za pomocą pojawiającego się wtedy przycisku \emph{Undo Delete}
+\item przycisk \emph{Edit} - pozwala włączyć tryb edytowania danego rekordu
+\end{itemize}
+Komponent tabeli oprócz wyświetlania wierszy pozwala wykonywać wiele innych operacji:
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{res/x_tabela_komponenty}
+\end{figure}
+\begin{itemize}
+\item \color{darkbrown} Menu główne tabeli:
+\begin{itemize}
+\item Dodanie nowego rekordu
+\item Zaaplikowanie wszystkich zmian i zaktualizowanie bazy danych
+\item Powrót do stanu początkowego - cofnięcie zmian niezaaplikowanych do bazy danych
+\item Tryb Smart Copy - opisany w dalszej części poradnika
+\end{itemize} \color{black}
+\item \color{orange} filtrowanie danych w tabeli \color{black}
+\item \color{ao} edytowanie rekordu - wyświetlane są dane aktualnie przechowywane w bazie danych oraz pod nimi pola pozwalające na wprowadzenie nowych danych \color{black}
+\item \color{red} usuwanie rekordu - rekord usunięty zostaje oznaczony poprzez zwiększenie jego przezroczystości w tabeli \color{black}
+\item \color{forestgreen(web)} nowy wpis w tabeli \color{black}
+\item \color{black} wprowadzenie zmian do wszystkich zaznaczonych, aktualne edytowanych rekordów
+\end{itemize}
+
+
+\subsubsection{Zatwierdzenie zmian}
+Po wybraniu opcji \emph{Commit changes}, jeśli nie wystąpiły błędy związane z walidacją danych, użytkownikowi zaprezentowana zostaje tabela przedstawiająca wszystkie wprowadzone przez niego zmiany:
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{res/x_tabela_commit}
+\end{figure} 
+Na zielono zaznaczone zostały rekordy dodane lub zmodyfikowane, rekordy usunięte mają natomiast zwiększoną przezroczystość. Zmian na tym etapie nie można już cofnąć. Aby wrócić do widoku pozwalającego na edycję danych należy wybrać opcję \emph{Continue}.
+
+\subsubsection{Walidacja wprowadzanych danych}
+Aplikacja posiada mechanizm walidacji danych wprowadzanych do bazy. W momencie wybrania opcji \emph{Commit changes} sprawdzana jest poprawność danych (np. czy mają one format adresu IP). Jeśli dane zawierają błędy, to nie są wprowadzane do bazy, a użytkownik zostaje o tym poinformowany:
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{res/x_tabela_niepoprawny}
+\end{figure}
+Wiersze zawierające błędy zostają oznaczone kolorem czerwonym. Pod wierszem zostają wypisane znalezione błędy. 
+
+\subsubsection{Zaznaczanie wierszy i komórek tabeli}
+Kliknięcie lewym przyciskiem myszy na wiersz tabeli zaznacza go, co zostaje uwidocznione przez zmianę jego koloru:
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{res/x_tabela_zaznaczenie_wiersz}
+\end{figure}
+Wykonanie tej samej akcji, ale trzymając przycisk \emph{Ctrl} powoduje zaznaczenie jedynie pojedynczej komórki (przy czym nie każdy rodzaj komórki można zaznaczyć):
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{res/x_tabela_zaznaczenie_pojedyncze}
+\end{figure}
+Kliknięcie poza obszar tabeli powoduje odznaczenie aktualnie zaznaczonego wiersza/komórki.
+Mechanizm zaznaczania jest istotny w połączeniu z opisanym dalej w poradniku mechanizmem Smart Copy. 
+
+\subsubsection{Tryb Smart Copy}
+Menu główne tabeli zawiera opcję \emph{Enable Smart Copy} - pozwala ona włączyć mechanizm zmieniający sposób działania kopiowania w tabeli. 
+
+Gdy mechanizm ten jest wyłączony, skróty:
+\begin{itemize}
+\item \emph{Ctrl+C}
+\item \emph{Ctrl+X}
+\item \emph{Ctrl+V}
+\end{itemize}
+spełnią swoje domyślne funkcje. Włączenie trybu \textbf{Smart Copy} zmienia sposób ich działania.
+
+Przy włączonym mechanizmie Smart Copy znaczenie tych skrótów zostaje zmienione:
+\begin{itemize}
+\item \emph{Ctrl+C} - wykonuje całego zaznaczonego wiersza/komórki, używając wartości znajdujących się w bazie danych - tzn. kopiuje wersję przed modyfikacją
+\item \emph{Ctrl+X} - jak wyżej, ale kopiuje zmodyfikowane dane z wiersza
+\item \emph{Ctrl+V} - dokonuje wstawienia danych do zaznaczonego wiersza/komórki. Wstawiane są ostatnio skopiowane dane (przy czym nie ma rozróżnienia na kopiowanie za pomocą Ctrl+C i Ctrl+V).
+\end{itemize} 
+
+\subsubsection{Modyfikowanie wielu danych jednocześnie}
+Stopka tabeli dostarcza kilku opcji modyfikacji wielu danych jednocześnie. Każdej modyfikowalnej kolumnie odpowiada pole w stopce. Aby zmodyfikować kilka wierszy jednocześnie, należy zaznaczyć je za pomocą \emph{checkbox'a} po lewej stronie i wybrać opcję \textbf{Edit selected} - każdy zaznaczony wiersz zostanie przeniesiony w tryb edycji. Następnie za pomocą pól w stopce można wprowadzać dane do wszystkich wierszy, które są jednocześnie zaznaczone i edytowane. Ponadto udostępniona została opcja \textbf{Delete selected} - pozwala ona usunąć jednocześnie wiele wierszy w tabeli. 
+
+
+\subsection{Dodatkowe opcje operacji na domenach DNS}
+Tabela domen udostępnia dodatkowe funkcjonalności niedostępne dla innych widoków. W tej tabeli numer ID domeny jest \textbf{odnośnikiem} do osobnego widoku poświęconego danej domenie:
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{res/x_widok_domeny}
+\end{figure}
+Z poziomu tego widoku użytkownik może edytować dane domeny - za pomocą dedykowanego formularza, przeglądać i edytować rekordy powiązane z tą domeną oraz dodawać \textbf{komentarze} - służy do tego tabela w zakładce \emph{Comments}.
+
 
 \subsection{Panel administratora}
 Wybierając opcję \textbf{Administration} w panelu nawigacyjnym użytkownik zostaje przeniesiony do widoku panelu administracyjnego:
@@ -196,7 +303,7 @@ Wybierając opcję \textbf{Administration} w panelu nawigacyjnym użytkownik zos
 \centering
 \includegraphics[width=\textwidth]{res/x_panel_administracyjny}
 \end{figure}
-Z poziomu tego panelu możliwe jest zatwierdzanie lub odrzucanie użytkowników oczekujących na przyznanie dostępu do aplikacji - można tego dokonać kolejno za pomocą przycisków \emph{Accept} oraz \emph{Reject}. 
+Z poziomu tego panelu możliwe jest zatwierdzanie lub odrzucanie użytkowników oczekujących na przyznanie dostępu do aplikacji - można tego dokonać kolejno za pomocą przycisków \emph{Accept} oraz \emph{Reject}.
 
 \subsection{Panel historii}
 Wybierając opcję \textbf{History} w panelu nawigacyjnym użytkownik zostaje przeniesiony do tabeli zawierającej historię transakcji przeprowadzanych na bazie danych:
@@ -206,42 +313,14 @@ Wybierając opcję \textbf{History} w panelu nawigacyjnym użytkownik zostaje pr
 \end{figure}
 Z tego poziomu użytkownik może przeglądać jakie zmiany w bazie zostały wprowadzone oraz kto je wprowadził. Kolumna \emph{Model} pokazuje, na jakim zasobie w bazie danych zmiana została przeprowadzona. 
 
-\newpage
-\section{Przewodnik użytkownika}
 
-
-
-Interfejs graficzny służący do wprowadzania zmian w postaci tabelki:
+\subsection{Panel zmiany hasła}
+Aplikacja udostępnia specjalny panel do zmiany hasła. Opcja ta dostępna jest z poziomu panelu użytkownika (\textbf{Change password}).
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{res/Tabelka}
+\includegraphics[width=\textwidth]{res/x_zmiana_hasla}
 \end{figure}
+Użytkownik proszony jest o podanie swojego starego hasła oraz o dwukrotne powtórzenie nowego.
 
-
-Możliwe operacje:
-\begin{itemize}
-\item \color{brown} Menu główne: 
-\begin{itemize}
-\item Dodanie nowego rekordu.
-\item Zaaplikowanie wszystkim zmian i zaktualizowanie bazy danych
-\item Powrót do stanu początkowego (wszystkie zmiany wprowadzone w trakcie sesji)
-\end{itemize} \color{black}
-\item \color{black} filtrowanie wyników \color{black}
-\item \color{ao} edytowanie rekordu \color{black}
-\item \color{red} usuwanie rekordu \color{black}
-\item \color{forestgreen(web)} nowy wpis w tabelce - kontekst do dodania nowego rekordu \color{black}
-\item Wprowadzenie zmian do wszystkich zaznaczonych i oznaczonych jako aktualnie edytowanych rekordów (niewidoczne na zrzucie ekranu)
-\end{itemize}
-
-Ważne informacje:
-\begin{itemize}
-\item Pola, gdzie mamy wybór spośród pewnej puli możliwości będą definiowane jako lista opcji (wybór jednej z możliwości)
-\item Niektóre pola, np.: notified serial są tylko informacyjne i nie można ich zmieniać
-\item Wszystkie widoki do edytowania są w formie tabelki, jedynym wyjątkiem są domeny, gdzie oprócz możliwości edytowania za pomocą listy jest również możliwość edytowania za pomocą formularza. 
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{res/formularz}
-\end{figure}
-\end{itemize}
 
 \end{document}

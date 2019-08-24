@@ -60,9 +60,12 @@ yarn-error.log*
 dbconfig.yaml
 
 ### Latex ###
-/documentation/reusableTable/reusableTableDevGuide.log
-/documentation/reusableTable/reusableTableDevGuide.aux
-/documentation/reusableTable/reusableTableDevGuide.synctex.gz
+/documentation/technicalDocumentation/dokumentacja_techniczna.log
+/documentation/technicalDocumentation/dokumentacja_techniczna.out
+/documentation/technicalDocumentation/dokumentacja_techniczna.aux
+/documentation/technicalDocumentation/dokumentacja_techniczna.toc
+/documentation/technicalDocumentation/dokumentacja_techniczna.synctex.gz
+
 /documentation/userGuide/dokumentacja_uzytkownika.log
 /documentation/userGuide/dokumentacja_uzytkownika.aux
 /documentation/userGuide/dokumentacja_uzytkownika.out

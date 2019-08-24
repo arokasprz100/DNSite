@@ -11,13 +11,14 @@ import java.util.regex.Pattern;
 public class NotifiedSerialApplier {
     public static List<Domain> toDomain(List<Domain> domainsToApply){
         for(Domain domain : domainsToApply){
-            int serial = domain.getNotifiedSerial();
-            String str = String.valueOf(serial);
-            if(!str.isEmpty()){
-                domain.setNotifiedSerial((int)((serial + 1)%1e10));
+
+            if (domain.getId() == null) {
+                domain.setNotifiedSerial(Integer.parseInt(Domain.dateFormat.format(new Date()))*100);
             }
             else {
-                domain.setNotifiedSerial(Integer.parseInt(Domain.dateFormat.format(new Date()))*100);
+                int serial = domain.getNotifiedSerial();
+                String str = String.valueOf(serial);
+                domain.setNotifiedSerial((int)((serial + 1)%1e10));
             }
         }
         return domainsToApply;
