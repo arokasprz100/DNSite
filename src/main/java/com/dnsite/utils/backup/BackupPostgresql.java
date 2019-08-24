@@ -37,25 +37,19 @@ public class BackupPostgresql {
     }
 
     public void createPostgreSQLBackup() throws IOException, InterruptedException {
-        Runtime rt = Runtime.getRuntime();
         Process p;
         ProcessBuilder pb;
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("ddMMyyyy_HHmmss");
 
-        rt = Runtime.getRuntime();
         pb = new ProcessBuilder(
                 dbConfig.getPg_dumpLocalization(),
                 "--host", dbConfig.getHostname(),
                 "--port", dbConfig.getDbPort(),
                 "--username", dbConfig.getUsername(),
                 "--no-password",
-//                "--format", "custom", // change format, default simple sql
-//                "--blobs",
-//                "--verbose", // printing steps
                 "--file",
                 dbConfig.getBackupLocalization() + "\\backup"+ formatter.format(date) + ".sql", "test");
-//                "C:\\backup\\backup" + formatter.format(date) + ".sql", "test");
         try {
             final Map<String, String> env = pb.environment();
             env.put("PGPASSWORD", dbConfig.getPassword());

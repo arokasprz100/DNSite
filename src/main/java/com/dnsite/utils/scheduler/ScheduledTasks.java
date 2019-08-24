@@ -21,7 +21,7 @@ public class ScheduledTasks {
     private final BackupPostgresql backupPostgresql = new BackupPostgresql();
 
     @Async
-//    @Scheduled(fixedRate = 10000)
+    @Scheduled(initialDelay=0, fixedRate=1000*60*60)
     public void makeDailyBackup() {
 
         if(!backupPostgresql.getBackupFlag()){

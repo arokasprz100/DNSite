@@ -1,19 +1,19 @@
 package com.dnsite.security.user.controller;
 
+import com.dnsite.security.DTOs.Passwords;
 import com.dnsite.security.service.SecurityService;
 import com.dnsite.security.user.model.Role;
 import com.dnsite.security.user.model.User;
 import com.dnsite.security.user.service.EmailService;
 import com.dnsite.security.user.service.UserService;
+import com.dnsite.security.user.utils.PasswordUtils;
 import com.dnsite.security.user.validator.UserValidator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -43,7 +43,7 @@ public class UserController {
     @RequestMapping(value = "/remind-passwd", method = RequestMethod.POST)
     public String remindPasswd(@ModelAttribute("userForm") User userForm, BindingResult bindingResult, Model model) {
 
-        String tempPassword = userService.setUserTemporaryPassword(userForm.getUsername());
+        String tempPassword = userService.setUserPassword(userForm.getUsername(), null);
         emailService.sendTempPasswdMessage(userService.findByUsername(userForm.getUsername()).getEmail(), userForm.getUsername(), tempPassword);
 
         return "redirect:/dnsite";
@@ -56,7 +56,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public String registration(@ModelAttribute("userForm") User userForm, BindingResult bindingResult, Model model){
+    public String registration(@ModelAttribute("userForm") User userForm, BindingResult bindingResult, Model model) {
 
         userValidator.validate(userForm, bindingResult);
 
@@ -65,15 +65,14 @@ public class UserController {
         }
 
         List<User> admins = userService.findByRole(Role.ADMIN.getAuthority());
-        if (admins.size() == 0){
+        if (admins.size() == 0) {
             userForm.setRole(Role.ADMIN.getAuthority());
             userService.save(userForm);
             log.info("First user of database saved");
-        }
-        else {
+        } else {
             log.info("Another user want to join system");
 
-            for(User admin : admins) {
+            for (User admin : admins) {
                 emailService.sendConfirmMessage(admin.getEmail(), userForm.getUsername(), userForm.getEmail());
             }
             userForm.setRole(Role.USER.getAuthority());
@@ -101,6 +100,25 @@ public class UserController {
     @RequestMapping(value = {"/403"}, method = RequestMethod.GET)
     public String accessDeny(Model model) {
         return "403";
+    }
+
+    @RequestMapping(value = "/changePasswd", method = RequestMethod.POST)
+    @ResponseBody
+    public String changePassword(@RequestBody Passwords password) {
+
+        PasswordUtils passwordUtils = new PasswordUtils();
+        User user = userService.findByUsername(securityService.findLoggedInUsername());
+
+        String message = passwordUtils.checkNewPassword(password, user);
+        if (message.equals("Valid")) {
+            userService.setUserPassword(user.getUsername(), password.newPassword);
+            log.info("Password of user " + user.getUsername() + " has been changed");
+        } else {
+            log.info("error during changing password: " + message);
+            //return message and show in info dialog
+        }
+        //if everything valid redirect to dnsite
+        return "redirect:/dnsite";
     }
 
 }
