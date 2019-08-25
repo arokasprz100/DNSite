@@ -12,6 +12,18 @@
 \usepackage{xcolor}
 \selectlanguage{polish}
 \usepackage{titlesec}
+\usepackage{listings}
+
+
+\lstset{
+	basicstyle=\ttfamily,
+	columns=fullflexible,
+	breaklines=true,
+	breakatwhitespace=true,
+	showstringspaces=false,
+	commentstyle=\color{red},
+	keywordstyle=\color{blue}
+}
 
 \definecolor{backgroundColor}{HTML}{3D3D3D}
 
@@ -83,24 +95,46 @@
 Niniejsza dokumentacja użytkownika została przygotowana dla pierwszego pełnego wydania aplikacji. Zawiera instrukcję instalacji oraz konfiguracji aplikacji, jak również poradnik ułatwiający poznanie wszystkich funkcjonalności.
 
 \section{Instalacja}
-Aplikacja dostarczona została w postaci pliku \emph{fat JAR}, a zatem wszystkie biblioteki potrzebne do jej działania są już dołączone. Oprócz samej aplikacji do działania wymagane są:
+W celu uruchomienia aplikacji wymagane są:
 \begin{itemize}
 \item Java w wersji 8
+\item Maven
 \item Baza danych PostgreSQL 11
 \item Aplikacja pgAdmin 4
 \end{itemize}
 Należy zadbać o to, by przed uruchomieniem aplikacji baza danych była już stworzona - może natomiast nie zawierać tabel.
-W celu uruchomienia aplikacji należy \textbf{tutaj JAKUBIAN PODA CO}
-
+W celu uruchomienia aplikacji należy pobrać ją z serwisu \textbf{Github} za pomocą polecenia:
+\begin{lstlisting}[language=bash]
+git clone https://github.com/agh-ki-io/DNSite
+\end{lstlisting}
+Następnie należy przejść do katalogu \emph{DNSite} za pomocą polecenia:
+\begin{lstlisting}[language=bash]
+cd DNSite
+\end{lstlisting}
+i wykonać z jego poziomu polecenie:
+\begin{lstlisting}[language=bash]
+mvn clean install
+\end{lstlisting}
+Proces instalacji może potrwać kilka minut. Należy zignorować pojawiające się komunikaty (również te oznaczone słowem \emph{error}). Po zakończeniu instalacji użytkownik powinien zobaczyć komunikat podobny do poniższego:
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{res/1_budowanie}
+\end{figure}
+Następnie w celu uruchomienia aplikacji należy \textbf{z poziomu katalogu DNSite} wykonać polecenie:
+\begin{lstlisting}[language=bash]
+java -jar target/dnsite-0.0.1-SNAPSHOT.jar
+\end{lstlisting}
+Krok ten należy wykonać za każdym razem, gdy aplikacja ma zostać uruchomiona. Należy teraz dokonać konfiguracji aplikacji (rozdział \hyperref[first_run]{\emph{Pierwsze uruchomienie i konfiguracja}}) lub, jeśli zostało to już zrobione, rozpocząć korzystanie z aplikacji za pomocą przeglądarki (rozdział \hyperref[webapp]{\emph{Korzystanie z aplikacji}}).
 
 \section{Pierwsze uruchomienie i konfiguracja}
+\label{first_run}
 Rozdział omawia proces pierwszego uruchomienia aplikacji oraz sposoby na zmianę konfiguracji aplikacji.
 
 \subsection{Pierwsze uruchomienie}
 Podczas pierwszego uruchomienia aplikacji wyświetlone zostanie następujące okno:
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.5]{res/1_konfiguracja}
+\includegraphics[scale=0.5]{res/2_konfiguracja}
 \end{figure}
 Służy ono do przeprowadzenia konfiguracji aplikacji - w szczególności wymaga od użytkownika szczegółów dotyczących bazy danych, z którą aplikacja ma się łączyć. Należy podać:
 \begin{itemize}
@@ -128,8 +162,10 @@ Dostępne są dwa sposoby na ponowne przeprowadzenie procesu konfiguracji aplika
 \item usunięcie pliku \textbf{dbconfig.yaml} - powoduje to ponowne uruchomienie opisanego powyżej graficznego interfejsu użytkownika przy następnym uruchomieniu aplikacji.
 \item ręczna edycja pliku \textbf{dbconfig.yaml} - zapisane są w nim wszystkie parametry podane wcześniej za pomocą graficznego interfejsu użytkownika.
 \end{itemize}
+\newpage
 
 \section{Korzystanie z aplikacji}
+\label{webapp}
 Dostęp do aplikacji można uzyskać \textbf{za pomocą przeglądarki}. Po uruchomieniu należy wpisać w pasku adresu \url{http://localhost:8001/}. \newline
 Kolejne podrozdziały zawierają opis podstawowych operacji, jakie można wykonać w aplikacji, takich jak logowanie, rejestracja, zmiana hasła czy edycja danych przechowywanych w bazie (rekordy, domeny).
 
@@ -137,17 +173,17 @@ Kolejne podrozdziały zawierają opis podstawowych operacji, jakie można wykona
 Po uruchomieniu aplikacji w przeglądarce użytkownik powinien uzyskać dostęp do strony umożliwiającej logowanie, zawierającej przedstawiony poniżej formularz:
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.5]{res/2_logowanie}
+\includegraphics[scale=0.5]{res/3_logowanie}
 \end{figure}
 Umożliwia on wprowadzenie danych \textbf{logowania} (nazwa użytkownika i hasło ustalone przy rejestracji). W celu przeprowadzenie \textbf{rejestracji} należy wybrać opcję \emph{Create an account}. Wybranie jej przenosi do strony z następującym formularzem:
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.5]{res/3_rejestracja}
+\includegraphics[scale=0.4]{res/4_rejestracja}
 \end{figure}
 Pierwszy utworzony użytkownik otrzymuje automatycznie prawa administratora i dostęp do aplikacji. Każdy następny musi zostać zatwierdzony przez zweryfikowane już konto (czyli konto mające dostęp do aplikacji). Do właścicieli takiego konta wysyłana jest wiadomość e-mail z powiadomieniem. Poniżej przykład takiej wiadomości:
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{res/x_mail_potwierdzenie}
+\includegraphics[width=0.8\textwidth]{res/5_mail_potwierdzenie}
 \end{figure}
 
 \subsection{Rodzaje kont w aplikacji DNSite}
@@ -162,24 +198,24 @@ Aplikacja wyróżnia dwa rodzaje kont:
 W sytuacji, gdy użytkownik zapomni hasła do aplikacji, możliwe jest wygenerowanie nowego, tymczasowego. Użytkownik z poziomu panelu logowania powinien wybrać opcję \emph{Remind password}. Zostanie przeniesiony do panelu pokazanego poniżej:
 \begin{figure}[H]
 \centering
-\includegraphics[scale = 1]{res/4_nowe_haslo}
+\includegraphics[scale = 1]{res/6_nowe_haslo}
 \end{figure}
 Po podaniu nazwy użytkownika i wybraniu opcji \emph{Submit}, do użytkownika zostanie wysłana wiadomość e-mail (na adres podany przy rejestracji). Będzie ona zawierać nowe, tymczasowe, wygenerowane losowo hasło, za pomocą którego użytkownik będzie mógł się zalogować do aplikacji. Przykładowa wiadomość została przedstawiona poniżej:
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{res/5_mail_haslo}
+\includegraphics[width=\textwidth]{res/7_mail_haslo}
 \end{figure}
 
 \subsection{Strona główna aplikacji}
 Po zalogowaniu się do aplikacji użytkownik uzyskuje dostęp do strony głównej:
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{res/6_strona_glowna}
+\includegraphics[width=\textwidth]{res/8_strona_glowna}
 \end{figure}
 W prawym górnym rogu znajduje się \emph{ikona użytkownika} - po jej wciśnięciu pojawia się menu zarządzania kontem:
 \begin{figure}[H]
 \centering
-\includegraphics[scale = 1]{res/7_panel_uzytkownika}
+\includegraphics[scale = 1]{res/9_panel_uzytkownika}
 \end{figure}
 Umożliwia ono \textbf{wylogowanie} się z aplikacji oraz przeniesienie do panelu \textbf{zmiany hasła}. 
 
@@ -207,7 +243,7 @@ w panelu nawigacyjnym. W kilku kolejnych podrozdziałach tego poradnika wykorzys
 Praca na danych oparta jest na tabeli zbudowanej w ten sposób, by ułatwić wykonywanie wielu operacji w krótkim czasie. Komponent tabeli prezentuje się następująco:
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{res/x_tabela}
+\includegraphics[width=\textwidth]{res/10_tabela}
 \end{figure}
 W tym przypadku w tabeli znajduje się jeden rekord typu SOA. Wiersz tabeli oprócz danych zawiera:
 \begin{itemize}
@@ -218,7 +254,7 @@ W tym przypadku w tabeli znajduje się jeden rekord typu SOA. Wiersz tabeli opr�
 Komponent tabeli oprócz wyświetlania wierszy pozwala wykonywać wiele innych operacji:
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{res/x_tabela_komponenty}
+\includegraphics[width=\textwidth]{res/11_tabela_komponenty}
 \end{figure}
 \begin{itemize}
 \item \color{darkbrown} Menu główne tabeli:
@@ -240,7 +276,7 @@ Komponent tabeli oprócz wyświetlania wierszy pozwala wykonywać wiele innych o
 Po wybraniu opcji \emph{Commit changes}, jeśli nie wystąpiły błędy związane z walidacją danych, użytkownikowi zaprezentowana zostaje tabela przedstawiająca wszystkie wprowadzone przez niego zmiany:
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{res/x_tabela_commit}
+\includegraphics[width=\textwidth]{res/12_tabela_commit}
 \end{figure} 
 Na zielono zaznaczone zostały rekordy dodane lub zmodyfikowane, rekordy usunięte mają natomiast zwiększoną przezroczystość. Zmian na tym etapie nie można już cofnąć. Aby wrócić do widoku pozwalającego na edycję danych należy wybrać opcję \emph{Continue}.
 
@@ -248,7 +284,7 @@ Na zielono zaznaczone zostały rekordy dodane lub zmodyfikowane, rekordy usunię
 Aplikacja posiada mechanizm walidacji danych wprowadzanych do bazy. W momencie wybrania opcji \emph{Commit changes} sprawdzana jest poprawność danych (np. czy mają one format adresu IP). Jeśli dane zawierają błędy, to nie są wprowadzane do bazy, a użytkownik zostaje o tym poinformowany:
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{res/x_tabela_niepoprawny}
+\includegraphics[width=\textwidth]{res/13_tabela_niepoprawny}
 \end{figure}
 Wiersze zawierające błędy zostają oznaczone kolorem czerwonym. Pod wierszem zostają wypisane znalezione błędy. 
 
@@ -256,12 +292,12 @@ Wiersze zawierające błędy zostają oznaczone kolorem czerwonym. Pod wierszem 
 Kliknięcie lewym przyciskiem myszy na wiersz tabeli zaznacza go, co zostaje uwidocznione przez zmianę jego koloru:
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{res/x_tabela_zaznaczenie_wiersz}
+\includegraphics[width=\textwidth]{res/14_tabela_zaznaczenie_wiersz}
 \end{figure}
 Wykonanie tej samej akcji, ale trzymając przycisk \emph{Ctrl} powoduje zaznaczenie jedynie pojedynczej komórki (przy czym nie każdy rodzaj komórki można zaznaczyć):
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{res/x_tabela_zaznaczenie_pojedyncze}
+\includegraphics[width=\textwidth]{res/15_tabela_zaznaczenie_pojedyncze}
 \end{figure}
 Kliknięcie poza obszar tabeli powoduje odznaczenie aktualnie zaznaczonego wiersza/komórki.
 Mechanizm zaznaczania jest istotny w połączeniu z opisanym dalej w poradniku mechanizmem Smart Copy. 
@@ -281,7 +317,7 @@ Przy włączonym mechanizmie Smart Copy znaczenie tych skrótów zostaje zmienio
 \begin{itemize}
 \item \emph{Ctrl+C} - wykonuje całego zaznaczonego wiersza/komórki, używając wartości znajdujących się w bazie danych - tzn. kopiuje wersję przed modyfikacją
 \item \emph{Ctrl+X} - jak wyżej, ale kopiuje zmodyfikowane dane z wiersza
-\item \emph{Ctrl+V} - dokonuje wstawienia danych do zaznaczonego wiersza/komórki. Wstawiane są ostatnio skopiowane dane (przy czym nie ma rozróżnienia na kopiowanie za pomocą Ctrl+C i Ctrl+V).
+\item \emph{Ctrl+V} - dokonuje wstawienia danych do zaznaczonego wiersza/komórki. Wstawiane są ostatnio skopiowane dane (przy czym nie ma rozróżnienia na kopiowanie za pomocą Ctrl+C i Ctrl+V). Aby skrót zadziałał, wiersz musi być edytowany.
 \end{itemize} 
 
 \subsubsection{Modyfikowanie wielu danych jednocześnie}
@@ -292,7 +328,7 @@ Stopka tabeli dostarcza kilku opcji modyfikacji wielu danych jednocześnie. Każ
 Tabela domen udostępnia dodatkowe funkcjonalności niedostępne dla innych widoków. W tej tabeli numer ID domeny jest \textbf{odnośnikiem} do osobnego widoku poświęconego danej domenie:
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{res/x_widok_domeny}
+\includegraphics[width=\textwidth]{res/16_widok_domeny}
 \end{figure}
 Z poziomu tego widoku użytkownik może edytować dane domeny - za pomocą dedykowanego formularza, przeglądać i edytować rekordy powiązane z tą domeną oraz dodawać \textbf{komentarze} - służy do tego tabela w zakładce \emph{Comments}.
 
@@ -301,7 +337,7 @@ Z poziomu tego widoku użytkownik może edytować dane domeny - za pomocą dedyk
 Wybierając opcję \textbf{Administration} w panelu nawigacyjnym użytkownik zostaje przeniesiony do widoku panelu administracyjnego:
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{res/x_panel_administracyjny}
+\includegraphics[width=\textwidth]{res/17_panel_administracyjny}
 \end{figure}
 Z poziomu tego panelu możliwe jest zatwierdzanie lub odrzucanie użytkowników oczekujących na przyznanie dostępu do aplikacji - można tego dokonać kolejno za pomocą przycisków \emph{Accept} oraz \emph{Reject}.
 
@@ -309,7 +345,7 @@ Z poziomu tego panelu możliwe jest zatwierdzanie lub odrzucanie użytkowników 
 Wybierając opcję \textbf{History} w panelu nawigacyjnym użytkownik zostaje przeniesiony do tabeli zawierającej historię transakcji przeprowadzanych na bazie danych:
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{res/x_historia}
+\includegraphics[width=\textwidth]{res/18_historia}
 \end{figure}
 Z tego poziomu użytkownik może przeglądać jakie zmiany w bazie zostały wprowadzone oraz kto je wprowadził. Kolumna \emph{Model} pokazuje, na jakim zasobie w bazie danych zmiana została przeprowadzona. 
 
@@ -318,7 +354,7 @@ Z tego poziomu użytkownik może przeglądać jakie zmiany w bazie zostały wpro
 Aplikacja udostępnia specjalny panel do zmiany hasła. Opcja ta dostępna jest z poziomu panelu użytkownika (\textbf{Change password}).
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{res/x_zmiana_hasla}
+\includegraphics[width=\textwidth]{res/19_zmiana_hasla}
 \end{figure}
 Użytkownik proszony jest o podanie swojego starego hasła oraz o dwukrotne powtórzenie nowego.
 
