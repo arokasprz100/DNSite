@@ -17,7 +17,6 @@ public class NotifiedSerialApplier {
             }
             else {
                 int serial = domain.getNotifiedSerial();
-                String str = String.valueOf(serial);
                 domain.setNotifiedSerial((int)((serial + 1)%1e10));
             }
         }
