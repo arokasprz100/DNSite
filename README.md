@@ -11,13 +11,24 @@ Documentation (in polish) can be found here:
 * [Developer Documentation](https://github.com/agh-ki-io/DNSite/blob/master/documentation/technicalDocumentation/dokumentacja_techniczna.pdf)
 
 ## Installation
-For developers:
-Before running it from intelij
-clean install in maven
 
-It should start immediately after hitting run button.
+### Using IntelliJ IDEA
+Clone this repository and open project using IntelliJ. Run *clean* and *install* with *Maven*.
+Then just click *run* button (the class that contains *main* function is called *DNSiteApplication*).
 
-localhost:8001 to find login page
+If You are using the application for the first time, complete configuration and You will find login page under https://localhost:8001.
+
+For more details, please consider reading documentation.
+
+### Using console
+Clone this repository and go into *DNSite* directory. Run
+`mvn clean install`
+After it finishes, **from DNSite directory** run 
+`java -jar target/dnsite-0.0.1-SNAPSHOT.jar`
+
+If You are using the application for the first time, complete configuration and You will find login page under https://localhost:8001.
+
+For more details, please consider reading documentation.
 
 
 ## Authors
