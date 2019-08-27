@@ -148,9 +148,10 @@ Poniżej przedstawiono stos technologiczny użyty podczas tworzenia aplikacji:
 \end{itemize}
 Do \textbf{budowania aplikacji} użyty został \emph{Maven}.
 
+\section{Baza danych}
+Aplikacja wykorzystuje bazę danych \textbf{PostgreSQL 11}. Schema oparta jest na tej dostępnej pod adresem: \url{https://doc.powerdns.com/authoritative/backends/generic-postgresql.html}. Dodane zostały dodatkowe tabele odpowiedzialne m.in. za przechowywanie informacji o użytkownikach.
 
 
-\newpage
 \section{Warstwa frontend}
 Ten rozdział opisuje sposób działania aplikacji po stronie frontendu. Omówione zostaną użyte technologie, organizacja kodu oraz najważniejsze komponenty, w tym komponent tabeli.
 
@@ -199,9 +200,179 @@ W katalogu \emph{images} przechowywane są 2 pliki:
 Do obsługi routingu po stronie przeglądarki wykorzystana została biblioteka \textbf{react-router}. React-router jest bardzo popularną biblioteką, wykorzystywaną często w projektach \emph{SPA (Single-Page Application)}. Dzięki tej bibliotece zapytanie do serwera wykonywane jest wyłącznie raz, na początku działania aplikacji. Po zmianie URL strona nie jest odświeżana, aplikacja przechwytuję zmianę URL i w oparciu o konfigurację Routera wyświetla odpowiedni widok dla danego URL. React-router wykonuje 3 podstawowe funkcje: modyfikuje URL, po wykonaniu modyfikacji ponownie renderuje aplikację, rozpoznaje URL i określa jakie komponenty mają być wyświetlane dla danej lokalizacji. Dzięki bibliotece react-router możemy też wykorzystać interfejs przeglądarki np. cofanie do poprzedniej strony bez odświeżania. 
 
 \subsection{Komponent ReusableTable}
-\textbf{TO SIE POJAWI JUTRO}
+Komponent ReusableTable jest największą częścią aplikacji po stronie frontendu (aktualnie składa się na niego ponad 1000 linii kodu). Znajduje się on w katalogu \path{webapp\src\resources\components}. Odpowiedzialny jest za renderowanie interaktywnej, wygodnej w użytku tabeli zawierającej dane takie jak domeny czy rekordy DNS:
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{res/front_tabela}
+\end{figure}
+Komponent ten oparty jest na komponencie \textbf{react-table}, o którym więcej informacji znaleźć można pod adresem: \url{https://github.com/tannerlinsley/react-table}.
+Komponent zawiera kod odpowiedzialny za funkcjonalności takie jak:
+\begin{itemize}
+\item edytowanie danych przy jednoczesny wyświetlaniu starej i nowej ich wersji
+\item filtrowanie danych
+\item wyświetlanie różnych typów komórek z danymi
+\item edytowanie oraz usuwanie wielu wierszy jednocześnie
+\item dodawanie nowych danych
+\item pobranie danych z warstwy backend
+\item kopiowanie danych za pomocą trybu \emph{Smart Copy}
+\item wyświetlanie informacji o poprawności wprowadzonych danych
+\item cofanie dokonanych zmian
+\end{itemize}
+Dalsze podrozdziały stanowią omówienie sposobu realizacji niektórych z tych funkcjonalności.
+
+\subsubsection{Stan komponentu}
+Domyślny stan komponentu \emph{ReusableTable} wygląda następująco:
+\begin{lstlisting}[language=java]
+this.state = {
+
+	// data stored in table
+	data : [],
+	valueConstraints : {},
+	toDelete : [],
+	editedContent : {},
+	currentIndex : 0,
+
+	// selection (checkbox) mechanism
+	selected : {},
+	selectAll : 0,
+
+	// validation error display mechanism
+	expanded: {},
+	errorMessages: [],
+
+	// enable copying mechanism
+	isSmartCopyEnabled: false,
+
+	// copying row mechanism
+	focusedRow: null,
+	copiedRow : {},
+
+	// copying single value mechanism
+	focusedCell: { rowNumber: null, columnName: null},
+	copiedCell : {columnName: null, value : null}
+};
+\end{lstlisting}
+Jak widać stan tabeli podzielić można na 6 części:
+\begin{itemize}
+\item pierwsza zawiera pole \textbf{data} - najważniejsze, przechowuje dane wyświetlane w tabeli. Zawiera również pola \textbf{valueConstraints} - pole to przechowuje możliwe wartości dla komórek typu \emph{select}. Pole \textbf{toDelete} zawiera identyfikatory elementów tabeli, które użytkownik chce usunąć z bazy danych. Pole \textbf{editedContent} zawiera zbiór danych działający na zasadzie klucz -> wartość. Kluczem jest identyfikator wiersza tabeli, a wartością - nowe, edytowane dane (tabela przechowuje zarówno dane przed edycją, jak i edytowane, stąd konieczność przechowywania edytowanych danych osobno). Pole \emph{currentIndex} przechowuje następny nieużyty numer wiersza - jest on nadawany nowo dodanym wierszom w tabeli. 
+\item druga grupa odpowiada za mechanizm wybierania wierszy za pomocą \emph{checkboxa}
+\item trzecia grupa odpowiada za wyświetlanie informacji zwrotnej z walidacji danych. 
+\item pole \emph{isSmartCopyEnabled} to flaga stanowiąca informację, czy użytkownik uaktywnił mechanizm rozszerzonego kopiowania
+\item ostatnie dwie grupy odpowiadają za zaznaczanie wierszy/komórek oraz przechowywanie skopiowanych danych.
+\end{itemize}
+
+\subsubsection{Rodzaje komórek z danymi}
+Tabela udostępnia kilka rodzajów komórek do przechowywania danych:
+\begin{itemize}
+\item komórka tekstowa - renderowana za pomocą funkcji \emph{renderTextCell} - przechowuje dane w postaci tekstowej. Przeznaczona do przechowywania małych ilości danych
+\item komórka tekstowa używająca komponentu \emph{textarea} - renderowana za pomocą funkcji \emph{renderTextAreaCell} - również przechowuje dane w postaci tekstowej, natomiast z racji użycia komponentu \emph{textarea} jest wygodniejsza, gdy dane mogą zajmować kilka linii
+\item komórka przechowująca liczbę - renderowana za pomocą funkcji \emph{renderNumberCell} - przechowuje dane w postaci liczb. 
+\item komórka przechowująca wartość logiczną prawda/fałsz - renderowana za pomocą funkcji \emph{renderBoolCell} - wspiera logikę trójwartościową - true, false lub null. Używa komponentu \emph{select}
+\item komórka z danymi o ograniczonej liczbie możliwych wartości - renderowana za pomocą funkcji \emph{renderSelectCell}. Podobnie jak poprzednia, opiera się na komponencie \emph{select}. Przykład takiej komórki poniżej:
+\begin{figure}[H]
+\centering
+\includegraphics[scale=1]{res/front_tabela_selectcell}
+\end{figure}
+Możliwe wartości pobierane są z warstwy backend za pomocą specjalnej funkcji, omówionej w dalszej części dokumentacji.
+\item komórka zawierająca link - wyświetla klikalną reprezentację danych, przenoszącą pod określony za pomocą samych danych adres. Użyta raz w projekcie, w tabeli domen - służy do przenoszenia do widoku pojedynczej domeny. Adres jest konstruowany według zależności:
+\begin{equation}
+link = nazwaZasobu + / + obiektZasobu[accessor]
+\end{equation}
+\item komórka edytowalna jedynie w momencie, gdy obiekt jest nowy - nie został jeszcze dodany do bazy - renderowana za pomocą funkcji \emph{renderCellEditableOnlyWhenRowIsNew} Jest to komórka tekstowa, używana w widoku zasobu \emph{Supermaster} - gdy konieczne jest podanie przez użytkownika dwuczęściowego klucza głównego identyfikującego wiersz danych, ale niemożliwe jest jego edytowanie po zatwierdzeniu w bazie.
+\item komórka typu \emph{none} - służy jedynie do wyświetlania danych, nie można jej edytować
+\end{itemize}
+Poza tymi rodzajami wprowadzone zostało rozróżnienie na komórki aktualnie edytowane oraz nie oraz na komórki renderowane, gdy tabela jest w trybie wprowadzania danych oraz w trybie tylko do odczytu. \newline
+Należy zwrócić uwagę że w większości przypadków komórki są rozróżnialne tylko, jeśli wiersz jest w trybie edycji - dane podstawowe, nieedytowane wyświetlane są zawsze w formie tekstu. Obrazuje to poniższy obrazek:
+\begin{figure}[H]
+\centering
+\includegraphics[scale=1]{res/front_komorka}
+\end{figure}
+Na podobnej zasadzie istnieją różne rodzaje możliwych komponentów stanowiących poszczególne elementy stopki tabeli. Mamy więc funkcje takie jak \emph{renderTextFooter} czy \emph{renderSelectFooter}.
+
+\subsubsection{Tryby wyświetlania tabeli}
+Komponent tabeli udostępnia dwa tryby wyświetlania:
+\begin{itemize}
+\item \textbf{tryb edycji} - dostępny przez większość czasu użytkowania tabeli, pozwala na odczyt, edycję i dodawanie danych
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{res/front_tabela_edit}
+\end{figure}
+\item \textbf{tryb tylko do odczytu} - dostępnych po udanym wprowadzeniu danych do bazy za pomocą opcji \emph{Commit changes}. Umożliwia przeglądnięcie wprowadzonych zmian.
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{res/front_tabela_commit}
+\end{figure}
+\end{itemize}
+Z tego powodu komponent \emph{ReusableTable} posiada dwie funkcje renderujące:
+\begin{itemize}
+\item \emph{renderTableInEditMode}
+\item \emph{renderTableInReadOnlyMode}
+\end{itemize}
+W każdym momencie działania tabeli jedna z tych funkcji powinna być przypisana do \emph{renderTable}- w zależności od tego, w jakim stanie znajduje się tabela. Funkcja ta jest natomiast używana przez standardową funkcję renderującą \emph{render}.
 
 
+\subsubsection{Tryb Smart Copy}
+Jedną z ważniejszych funkcjonalności tabeli jest tryb Smart Copy. Jego działanie opiera się na prostej funkcji \emph{handleKeyDown} - sprawdza ona, czy tabela pozwala na kopiowanie i wklejanie danych oraz wybiera odpowiedni \emph{handler} dla wciśniętej kombinacji klawiszy:
+\begin{itemize}
+\item \textbf{handleCtrlCEvent}
+\item \textbf{handleCtrlXEvent}
+\item \textbf{handleCtrlVEvent}
+\end{itemize}
+Kopiowane dane przechowywane są w stanie (\emph{state}) komponentu - odpowiednio copiedRow oraz copiedCell. \newline
+Zaznaczenie wiersza lub komórki odbywa się za pomocą \emph{handlera} dla \emph{eventu onClick} - ustawiany jest on w funkcji \emph{setCellProps}. Informacje o tym, który wiersz lub komórka jest aktualnie zaznaczony przechowywane są w stanie komponentu - odpowiednio focusedRow oraz focusedCell.
+
+\subsubsection{Pobieranie danych z backendu}
+Komponent ReusableTable pobiera dane do wyświetlania w tabeli oraz ograniczenia na wartości w komórkach typu \emph{select}. Dane pobierane są za pomocą \emph{fetch} - jest to więc mechanizm asynchroniczny. Dane do tabeli pobierane są z poziomu funkcji \emph{refreshTable}. Funkcja ta wywołuje również \emph{fetchValueConstraints} - jest to funkcja pobierająca możliwe wartości dla komórek typu \emph{select}. W celu zwiększenia elastyczności komponentu zdecydowano, że funkcja ta musi zostać dostarczona do tabeli z zewnątrz - powodem jest fakt, że każdy zbiór danych (domeny, rekordy itp.) nakłada inne ograniczenia na wartości różnych pól. Funkcję należy dostarczyć do komponentu za pomocą tzw. \textbf{props} - mechanizm atrybutów - konkretnie za pomocą atrybutu \emph{fetchValueConstraints}.
+
+\subsubsection{Użycie tabeli - API}
+Poniżej przedstawiono listing stanowiący przykład użycia komponentu ReusableTable:
+\begin{lstlisting}[language=java, tabsize=2]
+fetchValueConstraints()
+{
+	Promise.all([fetch('http://localhost:8001/domains/types')])
+	.then(([result]) => Promise.all([result.json()]))
+	.then(([types]) => {
+		let valueConstraints = 
+			JSON.parse(JSON.stringify(this.state.valueConstraints));
+		valueConstraints['types'] = types;
+		this.setState ({
+			valueConstraints : valueConstraints
+		});
+	})
+}
+
+render()
+{
+	const emptyDataExample = { id : "", name : null, master : null, type : null};
+	const columns = [
+		{Header : "ID", accessor : "id", type : "link"},
+		{Header : "Domain Name", accessor : "name", type : "text"},
+		{Header : "Domain Type", accessor : "type", type : "select"},
+		{Header : "Domain Master", accessor : "master", type : "text"}
+	];
+
+	return (
+		<div className="domains">
+			<ReusableTable ref="domainsTable"
+				fetchValueConstraints = {this.fetchValueConstraints}
+				resourcesURLBase = "http://localhost:8001/domains/"
+				resourcesSelectURL = "all"
+				emptyDataExample = {emptyDataExample}
+				columns = {columns}
+				resourceName = "domain" />
+		</div>
+	);
+}
+\end{lstlisting}
+Funkcja \textbf{fetchValueConstraints} służy do pobierania z backendu możliwych wartości dla komórek typu \emph{select}. Decyzja o konieczności pisania tej funkcji na zewnątrz tabeli wynika z faktu, iż różne modele danych (np. rekordy czy domeny) nakładają na wartości pól różne ograniczenia - nie ma jednego, uniwersalnego sposobu na pobranie ich z backendu. Funkcja \emph{render} zawiera natomiast całość kodu odpowiedzialną za stworzenie komponentu tabeli. Istotną informację stanowią przekazywane do komponentu atrybuty (\emph{props}):
+\begin{itemize}
+\item \textbf{fetchValueConstraints} - funkcja pobierająca możliwe wartości dla komórek typu \emph{select} 
+\item \textbf{resourceURLBase} - podstawowa część adresu służącego do pobierania oraz wysyłania danych do backendu - do tej części doklejane są następnie takie części jak \emph{all} czy \emph{commit}.
+\item \textbf{resourceSelectURL} - część URL odpowiedzialna za pobieranie danych
+\item \textbf{emptyDataExample} - obiekt stanowiący, jakie domyślne wartości powinien zawierać każdy wiersz tabeli - używane przy dodawaniu nowych wierszy
+\item \textbf{columns} - tablica zawierająca obiekty stanowiące opis każdej z kolumn tabeli. Opis każdej kolumny powinien składać się z 3 kluczy: \emph{Header} - nagłówek kolumny, \emph{accessor} - nazwa pola przechowującego dane, \emph{type} - typ kolumny.
+\item \textbf{resourceName} - nazwa zasobu przechowywanego przez tabelę.
+\end{itemize}
 
 \section{Warstwa backend}
 Ten rozdział opisuje sposób działania aplikacji po stronie backendu. Omówione zostaną rozwiązana stanowiące o przepływie danych w aplikacji, jej bezpieczeństwie, tworzeniu kopii zapasowych danych przechowywanych w bazie, czy tworzących historię operacji na niej.
@@ -332,6 +503,7 @@ Poniżej lista proponowanych przez nas rozszerzeń i poprawek w aplikacji, któr
 \item wdrożenie systemu replikacji za pomocą \emph{Slony}
 \item wdrożenie frameworka do testów przeprowadzanych po stronie React'a
 \item zwiększenie pokrycia kodu testami
+\item dodanie mechanizmu szablonów domen
 \end{itemize}
 
 
