@@ -40,7 +40,11 @@ body{
     transition: 0.3s;
 }
 
-.RegistrationButton:hover{
+.RegistrationButton:hover,
+.RegistrationButton:active,
+.RegistrationButton:hover:active,
+.RegistrationButton:active:focus,
+.RegistrationButton:focus{
     background-color: rgb(255, 88, 0);
     border-color: rgb(255, 88, 0);
 }

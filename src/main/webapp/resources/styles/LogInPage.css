@@ -54,7 +54,11 @@ body{
      transition: 0.3s;
  }
 
-.login-button:hover{
+.login-button:hover,
+.login-button:active,
+.login-button:focus,
+.login-button:hover:active,
+.login-button:active:focus{
     background-color: rgb(255, 88, 0);
     border-color: rgb(255, 88, 0);
 }
