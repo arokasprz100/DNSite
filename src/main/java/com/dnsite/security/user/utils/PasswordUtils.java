@@ -1,6 +1,6 @@
 package com.dnsite.security.user.utils;
 
-import com.dnsite.security.DTOs.Passwords;
+import com.dnsite.security.DTOs.ChangePasswordRequest;
 import com.dnsite.security.user.model.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import  com.dnsite.security.user.utils.PasswordGenerator;
@@ -28,13 +28,16 @@ public final class PasswordUtils {
         return !useDigits || password.matches(".*[a-z]+.*");
     }
 
-    public String checkNewPassword(Passwords password, User user) {
+    public String checkNewPassword(ChangePasswordRequest password, User user) {
 
         if (!bCryptPasswordEncoder.matches(password.oldPassword, user.getPassword())) {
             return "wrong old password";
         }
         if (!password.newPassword.equals(password.newPasswordConfirm)) {
             return "passwords are not same";
+        }
+        if (bCryptPasswordEncoder.matches(password.newPassword, user.getPassword())) {
+            return "New password is same as your current password";
         }
         if (!checkPassword(password.newPassword, false, false, false)) {
             return "wrong format of password";

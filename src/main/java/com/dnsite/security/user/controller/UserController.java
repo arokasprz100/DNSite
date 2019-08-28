@@ -1,6 +1,7 @@
 package com.dnsite.security.user.controller;
 
-import com.dnsite.security.DTOs.Passwords;
+import com.dnsite.security.DTOs.ChangePasswordRequest;
+import com.dnsite.security.DTOs.ChangePasswordResponse;
 import com.dnsite.security.service.SecurityService;
 import com.dnsite.security.user.model.Role;
 import com.dnsite.security.user.model.User;
@@ -104,21 +105,19 @@ public class UserController {
 
     @RequestMapping(value = "/changePasswd", method = RequestMethod.POST)
     @ResponseBody
-    public String changePassword(@RequestBody Passwords password) {
+    public ChangePasswordResponse changePassword(@RequestBody ChangePasswordRequest password) {
 
         PasswordUtils passwordUtils = new PasswordUtils();
         User user = userService.findByUsername(securityService.findLoggedInUsername());
-
         String message = passwordUtils.checkNewPassword(password, user);
         if (message.equals("Valid")) {
             userService.setUserPassword(user.getUsername(), password.newPassword);
             log.info("Password of user " + user.getUsername() + " has been changed");
         } else {
             log.info("error during changing password: " + message);
-            //return message and show in info dialog
+            return new ChangePasswordResponse(false, message);
         }
-        //if everything valid redirect to dnsite
-        return "redirect:/dnsite";
+        return new ChangePasswordResponse(true, "");
     }
 
 }

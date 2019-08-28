@@ -15,7 +15,6 @@ class ChangePassword extends React.Component {
     }
 
     onSubmit = (e) => {
-        console.log(JSON.stringify(this.state));
         return fetch('http://localhost:8001/changePasswd', {
             method: 'POST',
             headers: {
@@ -26,7 +25,15 @@ class ChangePassword extends React.Component {
             if (response.ok) { return response; }
             throw Error(response.status);
         })
-            .then(response => console.log(response))
+            //TODO Better showing information about changing password and clear forms
+            .then(response => {
+             return response.json();
+            }).then(data => {
+                if(data.changed === true)
+                    alert('Password changed');
+                else if(data.changed === false)
+                    alert('Error during changing password: ' + '\n' + data.errorMessage);
+            })
             .catch(error => console.error(error));
 
     }
