@@ -6,6 +6,7 @@ class ChangePassword extends React.Component {
         newPassword: "",
         newPasswordConfirm: "",
         oldPassword: "",
+        errorMessage: "",
         changeSuccess: false,
         errorOnServer: false,
         oldPasswordEmptyError: false,
@@ -59,6 +60,7 @@ class ChangePassword extends React.Component {
                             newPassword: "",
                             newPasswordConfirm: "",
                             oldPassword: "",
+                            errorMessage: "",
                             changeSuccess: true,
                             errorOnServer: false,
                             oldPasswordEmptyError: false,
@@ -70,6 +72,7 @@ class ChangePassword extends React.Component {
                             newPassword: "",
                             newPasswordConfirm: "",
                             oldPassword: "",
+                            errorMessage: data.errorMessage,
                             changeSuccess: false,
                             errorOnServer: true,
                             oldPasswordEmptyError: false,
@@ -86,17 +89,17 @@ class ChangePassword extends React.Component {
         return(
             <div className="changePasswordWrapper">
                 <div class="requestStatus">
-                    {this.state.changeSuccess && <div className="requestSuccess">Twoje hasło zostało zmienione</div>}
-                    {this.state.errorOnServer && <div className="requestError">Wystąpił błąd po stronie serwera. <br/>Twoje hasło nie zostało zmienione.</div>}
+                    {this.state.changeSuccess && <div className="requestSuccess">Your password has been changed</div>}
+                    {this.state.errorOnServer && <div className="requestError">Error during changing password: {this.state.errorMessage}</div>}
                 </div>
                 <div className="inputsWrapper">
                     <div className="oldPasswordWrapper">
-                        {this.state.oldPasswordEmptyError && <div className="subText">Pole nie może być puste</div>}
+                        {this.state.oldPasswordEmptyError && <div className="subText">Field cannot be empty</div>}
                         <input type="password" value={this.state.oldPassword} placeholder="Old password" onChange={this.handleChange} name="oldPassword"/>
                     </div>
                     <div className="newPasswordWrapper">
-                        {this.state.newPasswordEmptyError && <div className="subText">Pola nie mogą być puste</div>}
-                        {this.state.newDifferentPasswordsError && <div className="subText">Podane hasła nie są zgodne</div>}
+                        {this.state.newPasswordEmptyError && <div className="subText">Fields cannot be empty</div>}
+                        {this.state.newDifferentPasswordsError && <div className="subText">Entered passwords are different</div>}
                         <input type="password" value={this.state.newPassword} placeholder="New password" onChange={this.handleChange} name="newPassword"/>
                         <input type="password" value={this.state.newPasswordConfirm} placeholder="Repeat password" onChange={this.handleChange} name="newPasswordConfirm"/>
                     </div>
