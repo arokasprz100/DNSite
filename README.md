@@ -1,9 +1,9 @@
 # DNSite
 
 ## About the project
-DNSite is a management website for PostgreSQL based database used by PowerDNS. Its main purpose is to allow making 
-multiple changes to the data stored in database in a simple, fast and comfortable way. If you would like to learn more 
-please read attached documentation.
+DNSite is a management website for PostgreSQL based database used by PowerDNS. Its main purpose is to allow making multiple changes to the data stored in database in a simple, fast and comfortable way. If you would like to learn more please read attached documentation.
+
+This project has been tested on **Windows 10** and **Ubuntu**.
 
 ## Documentation
 Documentation (in polish) can be found here:
@@ -12,7 +12,19 @@ Documentation (in polish) can be found here:
 
 ## Installation
 
-### Using IntelliJ IDEA
+### For users
+In order to successfully use DNSite please follow those steps:
+ * install **Java 8** (if You are using Windows, after installing Java set **JAVA_HOME** and update **PATH** - more information can be found [here](https://javatutorial.net/set-java-home-windows-10))
+ * download *.war* file from [here](https://drive.google.com/drive/folders/1Og7IyqD11dZidbaHRg74Lt1glxVRp3ls)
+ * run `java -jar java -jar dnsite-0.0.1-SNAPSHOT.war` on downloaded file
+ * if You are using the application for the first time, complete configuration 
+ * visit https://localhost:8001
+
+This instruction assumes that You have prepared PostgreSQL database that will interact with both DNSite and PowerDNS.
+
+### For developers
+
+#### Using IntelliJ IDEA
 Clone this repository and open project using IntelliJ. Run *clean* and *install* with *Maven*.
 Then just click *run* button (the class that contains *main* function is called *DNSiteApplication*).
 
@@ -20,16 +32,15 @@ If You are using the application for the first time, complete configuration and 
 
 For more details, please consider reading documentation.
 
-### Using console
+#### Using console
 Clone this repository and go into *DNSite* directory. Run
 `mvn clean install`
 After it finishes, **from DNSite directory** run 
-`java -jar target/dnsite-0.0.1-SNAPSHOT.jar`
+`java -jar target/dnsite-0.0.1-SNAPSHOT.war`
 
 If You are using the application for the first time, complete configuration and You will find login page under https://localhost:8001.
 
 For more details, please consider reading documentation.
-
 
 ## Authors
 * [Jarosław Cierpich](https://github.com/Loniowsky)

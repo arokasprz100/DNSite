@@ -25,6 +25,7 @@
 	keywordstyle=\color{blue}
 }
 
+
 \definecolor{backgroundColor}{HTML}{3D3D3D}
 
 %%% Strona tytułowa %%%
@@ -95,6 +96,28 @@
 Niniejsza dokumentacja użytkownika została przygotowana dla pierwszego pełnego wydania aplikacji. Zawiera instrukcję instalacji oraz konfiguracji aplikacji, jak również poradnik ułatwiający poznanie wszystkich funkcjonalności.
 
 \section{Instalacja}
+Poniżej zawarta została instrukcja instalacji aplikacji w dwóch wersjach:
+\begin{itemize}
+\item instalacja gotowego pakietu - zalecana dla użytkowników nie będących developerami
+\item instalacja ze źródeł - zalecana dla developerów 
+\end{itemize}
+
+\subsection{Instalacja gotowego pakietu}
+W celu instalacji aplikacji za pomocą gotowego pakietu należy wykonać następujące kroki:
+\begin{itemize}
+\item instalacja Java 8 (\textbf{koniecznie w tej wersji}) - jeśli docelowym systemem jest Windows, po instalacji należy ustawić zmienną środowiskową \textbf{JAVA\_HOME} oraz zaktualizować zmienną \textbf{PATH} - więcej na ten temat można poczytać \href{https://javatutorial.net/set-java-home-windows-10}{\textbf{tutaj}}.
+\item pobranie pliku \emph{.war} - \href{https://drive.google.com/drive/folders/1Og7IyqD11dZidbaHRg74Lt1glxVRp3ls}{\textbf{link}}
+\item wykonanie komendy:
+\begin{lstlisting}[language=bash]
+java -jar <plik_war>
+\end{lstlisting}
+w celu uruchomienia aplikacji
+
+Należy teraz dokonać konfiguracji aplikacji (rozdział \hyperref[first_run]{\emph{Pierwsze uruchomienie i konfiguracja}}) lub, jeśli zostało to już zrobione, rozpocząć korzystanie z aplikacji za pomocą przeglądarki (rozdział \hyperref[webapp]{\emph{Korzystanie z aplikacji}}).
+\end{itemize}
+
+
+\subsection{Instalacja ze źródeł}
 W celu uruchomienia aplikacji wymagane są:
 \begin{itemize}
 \item Java w wersji 8
@@ -122,7 +145,7 @@ Proces instalacji może potrwać kilka minut. Należy zignorować pojawiające s
 \end{figure}
 Następnie w celu uruchomienia aplikacji należy \textbf{z poziomu katalogu DNSite} wykonać polecenie:
 \begin{lstlisting}[language=bash]
-java -jar target/dnsite-0.0.1-SNAPSHOT.jar
+java -jar target/dnsite-0.0.1-SNAPSHOT.war
 \end{lstlisting}
 Krok ten należy wykonać za każdym razem, gdy aplikacja ma zostać uruchomiona. Należy teraz dokonać konfiguracji aplikacji (rozdział \hyperref[first_run]{\emph{Pierwsze uruchomienie i konfiguracja}}) lub, jeśli zostało to już zrobione, rozpocząć korzystanie z aplikacji za pomocą przeglądarki (rozdział \hyperref[webapp]{\emph{Korzystanie z aplikacji}}).
 
