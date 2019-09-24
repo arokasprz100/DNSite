@@ -16,7 +16,7 @@ Documentation (in polish) can be found here:
 In order to successfully use DNSite please follow those steps:
  * install **Java 8** (if You are using Windows, after installing Java set **JAVA_HOME** and update **PATH** - more information can be found [here](https://javatutorial.net/set-java-home-windows-10))
  * download *.war* file from [here](https://drive.google.com/drive/folders/1Og7IyqD11dZidbaHRg74Lt1glxVRp3ls)
- * run `java -jar java -jar dnsite-0.0.1-SNAPSHOT.war` on downloaded file
+ * run `java -jar dnsite-0.0.1-SNAPSHOT.war` on downloaded file
  * if You are using the application for the first time, complete configuration 
  * visit https://localhost:8001
 
