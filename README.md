@@ -10,13 +10,14 @@ Documentation (in polish) can be found here:
 * [User Documentation](https://github.com/agh-ki-io/DNSite/blob/master/documentation/userGuide/dokumentacja_uzytkownika.pdf)
 * [Developer Documentation](https://github.com/agh-ki-io/DNSite/blob/master/documentation/technicalDocumentation/dokumentacja_techniczna.pdf)
 
+
 ## Installation
 
 ### For users
 In order to successfully use DNSite please follow those steps:
- * install **Java 8** (if You are using Windows, after installing Java set **JAVA_HOME** and update **PATH** - more information can be found [here](https://javatutorial.net/set-java-home-windows-10))
- * download *.war* file from [here](https://drive.google.com/drive/folders/1Og7IyqD11dZidbaHRg74Lt1glxVRp3ls)
- * run `java -jar dnsite-0.0.1-SNAPSHOT.war` on downloaded file
+ * install **Java 8** - but not using OpenJDK as it will probably not work (if You are using Windows, after installing Java set **JAVA_HOME** and update **PATH** - more information can be found [here](https://javatutorial.net/set-java-home-windows-10))
+ * download *.zip* file from [here](https://drive.google.com/drive/folders/1Og7IyqD11dZidbaHRg74Lt1glxVRp3ls) and unpack it
+ * run `java -jar dnsite-0.0.1-SNAPSHOT.war` on downloaded *.war* file
  * if You are using the application for the first time, complete configuration 
  * visit https://localhost:8001
 
