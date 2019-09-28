@@ -1,5 +1,9 @@
 # DNSite
 
+## Release
+
+[Download from here](https://drive.google.com/drive/folders/1Og7IyqD11dZidbaHRg74Lt1glxVRp3ls)
+
 ## About the project
 DNSite is a management website for PostgreSQL based database used by PowerDNS. Its main purpose is to allow making multiple changes to the data stored in database in a simple, fast and comfortable way. If you would like to learn more please read attached documentation.
 
